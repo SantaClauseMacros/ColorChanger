@@ -357,13 +357,6 @@
                 <div class="control-section">
                     <h4>Refine Edges</h4>
                     <div class="checkbox-group">
-                        <input type="checkbox" id="preserveShades" checked>
-                        <label>Preserve Color Shades</label>
-                    </div>
-                    <div class="info-box">
-                        If you turn this option on, then all pixels during the color-change operation will preserve their shades (which is the lightness and darkness of each pixel).
-                    </div>
-                    <div class="checkbox-group">
                         <input type="checkbox" id="smoothEdges">
                         <label>Make Edges Smooth</label>
                     </div>
@@ -595,7 +588,7 @@
             const fromColor = hexToRgb(document.getElementById('fromColor').value);
             const toColor = hexToRgb(document.getElementById('toColor').value);
             const tolerance = parseFloat(document.getElementById('tolerance').value);
-            const preserveShades = document.getElementById('preserveShades').checked;
+
             const previewMask = document.getElementById('previewMask').checked;
 
             const outputCanvas = document.getElementById('outputCanvas');
@@ -641,23 +634,9 @@
                     }
                 } else {
                     if (isMatch) {
-                        let newR = toColor.r;
-                        let newG = toColor.g;
-                        let newB = toColor.b;
-
-                        if (preserveShades) {
-                            const origBrightness = (r + g + b) / 3;
-                            const fromBrightness = (fromColor.r + fromColor.g + fromColor.b) / 3;
-                            const ratio = origBrightness / fromBrightness;
-                            
-                            newR = Math.min(255, Math.max(0, toColor.r * ratio));
-                            newG = Math.min(255, Math.max(0, toColor.g * ratio));
-                            newB = Math.min(255, Math.max(0, toColor.b * ratio));
-                        }
-
-                        newData[i] = Math.round(newR);
-                        newData[i + 1] = Math.round(newG);
-                        newData[i + 2] = Math.round(newB);
+                        newData[i] = toColor.r;
+                        newData[i + 1] = toColor.g;
+                        newData[i + 2] = toColor.b;
                         newData[i + 3] = a;
                     } else {
                         newData[i] = r;
