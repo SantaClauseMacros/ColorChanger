@@ -197,6 +197,18 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             margin-top: 10px;
+            position: relative;
+        }
+        
+        .gradient-position-indicator {
+            position: absolute;
+            top: -5px;
+            bottom: -5px;
+            width: 2px;
+            background: #333;
+            border-radius: 1px;
+            pointer-events: none;
+            z-index: 10;
         }
         
         .direction-selector {
@@ -392,6 +404,24 @@
         .hidden {
             display: none !important;
         }
+
+        .gradient-position-control {
+            margin-top: 15px;
+        }
+
+        .position-slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .position-value {
+            min-width: 35px;
+            text-align: center;
+            font-weight: bold;
+            color: #007bff;
+        }
     </style>
 </head>
 <body>
@@ -469,7 +499,23 @@
                         <input type="color" id="gradientEnd" class="color-input" value="#0000ff">
                         <input type="text" id="gradientEndText" class="color-text" value="#0000ff">
                     </div>
-                    <div class="gradient-preview" id="gradientPreview"></div>
+                    
+                    <div class="gradient-position-control">
+                        <label>Gradient Balance:</label>
+                        <div class="position-slider-container">
+                            <span style="font-size: 12px; color: #666;">Start</span>
+                            <input type="range" id="gradientPosition" class="slider" min="0" max="100" value="50" style="flex: 1;">
+                            <span style="font-size: 12px; color: #666;">End</span>
+                            <span class="position-value" id="positionValue">50%</span>
+                        </div>
+                        <div class="info-box">
+                            Move left for more start color, right for more end color. 50% = equal balance.
+                        </div>
+                    </div>
+                    
+                    <div class="gradient-preview" id="gradientPreview">
+                        <div class="gradient-position-indicator" id="positionIndicator"></div>
+                    </div>
                     <label>Gradient Direction:</label>
                     <div class="direction-selector">
                         <div class="direction-btn" onclick="setDirection('top-left')">↖ Top Left</div>
@@ -536,6 +582,7 @@
         let selectedDirectoryHandle = null;
         let currentMode = 'color';
         let gradientDirection = 'bottom';
+        let gradientPosition = 50;
 
         // Setup event listeners - all now trigger auto-processing
         document.getElementById('fileInput').addEventListener('change', handleFileUpload);
@@ -547,6 +594,7 @@
         document.getElementById('gradientEnd').addEventListener('change', updateGradientEndText);
         document.getElementById('gradientStartText').addEventListener('input', updateGradientStartPicker);
         document.getElementById('gradientEndText').addEventListener('input', updateGradientEndPicker);
+        document.getElementById('gradientPosition').addEventListener('input', updateGradientPosition);
         document.getElementById('tolerance').addEventListener('input', updateToleranceValue);
         document.getElementById('toleranceInput').addEventListener('input', updateToleranceFromInput);
         document.getElementById('edgeRadius').addEventListener('input', updateRadiusValue);
@@ -604,44 +652,61 @@
             autoProcessImage();
         }
 
+        function updateGradientPosition() {
+            gradientPosition = parseInt(document.getElementById('gradientPosition').value);
+            document.getElementById('positionValue').textContent = gradientPosition + '%';
+            
+            // Update position indicator
+            const indicator = document.getElementById('positionIndicator');
+            indicator.style.left = gradientPosition + '%';
+            
+            updateGradientPreview();
+            autoProcessImage();
+        }
+
         function updateGradientPreview() {
             const preview = document.getElementById('gradientPreview');
             const startColor = document.getElementById('gradientStart').value;
             const endColor = document.getElementById('gradientEnd').value;
+            const position = gradientPosition;
             
             let gradientCSS = '';
             
             switch(gradientDirection) {
                 case 'top':
-                    gradientCSS = `linear-gradient(to top, ${startColor}, ${endColor})`;
+                    gradientCSS = `linear-gradient(to top, ${startColor} 0%, ${startColor} ${100-position}%, ${endColor} 100%)`;
                     break;
                 case 'bottom':
-                    gradientCSS = `linear-gradient(to bottom, ${startColor}, ${endColor})`;
+                    gradientCSS = `linear-gradient(to bottom, ${startColor} 0%, ${startColor} ${position}%, ${endColor} 100%)`;
                     break;
                 case 'left':
-                    gradientCSS = `linear-gradient(to left, ${startColor}, ${endColor})`;
+                    gradientCSS = `linear-gradient(to left, ${startColor} 0%, ${startColor} ${100-position}%, ${endColor} 100%)`;
                     break;
                 case 'right':
-                    gradientCSS = `linear-gradient(to right, ${startColor}, ${endColor})`;
+                    gradientCSS = `linear-gradient(to right, ${startColor} 0%, ${startColor} ${position}%, ${endColor} 100%)`;
                     break;
                 case 'top-left':
-                    gradientCSS = `linear-gradient(to top left, ${startColor}, ${endColor})`;
+                    gradientCSS = `linear-gradient(to top left, ${startColor} 0%, ${startColor} ${position}%, ${endColor} 100%)`;
                     break;
                 case 'top-right':
-                    gradientCSS = `linear-gradient(to top right, ${startColor}, ${endColor})`;
+                    gradientCSS = `linear-gradient(to top right, ${startColor} 0%, ${startColor} ${position}%, ${endColor} 100%)`;
                     break;
                 case 'bottom-left':
-                    gradientCSS = `linear-gradient(to bottom left, ${startColor}, ${endColor})`;
+                    gradientCSS = `linear-gradient(to bottom left, ${startColor} 0%, ${startColor} ${position}%, ${endColor} 100%)`;
                     break;
                 case 'bottom-right':
-                    gradientCSS = `linear-gradient(to bottom right, ${startColor}, ${endColor})`;
+                    gradientCSS = `linear-gradient(to bottom right, ${startColor} 0%, ${startColor} ${position}%, ${endColor} 100%)`;
                     break;
                 case 'center':
-                    gradientCSS = `radial-gradient(circle, ${startColor}, ${endColor})`;
+                    gradientCSS = `radial-gradient(circle, ${startColor} 0%, ${startColor} ${position}%, ${endColor} 100%)`;
                     break;
             }
             
             preview.style.background = gradientCSS;
+            
+            // Update position indicator
+            const indicator = document.getElementById('positionIndicator');
+            indicator.style.left = position + '%';
         }
 
         async function selectDirectory() {
