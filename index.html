@@ -66,10 +66,15 @@
             background: #f8f9ff;
         }
         
-        .upload-area.drag-over {
+        .panel.drag-over {
             border-color: #007bff;
             background: #f0f7ff;
-            transform: scale(1.02);
+        }
+        
+        .panel.drag-over .upload-area {
+            border-color: #007bff;
+            background: #e3f2fd;
+            transform: scale(1.05);
         }
         
         .upload-text {
@@ -345,12 +350,16 @@
         document.getElementById('edgeRadius').addEventListener('input', updateRadiusValue);
 
         // Setup drag and drop
-        const uploadArea = document.querySelector('.upload-area');
+        const uploadPanel = document.querySelector('.panel');
         
-        uploadArea.addEventListener('dragover', handleDragOver);
-        uploadArea.addEventListener('dragenter', handleDragEnter);
-        uploadArea.addEventListener('dragleave', handleDragLeave);
-        uploadArea.addEventListener('drop', handleDrop);
+        uploadPanel.addEventListener('dragover', handleDragOver);
+        uploadPanel.addEventListener('dragenter', handleDragEnter);
+        uploadPanel.addEventListener('dragleave', handleDragLeave);
+        uploadPanel.addEventListener('drop', handleDrop);
+        
+        // Prevent default drag behaviors on the entire document
+        document.addEventListener('dragover', (e) => e.preventDefault());
+        document.addEventListener('drop', (e) => e.preventDefault());
 
         function updateFromColorText() {
             document.getElementById('fromColorText').value = document.getElementById('fromColor').value;
