@@ -177,6 +177,26 @@
             color: #1565c0;
         }
         
+        .filename-group {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .filename-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .filename-input {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 250px;
+            font-size: 14px;
+        }
+        
         .buttons {
             text-align: center;
             margin-top: 20px;
@@ -286,6 +306,11 @@
                 </div>
             </div>
             
+            <div class="filename-group">
+                <label for="filename">Download filename:</label>
+                <input type="text" id="filename" class="filename-input" value="color-replaced" placeholder="Enter filename (without .png)">
+            </div>
+            
             <div class="buttons">
                 <button class="btn btn-primary" onclick="processImage()">🎨 Apply Color Change</button>
                 <button class="btn btn-success" onclick="downloadImage()">💾 Download</button>
@@ -351,6 +376,10 @@
                 alert('Please upload a PNG file.');
                 return;
             }
+
+            // Auto-fill filename input with uploaded file name (without extension)
+            const fileName = file.name.replace(/\.[^/.]+$/, "");
+            document.getElementById('filename').value = fileName + "-edited";
 
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -482,8 +511,16 @@
             }
 
             const canvas = document.getElementById('outputCanvas');
+            const filename = document.getElementById('filename').value.trim();
+            
+            // Ensure filename is not empty and add .png extension if not present
+            let finalFilename = filename || 'color-replaced';
+            if (!finalFilename.toLowerCase().endsWith('.png')) {
+                finalFilename += '.png';
+            }
+
             const link = document.createElement('a');
-            link.download = 'color-replaced.png';
+            link.download = finalFilename;
             link.href = canvas.toDataURL('image/png');
             link.click();
         }
@@ -507,6 +544,7 @@
             document.getElementById('outputCanvas').style.display = 'none';
             document.querySelector('.upload-area').style.display = 'flex';
             document.getElementById('outputPlaceholder').style.display = 'block';
+            document.getElementById('filename').value = 'color-replaced';
             originalImageData = null;
             processedImageData = null;
         }
