@@ -189,9 +189,63 @@
             color: #1565c0;
         }
         
+        .save-options {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .save-options h4 {
+            margin-bottom: 15px;
+            color: #555;
+            font-weight: normal;
+        }
+        
+        .directory-group {
+            margin-bottom: 15px;
+        }
+        
+        .directory-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .directory-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .directory-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            background: #f9f9f9;
+        }
+        
+        .directory-btn {
+            padding: 8px 16px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .directory-btn:hover {
+            background: #5a6268;
+        }
+        
         .filename-group {
             margin-bottom: 20px;
-            text-align: center;
         }
         
         .filename-group label {
@@ -205,7 +259,7 @@
             padding: 8px 12px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            width: 250px;
+            width: 100%;
             font-size: 14px;
         }
         
@@ -240,6 +294,16 @@
         
         .btn:hover {
             opacity: 0.9;
+        }
+        
+        .browser-note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #856404;
         }
     </style>
 </head>
@@ -321,9 +385,22 @@
                 </div>
             </div>
             
-            <div class="filename-group">
-                <label for="filename">Download filename:</label>
-                <input type="text" id="filename" class="filename-input" value="color-replaced" placeholder="Enter filename (without .png)">
+            <div class="save-options">
+                <h4>💾 Save Options</h4>
+                <div class="directory-group">
+                    <label for="directoryPath">Save directory:</label>
+                    <div class="directory-selector">
+                        <input type="text" id="directoryPath" class="directory-input" placeholder="No directory selected - will use browser default" readonly>
+                        <button class="directory-btn" onclick="selectDirectory()">📁 Browse</button>
+                    </div>
+                    <div class="browser-note">
+                        <strong>Note:</strong> Directory selection requires a modern browser with File System Access API support (Chrome 86+, Edge 86+). If unsupported, files will download to your default Downloads folder.
+                    </div>
+                </div>
+                <div class="filename-group">
+                    <label for="filename">Filename:</label>
+                    <input type="text" id="filename" class="filename-input" value="color-replaced" placeholder="Enter filename (without .png)">
+                </div>
             </div>
             
             <div class="buttons">
@@ -338,6 +415,7 @@
     <script>
         let originalImageData = null;
         let processedImageData = null;
+        let selectedDirectoryHandle = null;
 
         // Setup event listeners
         document.getElementById('fileInput').addEventListener('change', handleFileUpload);
@@ -360,6 +438,61 @@
         // Prevent default drag behaviors on the entire document
         document.addEventListener('dragover', (e) => e.preventDefault());
         document.addEventListener('drop', (e) => e.preventDefault());
+
+        // Check if File System Access API is supported
+        const supportsFileSystemAccess = 'showDirectoryPicker' in window;
+        if (!supportsFileSystemAccess) {
+            document.querySelector('.browser-note').innerHTML = 
+                '<strong>Directory Selection Not Supported:</strong> Your browser doesn\'t support directory selection. Files will download to your default Downloads folder.';
+            document.querySelector('.directory-btn').disabled = true;
+            document.querySelector('.directory-btn').style.opacity = '0.5';
+        }
+
+        async function selectDirectory() {
+            if (!supportsFileSystemAccess) {
+                alert('Directory selection is not supported in your browser. Files will be saved to your default Downloads folder.');
+                return;
+            }
+
+            try {
+                selectedDirectoryHandle = await window.showDirectoryPicker();
+                document.getElementById('directoryPath').value = selectedDirectoryHandle.name;
+            } catch (err) {
+                // User cancelled the picker
+                console.log('Directory selection cancelled');
+            }
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+        }
+
+        function handleDragEnter(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            if (!e.currentTarget.contains(e.relatedTarget)) {
+                e.currentTarget.classList.remove('drag-over');
+            }
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                const file = files[0];
+                if (file.type.includes('png')) {
+                    handleFile(file);
+                } else {
+                    alert('Please upload a PNG file.');
+                }
+            }
+        }
 
         function updateFromColorText() {
             document.getElementById('fromColorText').value = document.getElementById('fromColor').value;
@@ -408,7 +541,10 @@
         function handleFileUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
+            handleFile(file);
+        }
 
+        function handleFile(file) {
             if (!file.type.includes('png')) {
                 alert('Please upload a PNG file.');
                 return;
@@ -541,7 +677,7 @@
             console.log(`Matched ${matchCount} pixels`);
         }
 
-        function downloadImage() {
+        async function downloadImage() {
             if (!processedImageData) {
                 alert('Please process an image first.');
                 return;
@@ -556,6 +692,25 @@
                 finalFilename += '.png';
             }
 
+            // Try to save to selected directory if File System Access API is supported
+            if (supportsFileSystemAccess && selectedDirectoryHandle) {
+                try {
+                    const fileHandle = await selectedDirectoryHandle.getFileHandle(finalFilename, { create: true });
+                    const writable = await fileHandle.createWritable();
+                    
+                    canvas.toBlob(async (blob) => {
+                        await writable.write(blob);
+                        await writable.close();
+                        alert(`Image saved to ${selectedDirectoryHandle.name}/${finalFilename}`);
+                    });
+                    return;
+                } catch (err) {
+                    console.error('Error saving to directory:', err);
+                    alert('Error saving to selected directory. Falling back to default download.');
+                }
+            }
+
+            // Fallback to regular download
             const link = document.createElement('a');
             link.download = finalFilename;
             link.href = canvas.toDataURL('image/png');
@@ -581,6 +736,8 @@
             document.getElementById('outputCanvas').style.display = 'none';
             document.querySelector('.upload-area').style.display = 'flex';
             document.getElementById('outputPlaceholder').style.display = 'block';
+            document.getElementById('directoryPath').value = '';
+            selectedDirectoryHandle = null;
             originalImageData = null;
             processedImageData = null;
         }
