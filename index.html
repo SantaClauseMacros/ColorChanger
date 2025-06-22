@@ -61,9 +61,15 @@
             background: white;
         }
         
-        .upload-area:hover {
+        .upload-area:hover:not(.drag-over) {
             border-color: #007bff;
             background: #f8f9ff;
+        }
+        
+        .upload-area.drag-over {
+            border-color: #007bff;
+            background: #f0f7ff;
+            transform: scale(1.02);
         }
         
         .upload-text {
@@ -338,6 +344,14 @@
         document.getElementById('toleranceInput').addEventListener('input', updateToleranceFromInput);
         document.getElementById('edgeRadius').addEventListener('input', updateRadiusValue);
 
+        // Setup drag and drop
+        const uploadArea = document.querySelector('.upload-area');
+        
+        uploadArea.addEventListener('dragover', handleDragOver);
+        uploadArea.addEventListener('dragenter', handleDragEnter);
+        uploadArea.addEventListener('dragleave', handleDragLeave);
+        uploadArea.addEventListener('drop', handleDrop);
+
         function updateFromColorText() {
             document.getElementById('fromColorText').value = document.getElementById('fromColor').value;
             if (originalImageData) processImage();
@@ -558,7 +572,6 @@
             document.getElementById('outputCanvas').style.display = 'none';
             document.querySelector('.upload-area').style.display = 'flex';
             document.getElementById('outputPlaceholder').style.display = 'block';
-            document.getElementById('filename').value = 'color-replaced';
             originalImageData = null;
             processedImageData = null;
         }
