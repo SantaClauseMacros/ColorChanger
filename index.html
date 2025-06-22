@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PNG Color Replacer</title>
+    <title>PNG Color & Gradient Replacer</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -104,6 +104,46 @@
             color: #333;
         }
         
+        .mode-selector {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .mode-selector h4 {
+            margin-bottom: 15px;
+            color: #555;
+            font-weight: normal;
+        }
+        
+        .mode-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .mode-btn {
+            padding: 10px 20px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        
+        .mode-btn.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        
+        .mode-btn:hover:not(.active) {
+            border-color: #007bff;
+            background: #f8f9ff;
+        }
+        
         .control-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -149,6 +189,43 @@
             border-radius: 4px;
             font-family: monospace;
             width: 80px;
+        }
+        
+        .gradient-preview {
+            width: 100%;
+            height: 40px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        
+        .direction-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            margin-top: 10px;
+        }
+        
+        .direction-btn {
+            padding: 8px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        
+        .direction-btn.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        
+        .direction-btn:hover:not(.active) {
+            background: #f8f9ff;
+            border-color: #007bff;
         }
         
         .slider-group {
@@ -311,6 +388,10 @@
             color: #155724;
             text-align: center;
         }
+
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
@@ -327,7 +408,7 @@
             </div>
             
             <div class="panel">
-                <h3>🎯 Output PNG (With New Colors)</h3>
+                <h3>🎯 Output PNG (With New Colors/Gradients)</h3>
                 <div id="outputPlaceholder" style="color: #999; text-align: center;">
                     <div style="font-size: 40px;">🖼️</div>
                     <div>Processed image will appear here</div>
@@ -341,18 +422,22 @@
             <div class="auto-indicator">
                 ✨ <strong>Auto Mode:</strong> Changes are applied automatically when you upload an image or adjust settings!
             </div>
+            
+            <div class="mode-selector">
+                <h4>Replacement Mode</h4>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" onclick="setMode('color')" id="colorModeBtn">🎨 Solid Color</button>
+                    <button class="mode-btn" onclick="setMode('gradient')" id="gradientModeBtn">🌈 Gradient</button>
+                </div>
+            </div>
+            
             <div class="control-grid">
                 <div class="control-section">
-                    <h4>From Color and To Color</h4>
+                    <h4>Source Color</h4>
                     <div class="color-group">
-                        <label>Replace this color (from color):</label>
+                        <label>Replace this color:</label>
                         <input type="color" id="fromColor" class="color-input" value="#ff0000">
                         <input type="text" id="fromColorText" class="color-text" value="#ff0000">
-                    </div>
-                    <div class="color-group">
-                        <label>With this color (to color):</label>
-                        <input type="color" id="toColor" class="color-input" value="#ffa500">
-                        <input type="text" id="toColorText" class="color-text" value="#ffa500">
                     </div>
                     <div class="slider-group">
                         <label>Match this % of similar colors:</label>
@@ -360,6 +445,42 @@
                             <input type="range" id="tolerance" class="slider" min="0" max="100" value="20" style="flex: 1;">
                             <input type="number" id="toleranceInput" min="0" max="100" value="20" style="width: 50px; padding: 4px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px;">
                         </div>
+                    </div>
+                </div>
+                
+                <div class="control-section" id="solidColorSection">
+                    <h4>Replacement Color</h4>
+                    <div class="color-group">
+                        <label>With this color:</label>
+                        <input type="color" id="toColor" class="color-input" value="#ffa500">
+                        <input type="text" id="toColorText" class="color-text" value="#ffa500">
+                    </div>
+                </div>
+                
+                <div class="control-section hidden" id="gradientSection">
+                    <h4>Gradient Colors</h4>
+                    <div class="color-group">
+                        <label>Start color:</label>
+                        <input type="color" id="gradientStart" class="color-input" value="#ff0000">
+                        <input type="text" id="gradientStartText" class="color-text" value="#ff0000">
+                    </div>
+                    <div class="color-group">
+                        <label>End color:</label>
+                        <input type="color" id="gradientEnd" class="color-input" value="#0000ff">
+                        <input type="text" id="gradientEndText" class="color-text" value="#0000ff">
+                    </div>
+                    <div class="gradient-preview" id="gradientPreview"></div>
+                    <label>Gradient Direction:</label>
+                    <div class="direction-selector">
+                        <div class="direction-btn" onclick="setDirection('top-left')">↖ Top Left</div>
+                        <div class="direction-btn" onclick="setDirection('top')">↑ Top</div>
+                        <div class="direction-btn" onclick="setDirection('top-right')">↗ Top Right</div>
+                        <div class="direction-btn" onclick="setDirection('left')">← Left</div>
+                        <div class="direction-btn" onclick="setDirection('center')">● Center</div>
+                        <div class="direction-btn" onclick="setDirection('right')">→ Right</div>
+                        <div class="direction-btn" onclick="setDirection('bottom-left')">↙ Bottom Left</div>
+                        <div class="direction-btn active" onclick="setDirection('bottom')">↓ Bottom</div>
+                        <div class="direction-btn" onclick="setDirection('bottom-right')">↘ Bottom Right</div>
                     </div>
                 </div>
                 
@@ -413,6 +534,8 @@
         let originalImageData = null;
         let processedImageData = null;
         let selectedDirectoryHandle = null;
+        let currentMode = 'color';
+        let gradientDirection = 'bottom';
 
         // Setup event listeners - all now trigger auto-processing
         document.getElementById('fileInput').addEventListener('change', handleFileUpload);
@@ -420,6 +543,10 @@
         document.getElementById('toColor').addEventListener('change', updateToColorText);
         document.getElementById('fromColorText').addEventListener('input', updateFromColorPicker);
         document.getElementById('toColorText').addEventListener('input', updateToColorPicker);
+        document.getElementById('gradientStart').addEventListener('change', updateGradientStartText);
+        document.getElementById('gradientEnd').addEventListener('change', updateGradientEndText);
+        document.getElementById('gradientStartText').addEventListener('input', updateGradientStartPicker);
+        document.getElementById('gradientEndText').addEventListener('input', updateGradientEndPicker);
         document.getElementById('tolerance').addEventListener('input', updateToleranceValue);
         document.getElementById('toleranceInput').addEventListener('input', updateToleranceFromInput);
         document.getElementById('edgeRadius').addEventListener('input', updateRadiusValue);
@@ -445,6 +572,76 @@
                 '<strong>Directory Selection Not Supported:</strong> Your browser doesn\'t support directory selection. Files will download to your default Downloads folder.';
             document.querySelector('.directory-btn').disabled = true;
             document.querySelector('.directory-btn').style.opacity = '0.5';
+        }
+
+        // Initialize gradient preview
+        updateGradientPreview();
+
+        function setMode(mode) {
+            currentMode = mode;
+            
+            // Update button states
+            document.getElementById('colorModeBtn').classList.toggle('active', mode === 'color');
+            document.getElementById('gradientModeBtn').classList.toggle('active', mode === 'gradient');
+            
+            // Show/hide sections
+            document.getElementById('solidColorSection').classList.toggle('hidden', mode !== 'color');
+            document.getElementById('gradientSection').classList.toggle('hidden', mode !== 'gradient');
+            
+            autoProcessImage();
+        }
+
+        function setDirection(direction) {
+            gradientDirection = direction;
+            
+            // Update button states
+            document.querySelectorAll('.direction-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            updateGradientPreview();
+            autoProcessImage();
+        }
+
+        function updateGradientPreview() {
+            const preview = document.getElementById('gradientPreview');
+            const startColor = document.getElementById('gradientStart').value;
+            const endColor = document.getElementById('gradientEnd').value;
+            
+            let gradientCSS = '';
+            
+            switch(gradientDirection) {
+                case 'top':
+                    gradientCSS = `linear-gradient(to top, ${startColor}, ${endColor})`;
+                    break;
+                case 'bottom':
+                    gradientCSS = `linear-gradient(to bottom, ${startColor}, ${endColor})`;
+                    break;
+                case 'left':
+                    gradientCSS = `linear-gradient(to left, ${startColor}, ${endColor})`;
+                    break;
+                case 'right':
+                    gradientCSS = `linear-gradient(to right, ${startColor}, ${endColor})`;
+                    break;
+                case 'top-left':
+                    gradientCSS = `linear-gradient(to top left, ${startColor}, ${endColor})`;
+                    break;
+                case 'top-right':
+                    gradientCSS = `linear-gradient(to top right, ${startColor}, ${endColor})`;
+                    break;
+                case 'bottom-left':
+                    gradientCSS = `linear-gradient(to bottom left, ${startColor}, ${endColor})`;
+                    break;
+                case 'bottom-right':
+                    gradientCSS = `linear-gradient(to bottom right, ${startColor}, ${endColor})`;
+                    break;
+                case 'center':
+                    gradientCSS = `radial-gradient(circle, ${startColor}, ${endColor})`;
+                    break;
+            }
+            
+            preview.style.background = gradientCSS;
         }
 
         async function selectDirectory() {
@@ -519,6 +716,36 @@
             }
         }
 
+        function updateGradientStartText() {
+            document.getElementById('gradientStartText').value = document.getElementById('gradientStart').value;
+            updateGradientPreview();
+            autoProcessImage();
+        }
+
+        function updateGradientEndText() {
+            document.getElementById('gradientEndText').value = document.getElementById('gradientEnd').value;
+            updateGradientPreview();
+            autoProcessImage();
+        }
+
+        function updateGradientStartPicker() {
+            const value = document.getElementById('gradientStartText').value;
+            if (/^#[0-9A-F]{6}$/i.test(value)) {
+                document.getElementById('gradientStart').value = value;
+                updateGradientPreview();
+                autoProcessImage();
+            }
+        }
+
+        function updateGradientEndPicker() {
+            const value = document.getElementById('gradientEndText').value;
+            if (/^#[0-9A-F]{6}$/i.test(value)) {
+                document.getElementById('gradientEnd').value = value;
+                updateGradientPreview();
+                autoProcessImage();
+            }
+        }
+
         function updateToleranceValue() {
             const value = document.getElementById('tolerance').value;
             document.getElementById('toleranceInput').value = value;
@@ -589,16 +816,59 @@
             } : null;
         }
 
+        function getGradientColor(x, y, width, height, startColor, endColor, direction) {
+            let progress = 0;
+            
+            switch(direction) {
+                case 'top':
+                    progress = y / height;
+                    break;
+                case 'bottom':
+                    progress = 1 - (y / height);
+                    break;
+                case 'left':
+                    progress = x / width;
+                    break;
+                case 'right':
+                    progress = 1 - (x / width);
+                    break;
+                case 'top-left':
+                    progress = (x + y) / (width + height);
+                    break;
+                case 'top-right':
+                    progress = ((width - x) + y) / (width + height);
+                    break;
+                case 'bottom-left':
+                    progress = (x + (height - y)) / (width + height);
+                    break;
+                case 'bottom-right':
+                    progress = ((width - x) + (height - y)) / (width + height);
+                    break;
+                case 'center':
+                    const centerX = width / 2;
+                    const centerY = height / 2;
+                    const maxDistance = Math.sqrt(centerX * centerX + centerY * centerY);
+                    const distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
+                    progress = distance / maxDistance;
+                    break;
+            }
+            
+            progress = Math.max(0, Math.min(1, progress));
+            
+            return {
+                r: Math.round(startColor.r + (endColor.r - startColor.r) * progress),
+                g: Math.round(startColor.g + (endColor.g - startColor.g) * progress),
+                b: Math.round(startColor.b + (endColor.b - startColor.b) * progress)
+            };
+        }
+
         // Renamed from processImage to autoProcessImage for clarity
         function autoProcessImage() {
             if (!originalImageData) return;
 
             const fromColor = hexToRgb(document.getElementById('fromColor').value);
-            const toColor = hexToRgb(document.getElementById('toColor').value);
             const tolerance = parseFloat(document.getElementById('tolerance').value);
             const preserveShades = document.getElementById('preserveShades').checked;
-
-            const previewMask = false;
 
             const outputCanvas = document.getElementById('outputCanvas');
             const outputCtx = outputCanvas.getContext('2d');
@@ -611,12 +881,31 @@
             const newData = newImageData.data;
 
             let matchCount = 0;
+            const width = originalImageData.width;
+            const height = originalImageData.height;
+
+            // Get replacement colors based on mode
+            let toColor = null;
+            let gradientStartColor = null;
+            let gradientEndColor = null;
+
+            if (currentMode === 'color') {
+                toColor = hexToRgb(document.getElementById('toColor').value);
+            } else {
+                gradientStartColor = hexToRgb(document.getElementById('gradientStart').value);
+                gradientEndColor = hexToRgb(document.getElementById('gradientEnd').value);
+            }
 
             for (let i = 0; i < data.length; i += 4) {
                 const r = data[i];
                 const g = data[i + 1];
                 const b = data[i + 2];
                 const a = data[i + 3];
+
+                // Calculate pixel position
+                const pixelIndex = i / 4;
+                const x = pixelIndex % width;
+                const y = Math.floor(pixelIndex / width);
 
                 // Simple color matching
                 const rDiff = Math.abs(r - fromColor.r);
@@ -629,45 +918,41 @@
 
                 if (isMatch) matchCount++;
 
-                if (previewMask) {
-                    if (isMatch) {
-                        newData[i] = 255;
-                        newData[i + 1] = 255;
-                        newData[i + 2] = 255;
-                        newData[i + 3] = a;
-                    } else {
-                        newData[i] = Math.floor(r * 0.3);
-                        newData[i + 1] = Math.floor(g * 0.3);
-                        newData[i + 2] = Math.floor(b * 0.3);
-                        newData[i + 3] = a;
-                    }
-                } else {
-                    if (isMatch) {
-                        let newR = toColor.r;
-                        let newG = toColor.g;
-                        let newB = toColor.b;
+                if (isMatch) {
+                    let newR, newG, newB;
 
-                        if (preserveShades) {
-                            const origBrightness = (r + g + b) / 3;
-                            const fromBrightness = (fromColor.r + fromColor.g + fromColor.b) / 3;
-                            if (fromBrightness > 0) {
-                                const ratio = origBrightness / fromBrightness;
-                                newR = Math.min(255, Math.max(0, toColor.r * ratio));
-                                newG = Math.min(255, Math.max(0, toColor.g * ratio));
-                                newB = Math.min(255, Math.max(0, toColor.b * ratio));
-                            }
+                    if (currentMode === 'color') {
+                        newR = toColor.r;
+                        newG = toColor.g;
+                        newB = toColor.b;
+                    } else {
+                        // Gradient mode
+                        const gradientColor = getGradientColor(x, y, width, height, gradientStartColor, gradientEndColor, gradientDirection);
+                        newR = gradientColor.r;
+                        newG = gradientColor.g;
+                        newB = gradientColor.b;
+                    }
+
+                    if (preserveShades) {
+                        const origBrightness = (r + g + b) / 3;
+                        const fromBrightness = (fromColor.r + fromColor.g + fromColor.b) / 3;
+                        if (fromBrightness > 0) {
+                            const ratio = origBrightness / fromBrightness;
+                            newR = Math.min(255, Math.max(0, newR * ratio));
+                            newG = Math.min(255, Math.max(0, newG * ratio));
+                            newB = Math.min(255, Math.max(0, newB * ratio));
                         }
-
-                        newData[i] = Math.round(newR);
-                        newData[i + 1] = Math.round(newG);
-                        newData[i + 2] = Math.round(newB);
-                        newData[i + 3] = a;
-                    } else {
-                        newData[i] = r;
-                        newData[i + 1] = g;
-                        newData[i + 2] = b;
-                        newData[i + 3] = a;
                     }
+
+                    newData[i] = Math.round(newR);
+                    newData[i + 1] = Math.round(newG);
+                    newData[i + 2] = Math.round(newB);
+                    newData[i + 3] = a;
+                } else {
+                    newData[i] = r;
+                    newData[i + 1] = g;
+                    newData[i + 2] = b;
+                    newData[i + 3] = a;
                 }
             }
 
@@ -742,6 +1027,10 @@
             selectedDirectoryHandle = null;
             originalImageData = null;
             processedImageData = null;
+            
+            // Reset to default mode
+            setMode('color');
+            setDirection('bottom');
         }
     </script>
 </body>
