@@ -881,7 +881,7 @@
             } : null;
         }
 
-        function getGradientColor(x, y, width, height, startColor, endColor, direction, position) {
+function getGradientColor(x, y, width, height, startColor, endColor, direction, position) {
     let progress = 0;
     
     switch(direction) {
@@ -920,14 +920,14 @@
     
     progress = Math.max(0, Math.min(1, progress));
     
-    // Apply gradient position adjustment
+    // Apply gradient position adjustment with stronger start color
     const positionRatio = position / 100; // Convert 0-100 to 0-1
     if (progress < positionRatio) {
-        // In the "start color" zone
-        progress = progress / positionRatio * 0.5; // Map to 0-0.5
+        // In the "start color" zone - make start color stronger by using a curve
+        progress = Math.pow(progress / positionRatio, 1.5) * 0.4; // Map to 0-0.4 with curve
     } else {
         // In the "end color" zone
-        progress = 0.5 + ((progress - positionRatio) / (1 - positionRatio)) * 0.5; // Map to 0.5-1
+        progress = 0.4 + ((progress - positionRatio) / (1 - positionRatio)) * 0.6; // Map to 0.4-1
     }
     
     return {
