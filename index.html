@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+const preserveShades = document.getElementById('preserveShades').checked;<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -357,23 +357,19 @@
                 <div class="control-section">
                     <h4>Refine Edges</h4>
                     <div class="checkbox-group">
+                        <input type="checkbox" id="preserveShades" checked>
+                        <label>Preserve Color Shades</label>
+                    </div>
+                    <div class="info-box">
+                        If you turn this option on, then all pixels during the color-change operation will preserve their shades (which is the lightness and darkness of each pixel).
+                    </div>
+                    <div class="checkbox-group">
                         <input type="checkbox" id="smoothEdges">
                         <label>Make Edges Smooth</label>
                     </div>
                     <div class="slider-group">
                         <label>Edge refinement radius: <span id="radiusValue">1</span></label>
                         <input type="range" id="edgeRadius" class="slider" min="0" max="5" value="1">
-                    </div>
-                </div>
-                
-                <div class="control-section">
-                    <h4>Preview Mask</h4>
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="previewMask">
-                        <label>Preview From Color</label>
-                    </div>
-                    <div class="info-box">
-                        Preview which pixels are matched by the "from" color and similarity filter.
                     </div>
                 </div>
             </div>
@@ -589,7 +585,7 @@
             const toColor = hexToRgb(document.getElementById('toColor').value);
             const tolerance = parseFloat(document.getElementById('tolerance').value);
 
-            const previewMask = document.getElementById('previewMask').checked;
+            const previewMask = false;
 
             const outputCanvas = document.getElementById('outputCanvas');
             const outputCtx = outputCanvas.getContext('2d');
@@ -634,9 +630,24 @@
                     }
                 } else {
                     if (isMatch) {
-                        newData[i] = toColor.r;
-                        newData[i + 1] = toColor.g;
-                        newData[i + 2] = toColor.b;
+                        let newR = toColor.r;
+                        let newG = toColor.g;
+                        let newB = toColor.b;
+
+                        if (preserveShades) {
+                            const origBrightness = (r + g + b) / 3;
+                            const fromBrightness = (fromColor.r + fromColor.g + fromColor.b) / 3;
+                            if (fromBrightness > 0) {
+                                const ratio = origBrightness / fromBrightness;
+                                newR = Math.min(255, Math.max(0, toColor.r * ratio));
+                                newG = Math.min(255, Math.max(0, toColor.g * ratio));
+                                newB = Math.min(255, Math.max(0, toColor.b * ratio));
+                            }
+                        }
+
+                        newData[i] = Math.round(newR);
+                        newData[i + 1] = Math.round(newG);
+                        newData[i + 2] = Math.round(newB);
                         newData[i + 3] = a;
                     } else {
                         newData[i] = r;
@@ -680,7 +691,6 @@
                     canvas.toBlob(async (blob) => {
                         await writable.write(blob);
                         await writable.close();
-                        alert(`Image saved to ${selectedDirectoryHandle.name}/${finalFilename}`);
                     });
                     return;
                 } catch (err) {
