@@ -665,49 +665,49 @@
         }
 
         function updateGradientPreview() {
-            const preview = document.getElementById('gradientPreview');
-            const startColor = document.getElementById('gradientStart').value;
-            const endColor = document.getElementById('gradientEnd').value;
-            const position = gradientPosition;
-            
-            let gradientCSS = '';
-            
-            switch(gradientDirection) {
-                case 'top':
-                    gradientCSS = `linear-gradient(to top, ${startColor} 0%, ${startColor} ${100-position}%, ${endColor} 100%)`;
-                    break;
-                case 'bottom':
-                    gradientCSS = `linear-gradient(to bottom, ${startColor} 0%, ${startColor} ${position}%, ${endColor} 100%)`;
-                    break;
-                case 'left':
-                    gradientCSS = `linear-gradient(to left, ${startColor} 0%, ${startColor} ${100-position}%, ${endColor} 100%)`;
-                    break;
-                case 'right':
-                    gradientCSS = `linear-gradient(to right, ${startColor} 0%, ${startColor} ${position}%, ${endColor} 100%)`;
-                    break;
-                case 'top-left':
-                    gradientCSS = `linear-gradient(to top left, ${startColor} 0%, ${startColor} ${position}%, ${endColor} 100%)`;
-                    break;
-                case 'top-right':
-                    gradientCSS = `linear-gradient(to top right, ${startColor} 0%, ${startColor} ${position}%, ${endColor} 100%)`;
-                    break;
-                case 'bottom-left':
-                    gradientCSS = `linear-gradient(to bottom left, ${startColor} 0%, ${startColor} ${position}%, ${endColor} 100%)`;
-                    break;
-                case 'bottom-right':
-                    gradientCSS = `linear-gradient(to bottom right, ${startColor} 0%, ${startColor} ${position}%, ${endColor} 100%)`;
-                    break;
-                case 'center':
-                    gradientCSS = `radial-gradient(circle, ${startColor} 0%, ${startColor} ${position}%, ${endColor} 100%)`;
-                    break;
-            }
-            
-            preview.style.background = gradientCSS;
-            
-            // Update position indicator
-            const indicator = document.getElementById('positionIndicator');
-            indicator.style.left = position + '%';
-        }
+    const preview = document.getElementById('gradientPreview');
+    const startColor = document.getElementById('gradientStart').value;
+    const endColor = document.getElementById('gradientEnd').value;
+    const position = gradientPosition;
+    
+    let gradientCSS = '';
+    
+    switch(gradientDirection) {
+        case 'top':
+            gradientCSS = `linear-gradient(to top, ${startColor} 0%, ${endColor} 100%)`;
+            break;
+        case 'bottom':
+            gradientCSS = `linear-gradient(to bottom, ${startColor} 0%, ${endColor} 100%)`;
+            break;
+        case 'left':
+            gradientCSS = `linear-gradient(to left, ${startColor} 0%, ${endColor} 100%)`;
+            break;
+        case 'right':
+            gradientCSS = `linear-gradient(to right, ${startColor} 0%, ${endColor} 100%)`;
+            break;
+        case 'top-left':
+            gradientCSS = `linear-gradient(to top left, ${startColor} 0%, ${endColor} 100%)`;
+            break;
+        case 'top-right':
+            gradientCSS = `linear-gradient(to top right, ${startColor} 0%, ${endColor} 100%)`;
+            break;
+        case 'bottom-left':
+            gradientCSS = `linear-gradient(to bottom left, ${startColor} 0%, ${endColor} 100%)`;
+            break;
+        case 'bottom-right':
+            gradientCSS = `linear-gradient(to bottom right, ${startColor} 0%, ${endColor} 100%)`;
+            break;
+        case 'center':
+            gradientCSS = `radial-gradient(circle, ${startColor} 0%, ${endColor} 100%)`;
+            break;
+    }
+    
+    preview.style.background = gradientCSS;
+    
+    // Update position indicator
+    const indicator = document.getElementById('positionIndicator');
+    indicator.style.left = position + '%';
+}
 
         async function selectDirectory() {
             if (!supportsFileSystemAccess) {
@@ -881,51 +881,61 @@
             } : null;
         }
 
-        function getGradientColor(x, y, width, height, startColor, endColor, direction) {
-            let progress = 0;
-            
-            switch(direction) {
-                case 'top':
-                    progress = y / height;
-                    break;
-                case 'bottom':
-                    progress = 1 - (y / height);
-                    break;
-                case 'left':
-                    progress = x / width;
-                    break;
-                case 'right':
-                    progress = 1 - (x / width);
-                    break;
-                case 'top-left':
-                    progress = (x + y) / (width + height);
-                    break;
-                case 'top-right':
-                    progress = ((width - x) + y) / (width + height);
-                    break;
-                case 'bottom-left':
-                    progress = (x + (height - y)) / (width + height);
-                    break;
-                case 'bottom-right':
-                    progress = ((width - x) + (height - y)) / (width + height);
-                    break;
-                case 'center':
-                    const centerX = width / 2;
-                    const centerY = height / 2;
-                    const maxDistance = Math.sqrt(centerX * centerX + centerY * centerY);
-                    const distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
-                    progress = distance / maxDistance;
-                    break;
-            }
-            
-            progress = Math.max(0, Math.min(1, progress));
-            
-            return {
-                r: Math.round(startColor.r + (endColor.r - startColor.r) * progress),
-                g: Math.round(startColor.g + (endColor.g - startColor.g) * progress),
-                b: Math.round(startColor.b + (endColor.b - startColor.b) * progress)
-            };
-        }
+        function getGradientColor(x, y, width, height, startColor, endColor, direction, position) {
+    let progress = 0;
+    
+    switch(direction) {
+        case 'top':
+            progress = y / height;
+            break;
+        case 'bottom':
+            progress = 1 - (y / height);
+            break;
+        case 'left':
+            progress = x / width;
+            break;
+        case 'right':
+            progress = 1 - (x / width);
+            break;
+        case 'top-left':
+            progress = (x + y) / (width + height);
+            break;
+        case 'top-right':
+            progress = ((width - x) + y) / (width + height);
+            break;
+        case 'bottom-left':
+            progress = (x + (height - y)) / (width + height);
+            break;
+        case 'bottom-right':
+            progress = ((width - x) + (height - y)) / (width + height);
+            break;
+        case 'center':
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const maxDistance = Math.sqrt(centerX * centerX + centerY * centerY);
+            const distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
+            progress = distance / maxDistance;
+            break;
+    }
+    
+    progress = Math.max(0, Math.min(1, progress));
+    
+    // Apply gradient position adjustment
+    const positionRatio = position / 100; // Convert 0-100 to 0-1
+    if (progress < positionRatio) {
+        // In the "start color" zone
+        progress = progress / positionRatio * 0.5; // Map to 0-0.5
+    } else {
+        // In the "end color" zone
+        progress = 0.5 + ((progress - positionRatio) / (1 - positionRatio)) * 0.5; // Map to 0.5-1
+    }
+    
+    return {
+        r: Math.round(startColor.r + (endColor.r - startColor.r) * progress),
+        g: Math.round(startColor.g + (endColor.g - startColor.g) * progress),
+        b: Math.round(startColor.b + (endColor.b - startColor.b) * progress)
+    };
+}
 
         // Renamed from processImage to autoProcessImage for clarity
         function autoProcessImage() {
@@ -992,7 +1002,7 @@
                         newB = toColor.b;
                     } else {
                         // Gradient mode
-                        const gradientColor = getGradientColor(x, y, width, height, gradientStartColor, gradientEndColor, gradientDirection);
+                        const gradientColor = getGradientColor(x, y, width, height, gradientStartColor, gradientEndColor, gradientDirection, gradientPosition);
                         newR = gradientColor.r;
                         newG = gradientColor.g;
                         newB = gradientColor.b;
