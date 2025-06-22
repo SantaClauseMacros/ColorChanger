@@ -1,4 +1,4 @@
-const preserveShades = document.getElementById('preserveShades').checked;<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -277,11 +277,6 @@ const preserveShades = document.getElementById('preserveShades').checked;<!DOCTY
             font-weight: bold;
         }
         
-        .btn-primary {
-            background: #007bff;
-            color: white;
-        }
-        
         .btn-success {
             background: #28a745;
             color: white;
@@ -304,6 +299,17 @@ const preserveShades = document.getElementById('preserveShades').checked;<!DOCTY
             margin-top: 10px;
             font-size: 12px;
             color: #856404;
+        }
+
+        .auto-indicator {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin-bottom: 15px;
+            font-size: 12px;
+            color: #155724;
+            text-align: center;
         }
     </style>
 </head>
@@ -332,6 +338,9 @@ const preserveShades = document.getElementById('preserveShades').checked;<!DOCTY
         
         <div class="controls">
             <h3>🛠️ Tool Options</h3>
+            <div class="auto-indicator">
+                ✨ <strong>Auto Mode:</strong> Changes are applied automatically when you upload an image or adjust settings!
+            </div>
             <div class="control-grid">
                 <div class="control-section">
                     <h4>From Color and To Color</h4>
@@ -393,7 +402,6 @@ const preserveShades = document.getElementById('preserveShades').checked;<!DOCTY
             </div>
             
             <div class="buttons">
-                <button class="btn btn-primary" onclick="processImage()">🎨 Apply Color Change</button>
                 <button class="btn btn-success" onclick="downloadImage()">💾 Download</button>
                 <button class="btn btn-secondary" onclick="copyToClipboard()">📋 Copy</button>
                 <button class="btn btn-secondary" onclick="resetAll()">🔄 Reset</button>
@@ -406,7 +414,7 @@ const preserveShades = document.getElementById('preserveShades').checked;<!DOCTY
         let processedImageData = null;
         let selectedDirectoryHandle = null;
 
-        // Setup event listeners
+        // Setup event listeners - all now trigger auto-processing
         document.getElementById('fileInput').addEventListener('change', handleFileUpload);
         document.getElementById('fromColor').addEventListener('change', updateFromColorText);
         document.getElementById('toColor').addEventListener('change', updateToColorText);
@@ -415,6 +423,8 @@ const preserveShades = document.getElementById('preserveShades').checked;<!DOCTY
         document.getElementById('tolerance').addEventListener('input', updateToleranceValue);
         document.getElementById('toleranceInput').addEventListener('input', updateToleranceFromInput);
         document.getElementById('edgeRadius').addEventListener('input', updateRadiusValue);
+        document.getElementById('preserveShades').addEventListener('change', autoProcessImage);
+        document.getElementById('smoothEdges').addEventListener('change', autoProcessImage);
 
         // Setup drag and drop
         const uploadPanel = document.querySelector('.panel');
@@ -485,19 +495,19 @@ const preserveShades = document.getElementById('preserveShades').checked;<!DOCTY
 
         function updateFromColorText() {
             document.getElementById('fromColorText').value = document.getElementById('fromColor').value;
-            if (originalImageData) processImage();
+            autoProcessImage();
         }
 
         function updateToColorText() {
             document.getElementById('toColorText').value = document.getElementById('toColor').value;
-            if (originalImageData) processImage();
+            autoProcessImage();
         }
 
         function updateFromColorPicker() {
             const value = document.getElementById('fromColorText').value;
             if (/^#[0-9A-F]{6}$/i.test(value)) {
                 document.getElementById('fromColor').value = value;
-                if (originalImageData) processImage();
+                autoProcessImage();
             }
         }
 
@@ -505,26 +515,27 @@ const preserveShades = document.getElementById('preserveShades').checked;<!DOCTY
             const value = document.getElementById('toColorText').value;
             if (/^#[0-9A-F]{6}$/i.test(value)) {
                 document.getElementById('toColor').value = value;
-                if (originalImageData) processImage();
+                autoProcessImage();
             }
         }
 
         function updateToleranceValue() {
             const value = document.getElementById('tolerance').value;
             document.getElementById('toleranceInput').value = value;
-            if (originalImageData) processImage();
+            autoProcessImage();
         }
 
         function updateToleranceFromInput() {
             const value = document.getElementById('toleranceInput').value;
             if (value >= 0 && value <= 100) {
                 document.getElementById('tolerance').value = value;
-                if (originalImageData) processImage();
+                autoProcessImage();
             }
         }
 
         function updateRadiusValue() {
             document.getElementById('radiusValue').textContent = document.getElementById('edgeRadius').value;
+            autoProcessImage();
         }
 
         function handleFileUpload(event) {
@@ -548,7 +559,7 @@ const preserveShades = document.getElementById('preserveShades').checked;<!DOCTY
                 const img = new Image();
                 img.onload = function() {
                     displayInputImage(img);
-                    processImage();
+                    autoProcessImage(); // Auto-process after loading
                 };
                 img.src = e.target.result;
             };
@@ -578,12 +589,14 @@ const preserveShades = document.getElementById('preserveShades').checked;<!DOCTY
             } : null;
         }
 
-        function processImage() {
+        // Renamed from processImage to autoProcessImage for clarity
+        function autoProcessImage() {
             if (!originalImageData) return;
 
             const fromColor = hexToRgb(document.getElementById('fromColor').value);
             const toColor = hexToRgb(document.getElementById('toColor').value);
             const tolerance = parseFloat(document.getElementById('tolerance').value);
+            const preserveShades = document.getElementById('preserveShades').checked;
 
             const previewMask = false;
 
@@ -669,7 +682,7 @@ const preserveShades = document.getElementById('preserveShades').checked;<!DOCTY
 
         async function downloadImage() {
             if (!processedImageData) {
-                alert('Please process an image first.');
+                alert('Please upload an image first.');
                 return;
             }
 
@@ -708,7 +721,7 @@ const preserveShades = document.getElementById('preserveShades').checked;<!DOCTY
 
         function copyToClipboard() {
             if (!processedImageData) {
-                alert('Please process an image first.');
+                alert('Please upload an image first.');
                 return;
             }
             
