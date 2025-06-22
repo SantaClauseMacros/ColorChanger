@@ -103,12 +103,13 @@
             background: white;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         
         .control-section h4 {
             margin-bottom: 15px;
             color: #555;
+            font-weight: normal;
         }
         
         .color-group {
@@ -270,8 +271,11 @@
                         <input type="text" id="toColorText" class="color-text" value="#ffa500">
                     </div>
                     <div class="slider-group">
-                        <label>Match this % of similar colors: <span id="toleranceValue">20</span></label>
-                        <input type="range" id="tolerance" class="slider" min="0" max="100" value="20">
+                        <label>Match this % of similar colors:</label>
+                        <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
+                            <input type="range" id="tolerance" class="slider" min="0" max="100" value="20" style="flex: 1;">
+                            <input type="number" id="toleranceInput" min="0" max="100" value="20" style="width: 50px; padding: 4px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px;">
+                        </div>
                     </div>
                 </div>
                 
@@ -331,6 +335,7 @@
         document.getElementById('fromColorText').addEventListener('input', updateFromColorPicker);
         document.getElementById('toColorText').addEventListener('input', updateToColorPicker);
         document.getElementById('tolerance').addEventListener('input', updateToleranceValue);
+        document.getElementById('toleranceInput').addEventListener('input', updateToleranceFromInput);
         document.getElementById('edgeRadius').addEventListener('input', updateRadiusValue);
 
         function updateFromColorText() {
@@ -360,8 +365,17 @@
         }
 
         function updateToleranceValue() {
-            document.getElementById('toleranceValue').textContent = document.getElementById('tolerance').value;
+            const value = document.getElementById('tolerance').value;
+            document.getElementById('toleranceInput').value = value;
             if (originalImageData) processImage();
+        }
+
+        function updateToleranceFromInput() {
+            const value = document.getElementById('toleranceInput').value;
+            if (value >= 0 && value <= 100) {
+                document.getElementById('tolerance').value = value;
+                if (originalImageData) processImage();
+            }
         }
 
         function updateRadiusValue() {
