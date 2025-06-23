@@ -29,7 +29,7 @@
         .panel {
             flex: 1;
             border: 2px dashed #ccc;
-            margin: 20px;
+            margin: px;
             border-radius: 8px;
             display: flex;
             flex-direction: column;
@@ -42,15 +42,15 @@
         .panel h3 {
             position: absolute;
             top: 15px;
-            left: 20px;
+            left: px;
             color: #666;
             font-size: 16px;
             margin: 0;
         }
         
         .upload-area {
-            width: 200px;
-            height: 200px;
+            width: 0px;
+            height: 0px;
             border: 2px dashed #999;
             border-radius: 8px;
             display: flex;
@@ -473,7 +473,7 @@
                         <label>Match this % of similar colors:</label>
                         <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
                             <input type="range" id="tolerance" class="slider" min="0" max="100" value="20" style="flex: 1;">
-                            <input type="number" id="toleranceInput" min="0" max="100" value="20" style="width: 50px; padding: 4px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px;">
+                            <input type="number" id="toleranceInput" min="0" max="100" value="35" style="width: 50px; padding: 4px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px;">
                         </div>
                     </div>
                 </div>
@@ -504,7 +504,7 @@
                         <label>Gradient Balance:</label>
                         <div class="position-slider-container">
                             <span style="font-size: 12px; color: #666;">Start</span>
-                            <input type="range" id="gradientPosition" class="slider" min="0" max="100" value="50" style="flex: 1;">
+                            <input type="range" id="gradientPosition" class="slider" min="0" max="100" value="60" style="flex: 1;">
                             <span style="font-size: 12px; color: #666;">End</span>
                             <span class="position-value" id="positionValue">50%</span>
                         </div>
@@ -524,8 +524,8 @@
                         <div class="direction-btn" onclick="setDirection('left')">← Left</div>
                         <div class="direction-btn" onclick="setDirection('center')">● Center</div>
                         <div class="direction-btn" onclick="setDirection('right')">→ Right</div>
-                        <div class="direction-btn" onclick="setDirection('bottom-left')">↙ Bottom Left</div>
-                        <div class="direction-btn active" onclick="setDirection('bottom')">↓ Bottom</div>
+                        <div class="direction-btn active" onclick="setDirection('bottom-left')">↙ Bottom Left</div>
+                        <div class="direction-btn" onclick="setDirection('bottom')">↓ Bottom</div>
                         <div class="direction-btn" onclick="setDirection('bottom-right')">↘ Bottom Right</div>
                     </div>
                 </div>
@@ -540,7 +540,7 @@
                         If you turn this option on, then all pixels during the color-change operation will preserve their shades (which is the lightness and darkness of each pixel).
                     </div>
                     <div class="checkbox-group">
-                        <input type="checkbox" id="smoothEdges">
+                        <input type="checkbox" id="smoothEdges" checked>
                         <label>Make Edges Smooth</label>
                     </div>
                     <div class="slider-group">
