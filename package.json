@@ -1,16 +1,16 @@
 
 {
-  "name": "color-replacer-app",
+  "name": "png-color-replacer",
   "version": "1.0.0",
-  "description": "Advanced color replacement tool with authentication",
-  "main": "index.html",
-  "dependencies": {
-    "@supabase/supabase-js": "^2.39.0"
-  },
+  "description": "PNG Color & Gradient Replacer Pro",
   "scripts": {
-    "build": "echo 'No build step required'",
-    "start": "echo 'Static site - no server needed'"
+    "dev": "netlify dev",
+    "build": "echo 'No build step required'"
   },
-  "author": "",
-  "license": "MIT"
+  "dependencies": {
+    "@supabase/supabase-js": "^2.38.0"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.0.0"
+  }
 }

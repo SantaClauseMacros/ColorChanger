@@ -1,4 +1,3 @@
-
 const { createClient } = require('@supabase/supabase-js');
 
 const supabase = createClient(
@@ -16,16 +15,14 @@ exports.handler = async (event, context) => {
     };
   }
 
-  const userId = user.sub;
-  const method = event.httpMethod;
-
   try {
-    if (method === 'GET') {
+    if (event.httpMethod === 'GET') {
       // Get user presets
       const { data: presets, error } = await supabase
         .from('presets')
         .select('*')
-        .eq('user_id', userId);
+        .eq('user_id', user.sub)
+        .order('created', { ascending: false });
 
       if (error) throw error;
 
@@ -33,40 +30,38 @@ exports.handler = async (event, context) => {
         statusCode: 200,
         body: JSON.stringify({ presets })
       };
-    }
 
-    if (method === 'POST') {
+    } else if (event.httpMethod === 'POST') {
       // Save new preset
       const { name, data } = JSON.parse(event.body);
-      
+
       const { data: preset, error } = await supabase
         .from('presets')
-        .insert({
-          user_id: userId,
-          name,
+        .insert([{
+          user_id: user.sub,
+          name: name,
           preset_data: data,
           created: new Date().toISOString()
-        })
+        }])
         .select()
         .single();
 
       if (error) throw error;
 
       return {
-        statusCode: 201,
-        body: JSON.stringify(preset)
+        statusCode: 200,
+        body: JSON.stringify({ preset })
       };
-    }
 
-    if (method === 'DELETE') {
+    } else if (event.httpMethod === 'DELETE') {
       // Delete preset
-      const { id } = JSON.parse(event.body);
-      
+      const presetId = event.queryStringParameters.id;
+
       const { error } = await supabase
         .from('presets')
         .delete()
-        .eq('id', id)
-        .eq('user_id', userId);
+        .eq('id', presetId)
+        .eq('user_id', user.sub);
 
       if (error) throw error;
 
