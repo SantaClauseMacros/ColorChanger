@@ -1,0 +1,16 @@
+
+{
+  "name": "color-replacer-app",
+  "version": "1.0.0",
+  "description": "Advanced color replacement tool with authentication",
+  "main": "index.html",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  },
+  "scripts": {
+    "build": "echo 'No build step required'",
+    "start": "echo 'Static site - no server needed'"
+  },
+  "author": "",
+  "license": "MIT"
+}

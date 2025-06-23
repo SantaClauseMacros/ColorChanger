@@ -8,6 +8,6 @@
     X-Frame-Options = "DENY"
     X-XSS-Protection = "1; mode=block"
 
-[template.environment]
-  SUPABASE_URL = "Your Supabase project URL"
-  SUPABASE_ANON_KEY = "Your Supabase anon key"
+
+
+

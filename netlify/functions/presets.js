@@ -8,7 +8,7 @@ const supabase = createClient(
 
 exports.handler = async (event, context) => {
   const { user } = context.clientContext;
-  
+
   if (!user) {
     return {
       statusCode: 401,
@@ -69,20 +69,6 @@ exports.handler = async (event, context) => {
         .eq('user_id', userId);
 
       if (error) throw error;
-
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ success: true })
-      };
-    }
-
-    if (method === 'DELETE') {
-      // Delete preset
-      const { id } = JSON.parse(event.body);
-      
-      await client.query(
-        q.Delete(q.Ref(q.Collection('presets'), id))
-      );
 
       return {
         statusCode: 200,
