@@ -1272,7 +1272,10 @@
                     currentUser = user;
                     updateAuthUI();
                     loadUserPresets();
-                    netlifyIdentity.close(); // Close the modal after login
+                    // Close the modal after a short delay to ensure user data is loaded
+                    setTimeout(() => {
+                        netlifyIdentity.close();
+                    }, 500);
                 });
 
                 netlifyIdentity.on('logout', () => {
@@ -1337,7 +1340,17 @@
             if (currentUser) {
                 loginBtn.style.display = 'none';
                 userInfo.style.display = 'flex';
-                userName.textContent = currentUser.user_metadata?.full_name || currentUser.email || 'User';
+                
+                // Better name extraction logic
+                let displayName = 'User';
+                if (currentUser.user_metadata?.full_name) {
+                    displayName = currentUser.user_metadata.full_name;
+                } else if (currentUser.email) {
+                    // Extract name from email (before @)
+                    displayName = currentUser.email.split('@')[0];
+                }
+                
+                userName.textContent = displayName;
                 
                 // Add a welcome animation
                 userInfo.style.animation = 'slideInRight 0.5s ease-out';
@@ -1572,6 +1585,7 @@
             const settings = getCurrentSettings();
             
             try {
+                // Try backend first
                 const response = await fetch('/.netlify/functions/presets', {
                     method: 'POST',
                     headers: {
@@ -1586,10 +1600,24 @@
                     document.getElementById('preset-name').value = '';
                     loadUserPresets();
                 } else {
-                    throw new Error('Failed to save preset');
+                    throw new Error('Backend not available');
                 }
             } catch (error) {
-                alert('Error saving preset: ' + error.message);
+                // Fallback to localStorage
+                console.log('Backend not available, using localStorage fallback');
+                const userPresets = JSON.parse(localStorage.getItem(`presets_${currentUser.id}`) || '[]');
+                const newPreset = {
+                    id: Date.now().toString(),
+                    name: name,
+                    data: settings,
+                    created: new Date().toISOString()
+                };
+                userPresets.push(newPreset);
+                localStorage.setItem(`presets_${currentUser.id}`, JSON.stringify(userPresets));
+                
+                alert('Preset saved locally! (Backend database not configured)');
+                document.getElementById('preset-name').value = '';
+                loadUserPresets();
             }
         }
 
@@ -1597,6 +1625,7 @@
             if (!currentUser) return;
             
             try {
+                // Try backend first
                 const response = await fetch('/.netlify/functions/presets', {
                     headers: {
                         'Authorization': `Bearer ${currentUser.token.access_token}`
@@ -1606,10 +1635,15 @@
                 if (response.ok) {
                     const { presets } = await response.json();
                     displayPresets(presets);
+                    return;
                 }
             } catch (error) {
-                console.error('Error loading presets:', error);
+                console.log('Backend not available, loading from localStorage');
             }
+            
+            // Fallback to localStorage
+            const userPresets = JSON.parse(localStorage.getItem(`presets_${currentUser.id}`) || '[]');
+            displayPresets(userPresets);
         }
 
         function displayPresets(presets) {
@@ -1662,6 +1696,39 @@
         }
 
         document.getElementById('save-preset-btn').addEventListener('click', savePreset);
+
+        // Add missing preset functions
+        window.loadPreset = async function(presetId) {
+            const userPresets = JSON.parse(localStorage.getItem(`presets_${currentUser.id}`) || '[]');
+            const preset = userPresets.find(p => p.id === presetId);
+            if (preset) {
+                applySettings(preset.data);
+                autoProcessImage();
+                alert('Preset loaded successfully!');
+            }
+        };
+
+        window.deletePreset = async function(presetId) {
+            if (!confirm('Are you sure you want to delete this preset?')) return;
+            
+            try {
+                // Try backend first
+                await fetch(`/.netlify/functions/presets?id=${presetId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${currentUser.token.access_token}`
+                    }
+                });
+            } catch (error) {
+                // Fallback to localStorage
+                const userPresets = JSON.parse(localStorage.getItem(`presets_${currentUser.id}`) || '[]');
+                const filteredPresets = userPresets.filter(p => p.id !== presetId);
+                localStorage.setItem(`presets_${currentUser.id}`, JSON.stringify(filteredPresets));
+            }
+            
+            loadUserPresets();
+            alert('Preset deleted successfully!');
+        };
 
         function setupColorReplacementListeners() {
             const colorReplacements = document.querySelectorAll('.color-replacement-item');
