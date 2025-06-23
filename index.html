@@ -1849,19 +1849,20 @@
         // Initialize everything when page loads
         document.addEventListener('DOMContentLoaded', function() {
             try {
-                waitForNetlifyIdentity();
+                console.log('Initializing application...');
+                
+                // Setup basic functionality first
+                setupBasicEventListeners();
                 setupZoomPan();
                 updateGradientPreview();
                 
-                // Initialize basic functionality
-                setupBasicEventListeners();
+                // Initialize auth after basic functionality
+                waitForNetlifyIdentity();
                 
-                // Add some cool page load animations
-                document.body.style.opacity = '0';
-                setTimeout(() => {
-                    document.body.style.transition = 'opacity 0.5s ease';
-                    document.body.style.opacity = '1';
-                }, 100);
+                // Show the interface
+                document.body.style.opacity = '1';
+                
+                console.log('Application initialized successfully');
             } catch (error) {
                 console.error('Initialization error:', error);
                 // Fallback: just show the interface
@@ -2135,20 +2136,28 @@
         }
 
         function handleFile(file) {
-            if (!file.type.includes('png')) {
-                alert('Please upload a PNG file.');
+            if (!file.type.includes('png') && !file.type.includes('image')) {
+                alert('Please upload an image file (PNG preferred).');
                 return;
             }
 
             const fileName = file.name.replace(/\.[^/.]+$/, "");
-            document.getElementById('filename').value = fileName + "-edited";
+            const filenameInput = document.getElementById('filename');
+            if (filenameInput) {
+                filenameInput.value = fileName + "-edited";
+            }
 
             const reader = new FileReader();
             reader.onload = function(e) {
                 const img = new Image();
                 img.onload = function() {
                     displayInputImage(img);
-                    autoProcessImage();
+                    setTimeout(() => {
+                        autoProcessImage();
+                    }, 100);
+                };
+                img.onerror = function() {
+                    alert('Error loading image. Please try a different file.');
                 };
                 img.src = e.target.result;
             };
@@ -2156,17 +2165,39 @@
         }
 
         function displayInputImage(img) {
-            const canvas = document.getElementById('inputCanvas');
-            const ctx = canvas.getContext('2d');
-            
-            canvas.width = img.width;
-            canvas.height = img.height;
-            ctx.drawImage(img, 0, 0);
-            
-            originalImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            
-            canvas.style.display = 'block';
-            canvas.parentElement.querySelector('.upload-area').style.display = 'none';
+            try {
+                const canvas = document.getElementById('inputCanvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Set canvas size
+                canvas.width = img.width;
+                canvas.height = img.height;
+                
+                // Clear canvas and draw image
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0);
+                
+                // Store original image data
+                originalImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                
+                // Show canvas and hide upload area
+                canvas.style.display = 'block';
+                const uploadArea = canvas.parentElement.querySelector('.upload-area');
+                if (uploadArea) {
+                    uploadArea.style.display = 'none';
+                }
+                
+                // Show zoom controls
+                const zoomControls = canvas.parentElement.querySelector('.zoom-controls');
+                if (zoomControls) {
+                    zoomControls.style.display = 'flex';
+                }
+                
+                console.log('Image loaded successfully:', img.width + 'x' + img.height);
+            } catch (error) {
+                console.error('Error displaying image:', error);
+                alert('Error processing image. Please try again.');
+            }
         }
 
         function hexToRgb(hex) {
@@ -2233,7 +2264,12 @@ function getGradientColor(x, y, width, height, startColor, endColor, direction, 
 
         function autoProcessImage() {
             try {
-                if (!originalImageData) return;
+                if (!originalImageData) {
+                    console.log('No original image data available');
+                    return;
+                }
+
+                console.log('Starting image processing...');
 
                 // Get all color replacements
                 const replacementItems = document.querySelectorAll('.color-replacement-item');
@@ -2265,6 +2301,8 @@ function getGradientColor(x, y, width, height, startColor, endColor, direction, 
                         });
                     }
                 }
+
+                console.log('Found', replacements.length, 'color replacements');
 
             const tolerance = parseFloat(document.getElementById('tolerance').value);
             const preserveShades = document.getElementById('preserveShades').checked;
@@ -2368,6 +2406,10 @@ function getGradientColor(x, y, width, height, startColor, endColor, direction, 
             outputCanvas.style.display = 'block';
 
             console.log(`Matched ${matchCount} pixels`);
+            } catch (error) {
+                console.error('Error processing image:', error);
+                alert('Error processing image. Please try uploading the image again.');
+            }
         }
 
         async function downloadImage() {
