@@ -1191,8 +1191,59 @@
         let selectionArea = null;
         let isEyedropperActive = false;
 
-        // Initialize Netlify Identity
-        netlifyIdentity.init();
+        // Initialize Netlify Identity with better error handling
+        function initAuth() {
+            try {
+                if (typeof netlifyIdentity !== 'undefined') {
+                    netlifyIdentity.init();
+                    
+                    // Set up event listeners immediately
+                    netlifyIdentity.on('init', user => {
+                        console.log('Identity initialized', user);
+                        if (user) {
+                            currentUser = user;
+                            updateAuthUI();
+                            loadUserPresets();
+                        }
+                    });
+
+                    netlifyIdentity.on('login', user => {
+                        console.log('User logged in', user);
+                        currentUser = user;
+                        updateAuthUI();
+                        loadUserPresets();
+                        setTimeout(() => {
+                            netlifyIdentity.close();
+                        }, 500);
+                    });
+
+                    netlifyIdentity.on('logout', () => {
+                        console.log('User logged out');
+                        currentUser = null;
+                        updateAuthUI();
+                        clearPresets();
+                    });
+
+                    netlifyIdentity.on('error', err => {
+                        console.error('Identity error:', err);
+                    });
+
+                    // Check current user immediately
+                    const user = netlifyIdentity.currentUser();
+                    if (user) {
+                        currentUser = user;
+                        updateAuthUI();
+                        loadUserPresets();
+                    }
+                } else {
+                    console.warn('Netlify Identity not loaded');
+                    document.querySelector('.auth-bar').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Auth initialization failed:', error);
+                document.querySelector('.auth-bar').style.display = 'none';
+            }
+        }
 
         document.getElementById('fileInput').addEventListener('change', handleFileUpload);
         document.getElementById('tolerance').addEventListener('input', updateToleranceValue);
@@ -1236,124 +1287,85 @@
             document.querySelector('.directory-btn').style.opacity = '0.5';
         }
 
-        // Initialize Netlify Identity properly
-        function initializeAuth() {
-            try {
-                // Check if netlifyIdentity is available
-                if (typeof netlifyIdentity === 'undefined') {
-                    console.warn('Netlify Identity widget not loaded');
-                    document.querySelector('.auth-bar').style.display = 'none';
-                    return;
-                }
-
-                // Initialize Netlify Identity
-                netlifyIdentity.init();
-                
-                // Get current user immediately
-                const user = netlifyIdentity.currentUser();
-                if (user) {
-                    currentUser = user;
-                    updateAuthUI();
-                    loadUserPresets();
-                }
-                
-                // Set up event listeners
-                netlifyIdentity.on('init', user => {
-                    console.log('Identity initialized', user);
-                    if (user) {
-                        currentUser = user;
-                        updateAuthUI();
-                        loadUserPresets();
-                    }
-                });
-
-                netlifyIdentity.on('login', user => {
-                    console.log('User logged in', user);
-                    currentUser = user;
-                    updateAuthUI();
-                    loadUserPresets();
-                    // Close the modal after a short delay to ensure user data is loaded
-                    setTimeout(() => {
-                        netlifyIdentity.close();
-                    }, 500);
-                });
-
-                netlifyIdentity.on('logout', () => {
-                    console.log('User logged out');
-                    currentUser = null;
-                    updateAuthUI();
-                    clearPresets();
-                });
-
-                netlifyIdentity.on('error', err => {
-                    console.error('Identity error:', err);
-                    alert('Authentication error: ' + err.message);
-                });
-
-                netlifyIdentity.on('signup', user => {
-                    console.log('User signed up:', user);
-                    if (user) {
-                        // If email confirmation is disabled, user should be ready to go
-                        if (user.confirmed_at || !user.email_confirmed_at) {
-                            alert('Account created successfully! You can now use all features.');
-                            currentUser = user;
-                            updateAuthUI();
-                            loadUserPresets();
-                        } else {
-                            // This should only happen if email confirmation is still enabled
-                            alert('Please check your email to confirm your account.');
-                        }
-                    }
-                });
-            } catch (error) {
-                console.warn('Netlify Identity initialization failed:', error);
-                // Hide auth UI if Netlify Identity isn't working
-                document.querySelector('.auth-bar').style.display = 'none';
+        // Wait for Netlify Identity to load, then initialize
+        function waitForNetlifyIdentity() {
+            if (typeof netlifyIdentity !== 'undefined') {
+                initAuth();
+            } else {
+                setTimeout(waitForNetlifyIdentity, 100);
             }
         }
 
-        document.getElementById('login-btn').addEventListener('click', (e) => {
-            e.preventDefault();
-            console.log('Login button clicked');
-            try {
-                netlifyIdentity.open();
-            } catch (error) {
-                console.error('Error opening login modal:', error);
-                alert('Login functionality is currently unavailable. Please try again later.');
+        // Set up login button with proper event delegation
+        document.addEventListener('click', function(e) {
+            if (e.target && e.target.id === 'login-btn') {
+                e.preventDefault();
+                console.log('Login button clicked');
+                try {
+                    if (typeof netlifyIdentity !== 'undefined') {
+                        netlifyIdentity.open();
+                    } else {
+                        alert('Authentication system is still loading. Please try again in a moment.');
+                    }
+                } catch (error) {
+                    console.error('Error opening login modal:', error);
+                    alert('Login functionality is currently unavailable. Please try again later.');
+                }
+            }
+            
+            if (e.target && e.target.id === 'logout-btn') {
+                e.preventDefault();
+                try {
+                    if (typeof netlifyIdentity !== 'undefined') {
+                        netlifyIdentity.logout();
+                    }
+                } catch (error) {
+                    console.error('Error logging out:', error);
+                }
             }
         });
 
-        document.getElementById('logout-btn').addEventListener('click', (e) => {
-            e.preventDefault();
-            try {
-                netlifyIdentity.logout();
-            } catch (error) {
-                console.error('Error logging out:', error);
-            }
-        });
+        
 
         function updateAuthUI() {
             const loginBtn = document.getElementById('login-btn');
             const userInfo = document.getElementById('user-info');
             const userName = document.getElementById('user-name');
 
+            if (!loginBtn || !userInfo || !userName) {
+                console.warn('Auth UI elements not found');
+                return;
+            }
+
             if (currentUser) {
                 loginBtn.style.display = 'none';
                 userInfo.style.display = 'flex';
+                userInfo.style.alignItems = 'center';
+                userInfo.style.gap = '15px';
                 
                 // Better name extraction logic
                 let displayName = 'User';
-                if (currentUser.user_metadata?.full_name) {
-                    displayName = currentUser.user_metadata.full_name;
-                } else if (currentUser.email) {
-                    // Extract name from email (before @)
-                    displayName = currentUser.email.split('@')[0];
+                try {
+                    if (currentUser.user_metadata?.full_name) {
+                        displayName = currentUser.user_metadata.full_name;
+                    } else if (currentUser.email) {
+                        // Extract name from email (before @)
+                        displayName = currentUser.email.split('@')[0];
+                        // Capitalize first letter
+                        displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+                    }
+                } catch (e) {
+                    console.warn('Error extracting user name:', e);
                 }
                 
                 userName.textContent = displayName;
+                userName.style.color = 'white';
+                userName.style.fontWeight = '500';
                 
                 // Add a welcome animation
                 userInfo.style.animation = 'slideInRight 0.5s ease-out';
+                
+                console.log('UI updated for user:', displayName);
             } else {
                 loginBtn.style.display = 'block';
                 userInfo.style.display = 'none';
@@ -1818,7 +1830,7 @@
 
         // Initialize everything when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            initializeAuth();
+            waitForNetlifyIdentity();
             setupZoomPan();
             updateGradientPreview();
             
@@ -1830,8 +1842,8 @@
             }, 100);
         });
         
-        // Initialize immediately as well for faster loading
-        initializeAuth();
+        // Also try to initialize immediately for faster loading
+        setTimeout(waitForNetlifyIdentity, 500);
         setupZoomPan();
         updateGradientPreview();
 
