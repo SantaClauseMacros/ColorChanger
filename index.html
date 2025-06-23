@@ -2150,24 +2150,52 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 const img = new Image();
+                img.crossOrigin = 'anonymous';
                 img.onload = function() {
-                    displayInputImage(img);
-                    setTimeout(() => {
-                        autoProcessImage();
-                    }, 100);
+                    try {
+                        displayInputImage(img);
+                        setTimeout(() => {
+                            autoProcessImage();
+                        }, 100);
+                    } catch (error) {
+                        console.error('Error processing image:', error);
+                        alert('Error processing the image. The file may be corrupted or in an unsupported format.');
+                    }
                 };
-                img.onerror = function() {
-                    alert('Error loading image. Please try a different file.');
+                img.onerror = function(error) {
+                    console.error('Image loading error:', error);
+                    alert('Error loading image. The file may be corrupted or in an unsupported PNG format. Please try a different file.');
                 };
+                
+                // Add timeout to catch hanging loads
+                setTimeout(() => {
+                    if (!img.complete) {
+                        img.src = '';
+                        alert('Image loading timed out. Please try a smaller file or different PNG.');
+                    }
+                }, 10000);
+                
                 img.src = e.target.result;
+            };
+            reader.onerror = function() {
+                alert('Error reading file. Please try again.');
             };
             reader.readAsDataURL(file);
         }
 
         function displayInputImage(img) {
             try {
+                if (!img || !img.width || !img.height) {
+                    throw new Error('Invalid image dimensions');
+                }
+                
                 const canvas = document.getElementById('inputCanvas');
                 const ctx = canvas.getContext('2d');
+                
+                // Check for reasonable image size limits
+                if (img.width > 4000 || img.height > 4000) {
+                    throw new Error('Image too large. Please use an image smaller than 4000x4000 pixels.');
+                }
                 
                 // Set canvas size
                 canvas.width = img.width;
@@ -2179,6 +2207,11 @@
                 
                 // Store original image data
                 originalImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                
+                // Verify we got valid image data
+                if (!originalImageData || !originalImageData.data || originalImageData.data.length === 0) {
+                    throw new Error('Failed to extract image data');
+                }
                 
                 // Show canvas and hide upload area
                 canvas.style.display = 'block';
@@ -2196,7 +2229,14 @@
                 console.log('Image loaded successfully:', img.width + 'x' + img.height);
             } catch (error) {
                 console.error('Error displaying image:', error);
-                alert('Error processing image. Please try again.');
+                alert('Error processing image: ' + error.message + '. Please try a different PNG file.');
+                
+                // Reset to upload state
+                const canvas = document.getElementById('inputCanvas');
+                const uploadArea = canvas.parentElement.querySelector('.upload-area');
+                if (canvas) canvas.style.display = 'none';
+                if (uploadArea) uploadArea.style.display = 'flex';
+                originalImageData = null;
             }
         }
 
