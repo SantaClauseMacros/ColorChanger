@@ -11,7 +11,7 @@
             padding: 20px;
             background-color: #f0f0f0;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -20,12 +20,12 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             overflow: hidden;
         }
-        
+
         .panels {
             display: flex;
             height: 400px;
         }
-        
+
         .panel {
             flex: 1;
             border: 2px dashed #ccc;
@@ -38,7 +38,7 @@
             background: #fafafa;
             position: relative;
         }
-        
+
         .panel h3 {
             position: absolute;
             top: 15px;
@@ -47,7 +47,7 @@
             font-size: 16px;
             margin: 0;
         }
-        
+
         .upload-area {
             width: 200px;
             height: 150px;
@@ -60,50 +60,50 @@
             cursor: pointer;
             background: white;
         }
-        
+
         .upload-area:hover:not(.drag-over) {
             border-color: #007bff;
             background: #f8f9ff;
         }
-        
+
         .panel.drag-over {
             border-color: #007bff;
             background: #f0f7ff;
         }
-        
+
         .panel.drag-over .upload-area {
             border-color: #007bff;
             background: #e3f2fd;
             transform: scale(1.35);
         }
-        
+
         .upload-text {
             color: #666;
             text-align: center;
             margin-top: 10px;
         }
-        
+
         #fileInput {
             display: none;
         }
-        
+
         canvas {
             max-width: 300px;
             max-height: 300px;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        
+
         .controls {
             padding: 30px;
             background: #f8f9fa;
         }
-        
+
         .controls h3 {
             margin-bottom: 20px;
             color: #333;
         }
-        
+
         .mode-selector {
             background: white;
             padding: 20px;
@@ -111,18 +111,18 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             margin-bottom: 20px;
         }
-        
+
         .mode-selector h4 {
             margin-bottom: 15px;
             color: #555;
             font-weight: normal;
         }
-        
+
         .mode-buttons {
             display: flex;
             gap: 10px;
         }
-        
+
         .mode-btn {
             padding: 10px 20px;
             border: 2px solid #ddd;
@@ -132,48 +132,48 @@
             transition: all 0.2s;
             font-weight: 500;
         }
-        
+
         .mode-btn.active {
             background: #007bff;
             color: white;
             border-color: #007bff;
         }
-        
+
         .mode-btn:hover:not(.active) {
             border-color: #007bff;
             background: #f8f9ff;
         }
-        
+
         .control-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 30px;
         }
-        
+
         .control-section {
             background: white;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-        
+
         .control-section h4 {
             margin-bottom: 15px;
             color: #555;
             font-weight: normal;
         }
-        
+
         .color-group {
             margin-bottom: 15px;
         }
-        
+
         .color-group label {
             display: block;
             margin-bottom: 5px;
             color: #666;
             font-size: 14px;
         }
-        
+
         .color-input {
             width: 40px;
             height: 30px;
@@ -182,7 +182,7 @@
             cursor: pointer;
             margin-right: 10px;
         }
-        
+
         .color-text {
             padding: 6px 10px;
             border: 1px solid #ccc;
@@ -190,7 +190,7 @@
             font-family: monospace;
             width: 80px;
         }
-        
+
         .gradient-preview {
             width: 100%;
             height: 40px;
@@ -199,7 +199,7 @@
             margin-top: 10px;
             position: relative;
         }
-        
+
         .gradient-position-indicator {
             position: absolute;
             top: -5px;
@@ -210,14 +210,14 @@
             pointer-events: none;
             z-index: 35;
         }
-        
+
         .direction-selector {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 5px;
             margin-top: 10px;
         }
-        
+
         .direction-btn {
             padding: 8px;
             border: 1px solid #ddd;
@@ -228,46 +228,46 @@
             font-size: 12px;
             transition: all 0.2s;
         }
-        
+
         .direction-btn.active {
             background: #007bff;
             color: white;
             border-color: #007bff;
         }
-        
+
         .direction-btn:hover:not(.active) {
             background: #f8f9ff;
             border-color: #007bff;
         }
-        
+
         .slider-group {
             margin-bottom: 15px;
         }
-        
+
         .slider-group label {
             display: block;
             margin-bottom: 5px;
             color: #666;
             font-size: 14px;
         }
-        
+
         .slider {
             width: 100%;
             margin-bottom: 10px;
         }
-        
+
         .checkbox-group {
             margin-bottom: 10px;
         }
-        
+
         .checkbox-group input {
             margin-right: 8px;
         }
-        
+
         .checkbox-group label {
             color: #555;
         }
-        
+
         .info-box {
             background: #e3f2fd;
             border: 1px solid #bbdefb;
@@ -277,7 +277,7 @@
             font-size: 12px;
             color: #1565c0;
         }
-        
+
         .save-options {
             background: white;
             border-radius: 8px;
@@ -285,31 +285,31 @@
             padding: 20px;
             margin-bottom: 20px;
         }
-        
+
         .save-options h4 {
             margin-bottom: 15px;
             color: #555;
             font-weight: normal;
         }
-        
+
         .directory-group {
             margin-bottom: 15px;
         }
-        
+
         .directory-group label {
             display: block;
             margin-bottom: 5px;
             color: #666;
             font-size: 14px;
         }
-        
+
         .directory-selector {
             display: flex;
             gap: 10px;
             align-items: center;
             margin-bottom: 10px;
         }
-        
+
         .directory-input {
             flex: 1;
             padding: 8px 12px;
@@ -318,7 +318,7 @@
             font-size: 14px;
             background: #f9f9f9;
         }
-        
+
         .directory-btn {
             padding: 8px 16px;
             background: #6c757d;
@@ -328,22 +328,22 @@
             cursor: pointer;
             font-size: 14px;
         }
-        
+
         .directory-btn:hover {
             background: #5a6268;
         }
-        
+
         .filename-group {
             margin-bottom: 20px;
         }
-        
+
         .filename-group label {
             display: block;
             margin-bottom: 5px;
             color: #666;
             font-size: 14px;
         }
-        
+
         .filename-input {
             padding: 8px 12px;
             border: 1px solid #ccc;
@@ -351,12 +351,12 @@
             width: 100%;
             font-size: 14px;
         }
-        
+
         .buttons {
             text-align: center;
             margin-top: 20px;
         }
-        
+
         .btn {
             padding: 10px 20px;
             margin: 5px;
@@ -365,21 +365,21 @@
             cursor: pointer;
             font-weight: bold;
         }
-        
+
         .btn-success {
             background: #28a745;
             color: white;
         }
-        
+
         .btn-secondary {
             background: #6c757d;
             color: white;
         }
-        
+
         .btn:hover {
             opacity: 0.9;
         }
-        
+
         .browser-note {
             background: #fff3cd;
             border: 1px solid #ffeaa7;
@@ -436,7 +436,7 @@
                 <input type="file" id="fileInput" accept=".png">
                 <canvas id="inputCanvas" style="display: none;"></canvas>
             </div>
-            
+
             <div class="panel">
                 <h3>🎯 Output PNG</h3>
                 <div id="outputPlaceholder" style="color: #999; text-align: center;">
@@ -446,13 +446,13 @@
                 <canvas id="outputCanvas" style="display: none;"></canvas>
             </div>
         </div>
-        
+
         <div class="controls">
             <h3>🛠️ Tool Options</h3>
             <div class="auto-indicator">
                 ✨ <strong>Auto Mode:</strong> Changes are applied automatically when you upload an image or adjust settings!
             </div>
-            
+
             <div class="mode-selector">
                 <h4>Replacement Mode</h4>
                 <div class="mode-buttons">
@@ -460,7 +460,7 @@
                     <button class="mode-btn" onclick="setMode('gradient')" id="gradientModeBtn">🌈 Gradient</button>
                 </div>
             </div>
-            
+
             <div class="control-grid">
                 <div class="control-section">
                     <h4>Source Color</h4>
@@ -477,7 +477,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="control-section" id="solidColorSection">
                     <h4>Replacement Color</h4>
                     <div class="color-group">
@@ -486,7 +486,7 @@
                         <input type="text" id="toColorText" class="color-text" value="#ffa500">
                     </div>
                 </div>
-                
+
                 <div class="control-section hidden" id="gradientSection">
                     <h4>Gradient Colors</h4>
                     <div class="color-group">
@@ -499,7 +499,7 @@
                         <input type="color" id="gradientEnd" class="color-input" value="#0000ff">
                         <input type="text" id="gradientEndText" class="color-text" value="#0000ff">
                     </div>
-                    
+
                     <div class="gradient-position-control">
                         <label>Gradient Balance:</label>
                         <div class="position-slider-container">
@@ -512,7 +512,7 @@
                             Move left for more start color, right for more end color. 50% = equal balance.
                         </div>
                     </div>
-                    
+
                     <div class="gradient-preview" id="gradientPreview">
                         <div class="gradient-position-indicator" id="positionIndicator"></div>
                     </div>
@@ -529,7 +529,7 @@
                         <div class="direction-btn" onclick="setDirection('bottom-right')">↘ Bottom Right</div>
                     </div>
                 </div>
-                
+
                 <div class="control-section">
                     <h4>Refine Edges</h4>
                     <div class="checkbox-group">
@@ -549,7 +549,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="save-options">
                 <h4>💾 Save Options</h4>
                 <div class="directory-group">
@@ -567,7 +567,7 @@
                     <input type="text" id="filename" class="filename-input" value="color-replaced" placeholder="Enter filename (without .png)">
                 </div>
             </div>
-            
+
             <div class="buttons">
                 <button class="btn btn-success" onclick="downloadImage()">💾 Download</button>
                 <button class="btn btn-secondary" onclick="copyToClipboard()">📋 Copy</button>
@@ -601,12 +601,12 @@
         document.getElementById('smoothEdges').addEventListener('change', autoProcessImage);
 
         const uploadPanel = document.querySelector('.panel');
-        
+
         uploadPanel.addEventListener('dragover', handleDragOver);
         uploadPanel.addEventListener('dragenter', handleDragEnter);
         uploadPanel.addEventListener('dragleave', handleDragLeave);
         uploadPanel.addEventListener('drop', handleDrop);
-        
+
         document.addEventListener('dragover', (e) => e.preventDefault());
         document.addEventListener('drop', (e) => e.preventDefault());
 
@@ -622,24 +622,24 @@
 
         function setMode(mode) {
             currentMode = mode;
-            
+
             document.getElementById('colorModeBtn').classList.toggle('active', mode === 'color');
             document.getElementById('gradientModeBtn').classList.toggle('active', mode === 'gradient');
-            
+
             document.getElementById('solidColorSection').classList.toggle('hidden', mode !== 'color');
             document.getElementById('gradientSection').classList.toggle('hidden', mode !== 'gradient');
-            
+
             autoProcessImage();
         }
 
         function setDirection(direction) {
             gradientDirection = direction;
-            
+
             document.querySelectorAll('.direction-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             event.target.classList.add('active');
-            
+
             updateGradientPreview();
             autoProcessImage();
         }
@@ -647,10 +647,10 @@
         function updateGradientPosition() {
             gradientPosition = parseInt(document.getElementById('gradientPosition').value);
             document.getElementById('positionValue').textContent = gradientPosition + '%';
-            
+
             const indicator = document.getElementById('positionIndicator');
             indicator.style.left = gradientPosition + '%';
-            
+
             updateGradientPreview();
             autoProcessImage();
         }
@@ -660,9 +660,9 @@
     const startColor = document.getElementById('gradientStart').value;
     const endColor = document.getElementById('gradientEnd').value;
     const position = gradientPosition;
-    
+
     let gradientCSS = '';
-    
+
     switch(gradientDirection) {
         case 'top':
             gradientCSS = `linear-gradient(to top, ${startColor} 0%, ${endColor} 100%)`;
@@ -692,9 +692,9 @@
             gradientCSS = `radial-gradient(circle, ${startColor} 0%, ${endColor} 100%)`;
             break;
     }
-    
+
     preview.style.background = gradientCSS;
-    
+
     const indicator = document.getElementById('positionIndicator');
     indicator.style.left = position + '%';
 }
@@ -732,7 +732,7 @@
         function handleDrop(e) {
             e.preventDefault();
             e.currentTarget.classList.remove('drag-over');
-            
+
             const files = e.dataTransfer.files;
             if (files.length > 0) {
                 const file = files[0];
@@ -849,13 +849,13 @@
         function displayInputImage(img) {
             const canvas = document.getElementById('inputCanvas');
             const ctx = canvas.getContext('2d');
-            
+
             canvas.width = img.width;
             canvas.height = img.height;
             ctx.drawImage(img, 0, 0);
-            
+
             originalImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            
+
             canvas.style.display = 'block';
             canvas.parentElement.querySelector('.upload-area').style.display = 'none';
         }
@@ -871,7 +871,7 @@
 
 function getGradientColor(x, y, width, height, startColor, endColor, direction, position) {
     let progress = 0;
-    
+
     switch(direction) {
         case 'top':
             progress = y / height;
@@ -905,16 +905,16 @@ function getGradientColor(x, y, width, height, startColor, endColor, direction, 
             progress = distance / maxDistance;
             break;
     }
-    
+
     progress = Math.max(0, Math.min(1, progress));
-    
+
     const positionRatio = position / 100;
     if (progress < positionRatio) {
         progress = Math.pow(progress / positionRatio, 1.5) * 0.4;
     } else {
         progress = 0.4 + ((progress - positionRatio) / (1 - positionRatio)) * 0.6;
     }
-    
+
     return {
         r: Math.round(startColor.r + (endColor.r - startColor.r) * progress),
         g: Math.round(startColor.g + (endColor.g - startColor.g) * progress),
@@ -931,7 +931,7 @@ function getGradientColor(x, y, width, height, startColor, endColor, direction, 
 
             const outputCanvas = document.getElementById('outputCanvas');
             const outputCtx = outputCanvas.getContext('2d');
-            
+
             outputCanvas.width = originalImageData.width;
             outputCanvas.height = originalImageData.height;
 
@@ -1028,7 +1028,7 @@ function getGradientColor(x, y, width, height, startColor, endColor, direction, 
 
             const canvas = document.getElementById('outputCanvas');
             const filename = document.getElementById('filename').value.trim();
-            
+
             let finalFilename = filename || 'color-replaced';
             if (!finalFilename.toLowerCase().endsWith('.png')) {
                 finalFilename += '.png';
@@ -1038,7 +1038,7 @@ function getGradientColor(x, y, width, height, startColor, endColor, direction, 
                 try {
                     const fileHandle = await selectedDirectoryHandle.getFileHandle(finalFilename, { create: true });
                     const writable = await fileHandle.createWritable();
-                    
+
                     canvas.toBlob(async (blob) => {
                         await writable.write(blob);
                         await writable.close();
@@ -1061,7 +1061,7 @@ function getGradientColor(x, y, width, height, startColor, endColor, direction, 
                 alert('Please upload an image first.');
                 return;
             }
-            
+
             const canvas = document.getElementById('outputCanvas');
             canvas.toBlob(blob => {
                 navigator.clipboard.write([new ClipboardItem({'image/png': blob})]);
@@ -1079,7 +1079,7 @@ function getGradientColor(x, y, width, height, startColor, endColor, direction, 
             selectedDirectoryHandle = null;
             originalImageData = null;
             processedImageData = null;
-            
+
             setMode('color');
             setDirection('bottom');
         }
