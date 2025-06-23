@@ -1286,6 +1286,22 @@
                     console.error('Identity error:', err);
                     alert('Authentication error: ' + err.message);
                 });
+
+                netlifyIdentity.on('signup', user => {
+                    console.log('User signed up:', user);
+                    if (user) {
+                        // If email confirmation is disabled, user should be ready to go
+                        if (user.confirmed_at || !user.email_confirmed_at) {
+                            alert('Account created successfully! You can now use all features.');
+                            currentUser = user;
+                            updateAuthUI();
+                            loadUserPresets();
+                        } else {
+                            // This should only happen if email confirmation is still enabled
+                            alert('Please check your email to confirm your account.');
+                        }
+                    }
+                });
             } catch (error) {
                 console.warn('Netlify Identity initialization failed:', error);
                 // Hide auth UI if Netlify Identity isn't working
