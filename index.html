@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PNG Color & Gradient Replacer</title>
+    <title>PNG Color & Gradient Replacer Pro</title>
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -405,6 +406,269 @@
             display: none !important;
         }
 
+        .auth-bar {
+            background: #2c3e50;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .auth-container {
+            margin-left: auto;
+        }
+
+        .auth-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .auth-btn:hover {
+            background: #2980b9;
+        }
+
+        .toolbar {
+            background: #34495e;
+            padding: 10px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tool-group {
+            display: flex;
+            gap: 5px;
+        }
+
+        .tool-btn {
+            padding: 8px 12px;
+            background: #95a5a6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tool-btn.active {
+            background: #e74c3c;
+        }
+
+        .tool-btn:hover {
+            background: #7f8c8d;
+        }
+
+        .image-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .zoom-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            border-radius: 4px;
+            padding: 5px;
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .zoom-controls button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .selection-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            border: 2px dashed #e74c3c;
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        .color-replacement-item {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #f9f9f9;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .eyedropper-trigger {
+            background: #9b59b6;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .remove-replacement {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .gradient-stop {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #f9f9f9;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .remove-stop {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .palette-colors {
+            display: flex;
+            gap: 5px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+
+        .palette-color {
+            width: 30px;
+            height: 30px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .palette-color:hover::after {
+            content: attr(data-color);
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 2px;
+            font-size: 10px;
+            white-space: nowrap;
+        }
+
+        .preset-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .preset-item {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .preset-item:hover {
+            background: #f5f5f5;
+        }
+
+        .preset-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .batch-queue {
+            min-height: 200px;
+            border: 2px dashed #ddd;
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 10px;
+        }
+
+        .batch-placeholder {
+            text-align: center;
+            color: #999;
+            font-style: italic;
+        }
+
+        .batch-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            background: white;
+        }
+
+        .batch-progress {
+            width: 100px;
+            height: 6px;
+            background: #ddd;
+            border-radius: 3px;
+            margin: 0 10px;
+        }
+
+        .batch-progress-fill {
+            height: 100%;
+            background: #28a745;
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+
+        .preview-toggle {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .preview-toggle button {
+            background: rgba(0,0,0,0.7);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
         .gradient-position-control {
             margin-top: 15px;
         }
@@ -425,25 +689,81 @@
     </style>
 </head>
 <body>
+    <div class="auth-bar">
+        <div class="auth-container">
+            <div id="auth-status">
+                <button id="login-btn" class="auth-btn">🔐 Login</button>
+                <div id="user-info" style="display: none;">
+                    <span id="user-name"></span>
+                    <button id="logout-btn" class="auth-btn">Logout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
+        <div class="toolbar">
+            <div class="tool-group">
+                <button id="color-picker-btn" class="tool-btn active" title="Color Picker">🎯</button>
+                <button id="zoom-btn" class="tool-btn" title="Zoom/Pan">🔍</button>
+                <button id="selection-btn" class="tool-btn" title="Selection Tool">✂️</button>
+                <button id="eyedropper-btn" class="tool-btn" title="Eyedropper">💧</button>
+            </div>
+            <div class="tool-group">
+                <button id="undo-btn" class="tool-btn" title="Undo">↩️</button>
+                <button id="redo-btn" class="tool-btn" title="Redo">↪️</button>
+            </div>
+            <div class="tool-group">
+                <button id="preset-save-btn" class="tool-btn" title="Save Preset">💾</button>
+                <button id="preset-load-btn" class="tool-btn" title="Load Preset">📁</button>
+                <button id="batch-btn" class="tool-btn" title="Batch Process">📁</button>
+            </div>
+        </div>
+        
         <div class="panels">
             <div class="panel">
                 <h3>📥 Input PNG</h3>
-                <div class="upload-area" onclick="document.getElementById('fileInput').click()">
-                    <div style="font-size: 40px;">📁</div>
-                    <div class="upload-text">Click to upload PNG</div>
+                <div class="image-container">
+                    <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                        <div style="font-size: 40px;">📁</div>
+                        <div class="upload-text">Click to upload PNG or drop multiple files</div>
+                    </div>
+                    <input type="file" id="fileInput" accept=".png" multiple>
+                    <canvas id="inputCanvas" style="display: none;"></canvas>
+                    <div class="zoom-controls" style="display: none;">
+                        <button id="zoom-in">🔍+</button>
+                        <button id="zoom-out">🔍-</button>
+                        <button id="zoom-fit">📏</button>
+                        <span id="zoom-level">100%</span>
+                    </div>
+                    <div class="selection-overlay" id="selection-overlay" style="display: none;"></div>
                 </div>
-                <input type="file" id="fileInput" accept=".png">
-                <canvas id="inputCanvas" style="display: none;"></canvas>
             </div>
             
             <div class="panel">
                 <h3>🎯 Output PNG</h3>
-                <div id="outputPlaceholder" style="color: #999; text-align: center;">
-                    <div style="font-size: 40px;">🖼️</div>
-                    <div>Processed image will appear here</div>
+                <div class="image-container">
+                    <div id="outputPlaceholder" style="color: #999; text-align: center;">
+                        <div style="font-size: 40px;">🖼️</div>
+                        <div>Processed image will appear here</div>
+                    </div>
+                    <canvas id="outputCanvas" style="display: none;"></canvas>
+                    <div class="preview-toggle" style="display: none;">
+                        <button id="before-after-btn">👁️ Before/After</button>
+                        <button id="split-view-btn">⚡ Split View</button>
+                    </div>
                 </div>
-                <canvas id="outputCanvas" style="display: none;"></canvas>
+            </div>
+            
+            <div class="panel" id="batch-panel" style="display: none;">
+                <h3>📁 Batch Processing</h3>
+                <div class="batch-queue" id="batch-queue">
+                    <div class="batch-placeholder">Drop multiple images here for batch processing</div>
+                </div>
+                <div class="batch-controls">
+                    <button id="batch-process-btn" class="btn btn-success">Process All</button>
+                    <button id="batch-download-btn" class="btn btn-secondary">Download All</button>
+                </div>
             </div>
         </div>
         
@@ -463,14 +783,33 @@
             
             <div class="control-grid">
                 <div class="control-section">
-                    <h4>Source Color</h4>
-                    <div class="color-group">
-                        <label>Replace this color:</label>
-                        <input type="color" id="fromColor" class="color-input" value="#ff0000">
-                        <input type="text" id="fromColorText" class="color-text" value="#ff0000">
+                    <h4>Color Replacement</h4>
+                    <div class="color-palette" id="extracted-palette" style="display: none;">
+                        <label>🎭 Extracted Colors:</label>
+                        <div class="palette-colors" id="palette-colors"></div>
+                        <button id="extract-palette-btn" class="btn btn-secondary">Extract Palette</button>
                     </div>
+                    
+                    <div id="color-replacements">
+                        <div class="color-replacement-item">
+                            <div class="color-group">
+                                <label>From:</label>
+                                <input type="color" class="from-color color-input" value="#ff0000">
+                                <input type="text" class="from-color-text color-text" value="#ff0000">
+                                <button class="eyedropper-trigger" title="Pick from image">💧</button>
+                            </div>
+                            <div class="color-group">
+                                <label>To:</label>
+                                <input type="color" class="to-color color-input" value="#ffa500">
+                                <input type="text" class="to-color-text color-text" value="#ffa500">
+                            </div>
+                            <button class="remove-replacement" style="display: none;">❌</button>
+                        </div>
+                    </div>
+                    <button id="add-replacement-btn" class="btn btn-secondary">➕ Add Color Pair</button>
+                    
                     <div class="slider-group">
-                        <label>Match this % of similar colors:</label>
+                        <label>Match tolerance:</label>
                         <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
                             <input type="range" id="tolerance" class="slider" min="0" max="100" value="20" style="flex: 1;">
                             <input type="number" id="toleranceInput" min="0" max="100" value="35" style="width: 50px; padding: 4px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px;">
@@ -488,17 +827,29 @@
                 </div>
                 
                 <div class="control-section hidden" id="gradientSection">
-                    <h4>Gradient Colors</h4>
-                    <div class="color-group">
-                        <label>Start color:</label>
-                        <input type="color" id="gradientStart" class="color-input" value="#ff0000">
-                        <input type="text" id="gradientStartText" class="color-text" value="#ff0000">
+                    <h4>🌈 Multi-Stop Gradient</h4>
+                    <div id="gradient-stops">
+                        <div class="gradient-stop" data-position="0">
+                            <label>Stop 1 (0%):</label>
+                            <input type="color" class="gradient-color color-input" value="#ff0000">
+                            <input type="text" class="gradient-color-text color-text" value="#ff0000">
+                            <input type="range" class="stop-position" min="0" max="100" value="0" disabled>
+                        </div>
+                        <div class="gradient-stop" data-position="50">
+                            <label>Stop 2 (50%):</label>
+                            <input type="color" class="gradient-color color-input" value="#00ff00">
+                            <input type="text" class="gradient-color-text color-text" value="#00ff00">
+                            <input type="range" class="stop-position" min="0" max="100" value="50">
+                            <button class="remove-stop">❌</button>
+                        </div>
+                        <div class="gradient-stop" data-position="100">
+                            <label>Stop 3 (100%):</label>
+                            <input type="color" class="gradient-color color-input" value="#0000ff">
+                            <input type="text" class="gradient-color-text color-text" value="#0000ff">
+                            <input type="range" class="stop-position" min="0" max="100" value="100" disabled>
+                        </div>
                     </div>
-                    <div class="color-group">
-                        <label>End color:</label>
-                        <input type="color" id="gradientEnd" class="color-input" value="#0000ff">
-                        <input type="text" id="gradientEndText" class="color-text" value="#0000ff">
-                    </div>
+                    <button id="add-gradient-stop" class="btn btn-secondary">➕ Add Stop</button>
                     
                     <div class="gradient-position-control">
                         <label>Gradient Balance:</label>
@@ -550,6 +901,15 @@
                 </div>
             </div>
             
+            <div class="preset-options" style="display: none;" id="preset-panel">
+                <h4>💾 Preset Management</h4>
+                <div class="preset-list" id="preset-list"></div>
+                <div class="preset-save-form">
+                    <input type="text" id="preset-name" placeholder="Enter preset name" class="preset-input">
+                    <button id="save-preset-btn" class="btn btn-success">Save Current Settings</button>
+                </div>
+            </div>
+            
             <div class="save-options">
                 <h4>💾 Save Options</h4>
                 <div class="directory-group">
@@ -577,12 +937,29 @@
     </div>
 
     <script>
+        // Core variables
         let originalImageData = null;
         let processedImageData = null;
         let selectedDirectoryHandle = null;
         let currentMode = 'color';
         let gradientDirection = 'bottom-left';
         let gradientPosition = 60;
+        let currentUser = null;
+        let currentTool = 'color-picker';
+        let zoomLevel = 1;
+        let panX = 0, panY = 0;
+        let isDragging = false;
+        let dragStart = { x: 0, y: 0 };
+        let undoStack = [];
+        let redoStack = [];
+        let colorReplacements = [];
+        let gradientStops = [];
+        let batchQueue = [];
+        let selectionArea = null;
+        let isEyedropperActive = false;
+
+        // Initialize Netlify Identity
+        netlifyIdentity.init();
 
         document.getElementById('fileInput').addEventListener('change', handleFileUpload);
         document.getElementById('fromColor').addEventListener('change', updateFromColorText);
@@ -618,6 +995,359 @@
             document.querySelector('.directory-btn').style.opacity = '0.5';
         }
 
+        // Authentication handlers
+        netlifyIdentity.on('init', user => {
+            if (user) {
+                currentUser = user;
+                updateAuthUI();
+                loadUserPresets();
+            }
+        });
+
+        netlifyIdentity.on('login', user => {
+            currentUser = user;
+            updateAuthUI();
+            loadUserPresets();
+        });
+
+        netlifyIdentity.on('logout', () => {
+            currentUser = null;
+            updateAuthUI();
+        });
+
+        document.getElementById('login-btn').addEventListener('click', () => {
+            netlifyIdentity.open();
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            netlifyIdentity.logout();
+        });
+
+        function updateAuthUI() {
+            const loginBtn = document.getElementById('login-btn');
+            const userInfo = document.getElementById('user-info');
+            const userName = document.getElementById('user-name');
+
+            if (currentUser) {
+                loginBtn.style.display = 'none';
+                userInfo.style.display = 'flex';
+                userName.textContent = currentUser.user_metadata?.full_name || currentUser.email;
+            } else {
+                loginBtn.style.display = 'block';
+                userInfo.style.display = 'none';
+            }
+        }
+
+        // Tool management
+        document.querySelectorAll('.tool-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                currentTool = e.target.id.replace('-btn', '');
+                handleToolChange();
+            });
+        });
+
+        function handleToolChange() {
+            // Reset states
+            isEyedropperActive = false;
+            
+            switch(currentTool) {
+                case 'eyedropper':
+                    isEyedropperActive = true;
+                    break;
+                case 'batch':
+                    document.getElementById('batch-panel').style.display = 'block';
+                    break;
+                case 'preset-save':
+                case 'preset-load':
+                    document.getElementById('preset-panel').style.display = 'block';
+                    break;
+                default:
+                    document.getElementById('batch-panel').style.display = 'none';
+                    document.getElementById('preset-panel').style.display = 'none';
+            }
+        }
+
+        // Zoom and pan functionality
+        function setupZoomPan() {
+            const canvas = document.getElementById('inputCanvas');
+            
+            canvas.addEventListener('wheel', (e) => {
+                if (currentTool === 'zoom') {
+                    e.preventDefault();
+                    const delta = e.deltaY > 0 ? 0.9 : 1.1;
+                    zoomLevel = Math.max(0.1, Math.min(5, zoomLevel * delta));
+                    updateCanvasTransform();
+                    document.getElementById('zoom-level').textContent = Math.round(zoomLevel * 100) + '%';
+                }
+            });
+
+            canvas.addEventListener('mousedown', (e) => {
+                if (currentTool === 'zoom') {
+                    isDragging = true;
+                    dragStart = { x: e.clientX - panX, y: e.clientY - panY };
+                } else if (isEyedropperActive) {
+                    pickColorFromCanvas(e);
+                }
+            });
+
+            canvas.addEventListener('mousemove', (e) => {
+                if (isDragging && currentTool === 'zoom') {
+                    panX = e.clientX - dragStart.x;
+                    panY = e.clientY - dragStart.y;
+                    updateCanvasTransform();
+                }
+            });
+
+            canvas.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+        }
+
+        function updateCanvasTransform() {
+            const canvas = document.getElementById('inputCanvas');
+            canvas.style.transform = `translate(${panX}px, ${panY}px) scale(${zoomLevel})`;
+        }
+
+        function pickColorFromCanvas(e) {
+            const canvas = document.getElementById('inputCanvas');
+            const ctx = canvas.getContext('2d');
+            const rect = canvas.getBoundingClientRect();
+            const x = Math.floor((e.clientX - rect.left) / zoomLevel);
+            const y = Math.floor((e.clientY - rect.top) / zoomLevel);
+            
+            const imageData = ctx.getImageData(x, y, 1, 1);
+            const [r, g, b] = imageData.data;
+            const hex = '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+            
+            // Set the picked color to the active color input
+            const activeReplacement = document.querySelector('.color-replacement-item:last-child');
+            const fromColorInput = activeReplacement.querySelector('.from-color');
+            const fromColorText = activeReplacement.querySelector('.from-color-text');
+            
+            fromColorInput.value = hex;
+            fromColorText.value = hex;
+            
+            isEyedropperActive = false;
+            autoProcessImage();
+        }
+
+        // Undo/Redo system
+        function pushToUndoStack() {
+            if (processedImageData) {
+                undoStack.push({
+                    imageData: new ImageData(
+                        new Uint8ClampedArray(processedImageData.data),
+                        processedImageData.width,
+                        processedImageData.height
+                    ),
+                    settings: getCurrentSettings()
+                });
+                redoStack = []; // Clear redo stack
+                
+                if (undoStack.length > 20) {
+                    undoStack.shift(); // Limit undo stack size
+                }
+            }
+        }
+
+        function undo() {
+            if (undoStack.length > 0) {
+                const current = {
+                    imageData: processedImageData,
+                    settings: getCurrentSettings()
+                };
+                redoStack.push(current);
+                
+                const previous = undoStack.pop();
+                processedImageData = previous.imageData;
+                applySettings(previous.settings);
+                
+                const outputCanvas = document.getElementById('outputCanvas');
+                const outputCtx = outputCanvas.getContext('2d');
+                outputCanvas.width = processedImageData.width;
+                outputCanvas.height = processedImageData.height;
+                outputCtx.putImageData(processedImageData, 0, 0);
+            }
+        }
+
+        function redo() {
+            if (redoStack.length > 0) {
+                pushToUndoStack();
+                
+                const next = redoStack.pop();
+                processedImageData = next.imageData;
+                applySettings(next.settings);
+                
+                const outputCanvas = document.getElementById('outputCanvas');
+                const outputCtx = outputCanvas.getContext('2d');
+                outputCanvas.width = processedImageData.width;
+                outputCanvas.height = processedImageData.height;
+                outputCtx.putImageData(processedImageData, 0, 0);
+            }
+        }
+
+        document.getElementById('undo-btn').addEventListener('click', undo);
+        document.getElementById('redo-btn').addEventListener('click', redo);
+
+        // Palette extraction
+        function extractPalette() {
+            if (!originalImageData) return;
+            
+            const colors = new Map();
+            const data = originalImageData.data;
+            
+            for (let i = 0; i < data.length; i += 4) {
+                if (data[i + 3] > 128) { // Only count non-transparent pixels
+                    const hex = '#' + [data[i], data[i + 1], data[i + 2]]
+                        .map(x => x.toString(16).padStart(2, '0')).join('');
+                    colors.set(hex, (colors.get(hex) || 0) + 1);
+                }
+            }
+            
+            // Sort by frequency and take top 10
+            const sortedColors = Array.from(colors.entries())
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10);
+            
+            displayPalette(sortedColors);
+        }
+
+        function displayPalette(colors) {
+            const paletteContainer = document.getElementById('palette-colors');
+            paletteContainer.innerHTML = '';
+            
+            colors.forEach(([color, count]) => {
+                const colorDiv = document.createElement('div');
+                colorDiv.className = 'palette-color';
+                colorDiv.style.backgroundColor = color;
+                colorDiv.setAttribute('data-color', color);
+                colorDiv.addEventListener('click', () => {
+                    const activeReplacement = document.querySelector('.color-replacement-item:last-child');
+                    const fromColorInput = activeReplacement.querySelector('.from-color');
+                    const fromColorText = activeReplacement.querySelector('.from-color-text');
+                    fromColorInput.value = color;
+                    fromColorText.value = color;
+                    autoProcessImage();
+                });
+                paletteContainer.appendChild(colorDiv);
+            });
+            
+            document.getElementById('extracted-palette').style.display = 'block';
+        }
+
+        document.getElementById('extract-palette-btn').addEventListener('click', extractPalette);
+
+        // Preset management
+        async function savePreset() {
+            if (!currentUser) {
+                alert('Please log in to save presets');
+                return;
+            }
+            
+            const name = document.getElementById('preset-name').value.trim();
+            if (!name) {
+                alert('Please enter a preset name');
+                return;
+            }
+            
+            const settings = getCurrentSettings();
+            
+            try {
+                const response = await fetch('/.netlify/functions/presets', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentUser.token.access_token}`
+                    },
+                    body: JSON.stringify({ name, data: settings })
+                });
+                
+                if (response.ok) {
+                    alert('Preset saved successfully!');
+                    document.getElementById('preset-name').value = '';
+                    loadUserPresets();
+                } else {
+                    throw new Error('Failed to save preset');
+                }
+            } catch (error) {
+                alert('Error saving preset: ' + error.message);
+            }
+        }
+
+        async function loadUserPresets() {
+            if (!currentUser) return;
+            
+            try {
+                const response = await fetch('/.netlify/functions/presets', {
+                    headers: {
+                        'Authorization': `Bearer ${currentUser.token.access_token}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const { presets } = await response.json();
+                    displayPresets(presets);
+                }
+            } catch (error) {
+                console.error('Error loading presets:', error);
+            }
+        }
+
+        function displayPresets(presets) {
+            const presetList = document.getElementById('preset-list');
+            presetList.innerHTML = '';
+            
+            presets.forEach(preset => {
+                const presetItem = document.createElement('div');
+                presetItem.className = 'preset-item';
+                presetItem.innerHTML = `
+                    <span>${preset.name}</span>
+                    <div>
+                        <button onclick="loadPreset('${preset.id}')" class="btn btn-secondary">Load</button>
+                        <button onclick="deletePreset('${preset.id}')" class="btn btn-danger">Delete</button>
+                    </div>
+                `;
+                presetList.appendChild(presetItem);
+            });
+        }
+
+        function getCurrentSettings() {
+            return {
+                mode: currentMode,
+                tolerance: document.getElementById('tolerance').value,
+                preserveShades: document.getElementById('preserveShades').checked,
+                smoothEdges: document.getElementById('smoothEdges').checked,
+                edgeRadius: document.getElementById('edgeRadius').value,
+                colorReplacements: colorReplacements,
+                gradientStops: gradientStops,
+                gradientDirection: gradientDirection,
+                gradientPosition: gradientPosition
+            };
+        }
+
+        function applySettings(settings) {
+            currentMode = settings.mode;
+            document.getElementById('tolerance').value = settings.tolerance;
+            document.getElementById('preserveShades').checked = settings.preserveShades;
+            document.getElementById('smoothEdges').checked = settings.smoothEdges;
+            document.getElementById('edgeRadius').value = settings.edgeRadius;
+            colorReplacements = settings.colorReplacements || [];
+            gradientStops = settings.gradientStops || [];
+            gradientDirection = settings.gradientDirection;
+            gradientPosition = settings.gradientPosition;
+            
+            // Update UI elements
+            setMode(currentMode);
+            updateGradientPosition();
+            // ... update other UI elements
+        }
+
+        document.getElementById('save-preset-btn').addEventListener('click', savePreset);
+
+        // Initialize
+        setupZoomPan();
         updateGradientPreview();
 
         function setMode(mode) {
