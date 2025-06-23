@@ -4,9 +4,7 @@
   publish = "."
 
 [context.production]
-  environment = { 
-    NODE_VERSION = "18"
-  }
+  environment = { NODE_VERSION = "18" }
 
 [[headers]]
   for = "/*"
