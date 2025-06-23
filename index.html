@@ -3,113 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PNG Color & Gradient Replacer Pro</title>
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <title>PNG Color & Gradient Replacer</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
-        }
-        
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 1;
-        }
-        
-        .floating-shapes {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 2;
-        }
-        
-        .shape {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
-        }
-        
-        .shape:nth-child(1) {
-            width: 80px;
-            height: 80px;
-            top: 10%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-        
-        .shape:nth-child(2) {
-            width: 60px;
-            height: 60px;
-            top: 70%;
-            right: 10%;
-            animation-delay: 2s;
-        }
-        
-        .shape:nth-child(3) {
-            width: 100px;
-            height: 100px;
-            bottom: 20%;
-            left: 20%;
-            animation-delay: 4s;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
+            padding: 20px;
+            background-color: #f0f0f0;
         }
         
         .container {
             max-width: 1200px;
-            margin: 20px auto;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            box-shadow: 
-                0 8px 32px rgba(0, 0, 0, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             overflow: hidden;
-            position: relative;
-            z-index: 10;
-            animation: slideInUp 0.8s ease-out;
-        }
-        
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
         
         .panels {
@@ -119,40 +28,15 @@
         
         .panel {
             flex: 1;
-            border: 2px dashed rgba(255, 255, 255, 0.3);
-            margin: 15px;
-            border-radius: 15px;
+            border: 2px dashed #ccc;
+            margin: 10px;
+            border-radius: 8px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            background: #fafafa;
             position: relative;
-            transition: all 0.3s ease;
-            overflow: hidden;
-        }
-        
-        .panel::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .panel:hover::before {
-            opacity: 1;
-        }
-        
-        .panel:hover {
-            border-color: rgba(255, 255, 255, 0.5);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
         
         .panel h3 {
@@ -212,9 +96,7 @@
         
         .controls {
             padding: 30px;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: #f8f9fa;
         }
         
         .controls h3 {
@@ -476,54 +358,26 @@
         }
         
         .btn {
-            padding: 12px 24px;
-            margin: 8px;
+            padding: 10px 20px;
+            margin: 5px;
             border: none;
-            border-radius: 25px;
+            border-radius: 4px;
             cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-weight: bold;
         }
         
         .btn-success {
-            background: linear-gradient(135deg, #56ab2f, #a8e6cf);
+            background: #28a745;
             color: white;
-            box-shadow: 0 4px 15px rgba(86, 171, 47, 0.4);
         }
         
         .btn-secondary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: #6c757d;
             color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-        
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s;
-        }
-        
-        .btn:hover::before {
-            left: 100%;
         }
         
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-        }
-        
-        .btn:active {
-            transform: translateY(0);
+            opacity: 0.9;
         }
         
         .browser-note {
@@ -551,315 +405,6 @@
             display: none !important;
         }
 
-        .auth-bar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .auth-bar::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-            animation: shimmer 3s infinite;
-        }
-        
-        @keyframes shimmer {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-
-        .auth-container {
-            margin-left: auto;
-        }
-
-        .auth-btn {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .auth-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s;
-        }
-        
-        .auth-btn:hover::before {
-            left: 100%;
-        }
-        
-        .auth-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
-            background: linear-gradient(135deg, #ff5252, #e53e3e);
-        }
-        
-        .auth-btn:active {
-            transform: translateY(0);
-        }
-
-        .toolbar {
-            background: #34495e;
-            padding: 10px;
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .tool-group {
-            display: flex;
-            gap: 5px;
-        }
-
-        .tool-btn {
-            padding: 8px 12px;
-            background: #95a5a6;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .tool-btn.active {
-            background: #e74c3c;
-        }
-
-        .tool-btn:hover {
-            background: #7f8c8d;
-        }
-
-        .image-container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-        }
-
-        .zoom-controls {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(0,0,0,0.7);
-            border-radius: 4px;
-            padding: 5px;
-            display: flex;
-            gap: 5px;
-            align-items: center;
-        }
-
-        .zoom-controls button {
-            background: #3498db;
-            color: white;
-            border: none;
-            padding: 4px 8px;
-            border-radius: 2px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        .selection-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            pointer-events: none;
-            border: 2px dashed #e74c3c;
-            background: rgba(231, 76, 60, 0.1);
-        }
-
-        .color-replacement-item {
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 10px;
-            margin-bottom: 10px;
-            background: #f9f9f9;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .eyedropper-trigger {
-            background: #9b59b6;
-            color: white;
-            border: none;
-            padding: 4px 8px;
-            border-radius: 2px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        .remove-replacement {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            padding: 4px 8px;
-            border-radius: 2px;
-            cursor: pointer;
-        }
-
-        .gradient-stop {
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 10px;
-            margin-bottom: 10px;
-            background: #f9f9f9;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .remove-stop {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            padding: 4px 8px;
-            border-radius: 2px;
-            cursor: pointer;
-        }
-
-        .palette-colors {
-            display: flex;
-            gap: 5px;
-            margin: 10px 0;
-            flex-wrap: wrap;
-        }
-
-        .palette-color {
-            width: 30px;
-            height: 30px;
-            border: 2px solid #ddd;
-            border-radius: 4px;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .palette-color:hover::after {
-            content: attr(data-color);
-            position: absolute;
-            top: -25px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #333;
-            color: white;
-            padding: 2px 6px;
-            border-radius: 2px;
-            font-size: 10px;
-            white-space: nowrap;
-        }
-
-        .preset-list {
-            max-height: 200px;
-            overflow-y: auto;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-bottom: 10px;
-        }
-
-        .preset-item {
-            padding: 8px;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .preset-item:hover {
-            background: #f5f5f5;
-        }
-
-        .preset-input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-bottom: 10px;
-        }
-
-        .batch-queue {
-            min-height: 200px;
-            border: 2px dashed #ddd;
-            border-radius: 4px;
-            padding: 20px;
-            margin-bottom: 10px;
-        }
-
-        .batch-placeholder {
-            text-align: center;
-            color: #999;
-            font-style: italic;
-        }
-
-        .batch-item {
-            display: flex;
-            align-items: center;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-bottom: 5px;
-            background: white;
-        }
-
-        .batch-progress {
-            width: 100px;
-            height: 6px;
-            background: #ddd;
-            border-radius: 3px;
-            margin: 0 10px;
-        }
-
-        .batch-progress-fill {
-            height: 100%;
-            background: #28a745;
-            border-radius: 3px;
-            transition: width 0.3s;
-        }
-
-        .preview-toggle {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            display: flex;
-            gap: 5px;
-        }
-
-        .preview-toggle button {
-            background: rgba(0,0,0,0.7);
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
         .gradient-position-control {
             margin-top: 15px;
         }
@@ -877,138 +422,28 @@
             font-weight: bold;
             color: #007bff;
         }
-        
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        
-        .control-section {
-            background: rgba(255, 255, 255, 0.1) !important;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            color: white;
-        }
-        
-        .control-section h4 {
-            color: rgba(255, 255, 255, 0.9) !important;
-        }
-        
-        .info-box {
-            background: rgba(227, 242, 253, 0.1) !important;
-            border: 1px solid rgba(187, 222, 251, 0.3) !important;
-            color: rgba(255, 255, 255, 0.8) !important;
-        }
-        
-        .mode-selector {
-            background: rgba(255, 255, 255, 0.1) !important;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        }
-        
-        .save-options {
-            background: rgba(255, 255, 255, 0.1) !important;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        }
-        
-        .panel h3 {
-            color: rgba(255, 255, 255, 0.9) !important;
-        }
-        
-        .controls h3 {
-            color: rgba(255, 255, 255, 0.9) !important;
-        }
     </style>
 </head>
 <body>
-    <div class="floating-shapes">
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
-    </div>
-    
-    <div class="auth-bar">
-        <div class="auth-container">
-            <div id="auth-status">
-                <button id="login-btn" class="auth-btn">🔐 Login</button>
-                <div id="user-info" style="display: none;">
-                    <span id="user-name"></span>
-                    <button id="logout-btn" class="auth-btn">Logout</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="container">
-        <div class="toolbar">
-            <div class="tool-group">
-                <button id="color-picker-btn" class="tool-btn active" title="Color Picker">🎯</button>
-                <button id="zoom-btn" class="tool-btn" title="Zoom/Pan">🔍</button>
-                <button id="selection-btn" class="tool-btn" title="Selection Tool">✂️</button>
-                <button id="eyedropper-btn" class="tool-btn" title="Eyedropper">💧</button>
-            </div>
-            <div class="tool-group">
-                <button id="undo-btn" class="tool-btn" title="Undo">↩️</button>
-                <button id="redo-btn" class="tool-btn" title="Redo">↪️</button>
-            </div>
-            <div class="tool-group">
-                <button id="preset-save-btn" class="tool-btn" title="Save Preset">💾</button>
-                <button id="preset-load-btn" class="tool-btn" title="Load Preset">📁</button>
-                <button id="batch-btn" class="tool-btn" title="Batch Process">📁</button>
-            </div>
-        </div>
-        
         <div class="panels">
             <div class="panel">
                 <h3>📥 Input PNG</h3>
-                <div class="image-container">
-                    <div class="upload-area" onclick="document.getElementById('fileInput').click()">
-                        <div style="font-size: 40px;">📁</div>
-                        <div class="upload-text">Click to upload PNG or drop multiple files</div>
-                    </div>
-                    <input type="file" id="fileInput" accept=".png" multiple>
-                    <canvas id="inputCanvas" style="display: none;"></canvas>
-                    <div class="zoom-controls" style="display: none;">
-                        <button id="zoom-in">🔍+</button>
-                        <button id="zoom-out">🔍-</button>
-                        <button id="zoom-fit">📏</button>
-                        <span id="zoom-level">100%</span>
-                    </div>
-                    <div class="selection-overlay" id="selection-overlay" style="display: none;"></div>
+                <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                    <div style="font-size: 40px;">📁</div>
+                    <div class="upload-text">Click to upload PNG</div>
                 </div>
+                <input type="file" id="fileInput" accept=".png">
+                <canvas id="inputCanvas" style="display: none;"></canvas>
             </div>
             
             <div class="panel">
                 <h3>🎯 Output PNG</h3>
-                <div class="image-container">
-                    <div id="outputPlaceholder" style="color: #999; text-align: center;">
-                        <div style="font-size: 40px;">🖼️</div>
-                        <div>Processed image will appear here</div>
-                    </div>
-                    <canvas id="outputCanvas" style="display: none;"></canvas>
-                    <div class="preview-toggle" style="display: none;">
-                        <button id="before-after-btn">👁️ Before/After</button>
-                        <button id="split-view-btn">⚡ Split View</button>
-                    </div>
+                <div id="outputPlaceholder" style="color: #999; text-align: center;">
+                    <div style="font-size: 40px;">🖼️</div>
+                    <div>Processed image will appear here</div>
                 </div>
-            </div>
-            
-            <div class="panel" id="batch-panel" style="display: none;">
-                <h3>📁 Batch Processing</h3>
-                <div class="batch-queue" id="batch-queue">
-                    <div class="batch-placeholder">Drop multiple images here for batch processing</div>
-                </div>
-                <div class="batch-controls">
-                    <button id="batch-process-btn" class="btn btn-success">Process All</button>
-                    <button id="batch-download-btn" class="btn btn-secondary">Download All</button>
-                </div>
+                <canvas id="outputCanvas" style="display: none;"></canvas>
             </div>
         </div>
         
@@ -1028,33 +463,14 @@
             
             <div class="control-grid">
                 <div class="control-section">
-                    <h4>Color Replacement</h4>
-                    <div class="color-palette" id="extracted-palette" style="display: none;">
-                        <label>🎭 Extracted Colors:</label>
-                        <div class="palette-colors" id="palette-colors"></div>
-                        <button id="extract-palette-btn" class="btn btn-secondary">Extract Palette</button>
+                    <h4>Source Color</h4>
+                    <div class="color-group">
+                        <label>Replace this color:</label>
+                        <input type="color" id="fromColor" class="color-input" value="#ff0000">
+                        <input type="text" id="fromColorText" class="color-text" value="#ff0000">
                     </div>
-                    
-                    <div id="color-replacements">
-                        <div class="color-replacement-item">
-                            <div class="color-group">
-                                <label>From:</label>
-                                <input type="color" class="from-color color-input" value="#ff0000">
-                                <input type="text" class="from-color-text color-text" value="#ff0000">
-                                <button class="eyedropper-trigger" title="Pick from image">💧</button>
-                            </div>
-                            <div class="color-group">
-                                <label>To:</label>
-                                <input type="color" class="to-color color-input" value="#ffa500">
-                                <input type="text" class="to-color-text color-text" value="#ffa500">
-                            </div>
-                            <button class="remove-replacement" style="display: none;">❌</button>
-                        </div>
-                    </div>
-                    <button id="add-replacement-btn" class="btn btn-secondary">➕ Add Color Pair</button>
-                    
                     <div class="slider-group">
-                        <label>Match tolerance:</label>
+                        <label>Match this % of similar colors:</label>
                         <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
                             <input type="range" id="tolerance" class="slider" min="0" max="100" value="20" style="flex: 1;">
                             <input type="number" id="toleranceInput" min="0" max="100" value="35" style="width: 50px; padding: 4px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px;">
@@ -1072,14 +488,14 @@
                 </div>
                 
                 <div class="control-section hidden" id="gradientSection">
-                    <h4>🌈 Gradient</h4>
+                    <h4>Gradient Colors</h4>
                     <div class="color-group">
-                        <label>Start Color:</label>
+                        <label>Start color:</label>
                         <input type="color" id="gradientStart" class="color-input" value="#ff0000">
                         <input type="text" id="gradientStartText" class="color-text" value="#ff0000">
                     </div>
                     <div class="color-group">
-                        <label>End Color:</label>
+                        <label>End color:</label>
                         <input type="color" id="gradientEnd" class="color-input" value="#0000ff">
                         <input type="text" id="gradientEndText" class="color-text" value="#0000ff">
                     </div>
@@ -1134,15 +550,6 @@
                 </div>
             </div>
             
-            <div class="preset-options" style="display: none;" id="preset-panel">
-                <h4>💾 Preset Management</h4>
-                <div class="preset-list" id="preset-list"></div>
-                <div class="preset-save-form">
-                    <input type="text" id="preset-name" placeholder="Enter preset name" class="preset-input">
-                    <button id="save-preset-btn" class="btn btn-success">Save Current Settings</button>
-                </div>
-            </div>
-            
             <div class="save-options">
                 <h4>💾 Save Options</h4>
                 <div class="directory-group">
@@ -1170,104 +577,28 @@
     </div>
 
     <script>
-        // Core variables
         let originalImageData = null;
         let processedImageData = null;
         let selectedDirectoryHandle = null;
         let currentMode = 'color';
         let gradientDirection = 'bottom-left';
         let gradientPosition = 60;
-        let currentUser = null;
-        let currentTool = 'color-picker';
-        let zoomLevel = 1;
-        let panX = 0, panY = 0;
-        let isDragging = false;
-        let dragStart = { x: 0, y: 0 };
-        let undoStack = [];
-        let redoStack = [];
-        let colorReplacements = [];
-        let gradientStops = [];
-        let batchQueue = [];
-        let selectionArea = null;
-        let isEyedropperActive = false;
-
-        // Initialize Netlify Identity with better error handling
-        function initAuth() {
-            try {
-                if (typeof netlifyIdentity !== 'undefined') {
-                    netlifyIdentity.init();
-                    
-                    // Set up event listeners immediately
-                    netlifyIdentity.on('init', user => {
-                        console.log('Identity initialized', user);
-                        if (user) {
-                            currentUser = user;
-                            updateAuthUI();
-                            loadUserPresets();
-                        }
-                    });
-
-                    netlifyIdentity.on('login', user => {
-                        console.log('User logged in', user);
-                        currentUser = user;
-                        updateAuthUI();
-                        loadUserPresets();
-                        setTimeout(() => {
-                            netlifyIdentity.close();
-                        }, 500);
-                    });
-
-                    netlifyIdentity.on('logout', () => {
-                        console.log('User logged out');
-                        currentUser = null;
-                        updateAuthUI();
-                        clearPresets();
-                    });
-
-                    netlifyIdentity.on('error', err => {
-                        console.error('Identity error:', err);
-                    });
-
-                    // Check current user immediately
-                    const user = netlifyIdentity.currentUser();
-                    if (user) {
-                        currentUser = user;
-                        updateAuthUI();
-                        loadUserPresets();
-                    }
-                } else {
-                    console.warn('Netlify Identity not loaded');
-                    document.querySelector('.auth-bar').style.display = 'none';
-                }
-            } catch (error) {
-                console.error('Auth initialization failed:', error);
-                document.querySelector('.auth-bar').style.display = 'none';
-            }
-        }
 
         document.getElementById('fileInput').addEventListener('change', handleFileUpload);
+        document.getElementById('fromColor').addEventListener('change', updateFromColorText);
+        document.getElementById('toColor').addEventListener('change', updateToColorText);
+        document.getElementById('fromColorText').addEventListener('input', updateFromColorPicker);
+        document.getElementById('toColorText').addEventListener('input', updateToColorPicker);
+        document.getElementById('gradientStart').addEventListener('change', updateGradientStartText);
+        document.getElementById('gradientEnd').addEventListener('change', updateGradientEndText);
+        document.getElementById('gradientStartText').addEventListener('input', updateGradientStartPicker);
+        document.getElementById('gradientEndText').addEventListener('input', updateGradientEndPicker);
+        document.getElementById('gradientPosition').addEventListener('input', updateGradientPosition);
         document.getElementById('tolerance').addEventListener('input', updateToleranceValue);
         document.getElementById('toleranceInput').addEventListener('input', updateToleranceFromInput);
-        document.getElementById('gradientPosition').addEventListener('input', updateGradientPosition);
         document.getElementById('edgeRadius').addEventListener('input', updateRadiusValue);
         document.getElementById('preserveShades').addEventListener('change', autoProcessImage);
         document.getElementById('smoothEdges').addEventListener('change', autoProcessImage);
-        
-        // Add color replacement event listeners
-        setupColorReplacementListeners();
-        
-        // Add gradient event listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            const gradientStart = document.getElementById('gradientStart');
-            const gradientEnd = document.getElementById('gradientEnd');
-            const gradientStartText = document.getElementById('gradientStartText');
-            const gradientEndText = document.getElementById('gradientEndText');
-            
-            if (gradientStart) gradientStart.addEventListener('change', updateGradientStartText);
-            if (gradientEnd) gradientEnd.addEventListener('change', updateGradientEndText);
-            if (gradientStartText) gradientStartText.addEventListener('input', updateGradientStartPicker);
-            if (gradientEndText) gradientEndText.addEventListener('input', updateGradientEndPicker);
-        });
 
         const uploadPanel = document.querySelector('.panel');
         
@@ -1287,648 +618,7 @@
             document.querySelector('.directory-btn').style.opacity = '0.5';
         }
 
-        // Wait for Netlify Identity to load, then initialize
-        function waitForNetlifyIdentity() {
-            try {
-                if (typeof netlifyIdentity !== 'undefined') {
-                    initAuth();
-                } else {
-                    // Don't wait forever - after 5 seconds, give up
-                    let attempts = 0;
-                    const checkIdentity = () => {
-                        attempts++;
-                        if (typeof netlifyIdentity !== 'undefined') {
-                            initAuth();
-                        } else if (attempts < 50) { // 5 seconds max
-                            setTimeout(checkIdentity, 100);
-                        } else {
-                            console.log('Netlify Identity not available, continuing without auth');
-                            document.querySelector('.auth-bar').style.display = 'none';
-                        }
-                    };
-                    checkIdentity();
-                }
-            } catch (error) {
-                console.error('Error initializing Netlify Identity:', error);
-                document.querySelector('.auth-bar').style.display = 'none';
-            }
-        }
-
-        // Set up login button with proper event delegation
-        document.addEventListener('click', function(e) {
-            if (e.target && e.target.id === 'login-btn') {
-                e.preventDefault();
-                console.log('Login button clicked');
-                try {
-                    if (typeof netlifyIdentity !== 'undefined') {
-                        netlifyIdentity.open();
-                    } else {
-                        alert('Authentication system is still loading. Please try again in a moment.');
-                    }
-                } catch (error) {
-                    console.error('Error opening login modal:', error);
-                    alert('Login functionality is currently unavailable. Please try again later.');
-                }
-            }
-            
-            if (e.target && e.target.id === 'logout-btn') {
-                e.preventDefault();
-                try {
-                    if (typeof netlifyIdentity !== 'undefined') {
-                        netlifyIdentity.logout();
-                    }
-                } catch (error) {
-                    console.error('Error logging out:', error);
-                }
-            }
-        });
-
-        
-
-        function updateAuthUI() {
-            const loginBtn = document.getElementById('login-btn');
-            const userInfo = document.getElementById('user-info');
-            const userName = document.getElementById('user-name');
-
-            if (!loginBtn || !userInfo || !userName) {
-                console.warn('Auth UI elements not found');
-                return;
-            }
-
-            if (currentUser) {
-                loginBtn.style.display = 'none';
-                userInfo.style.display = 'flex';
-                userInfo.style.alignItems = 'center';
-                userInfo.style.gap = '15px';
-                
-                // Better name extraction logic
-                let displayName = 'User';
-                try {
-                    if (currentUser.user_metadata?.full_name) {
-                        displayName = currentUser.user_metadata.full_name;
-                    } else if (currentUser.email) {
-                        // Extract name from email (before @)
-                        displayName = currentUser.email.split('@')[0];
-                        // Capitalize first letter
-                        displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
-                    }
-                } catch (e) {
-                    console.warn('Error extracting user name:', e);
-                }
-                
-                userName.textContent = displayName;
-                userName.style.color = 'white';
-                userName.style.fontWeight = '500';
-                
-                // Add a welcome animation
-                userInfo.style.animation = 'slideInRight 0.5s ease-out';
-                
-                console.log('UI updated for user:', displayName);
-            } else {
-                loginBtn.style.display = 'block';
-                userInfo.style.display = 'none';
-            }
-        }
-        
-        function clearPresets() {
-            const presetList = document.getElementById('preset-list');
-            if (presetList) {
-                presetList.innerHTML = '<div style="color: rgba(255,255,255,0.7); padding: 20px; text-align: center;">Please log in to access your presets</div>';
-            }
-        }
-
-        // Tool management
-        document.querySelectorAll('.tool-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                currentTool = e.target.id.replace('-btn', '');
-                handleToolChange();
-            });
-        });
-
-        function handleToolChange() {
-            // Reset states
-            isEyedropperActive = false;
-            
-            switch(currentTool) {
-                case 'eyedropper':
-                    isEyedropperActive = true;
-                    break;
-                case 'batch':
-                    document.getElementById('batch-panel').style.display = 'block';
-                    break;
-                case 'preset-save':
-                case 'preset-load':
-                    document.getElementById('preset-panel').style.display = 'block';
-                    break;
-                default:
-                    document.getElementById('batch-panel').style.display = 'none';
-                    document.getElementById('preset-panel').style.display = 'none';
-            }
-        }
-
-        // Zoom and pan functionality
-        function setupZoomPan() {
-            const canvas = document.getElementById('inputCanvas');
-            
-            canvas.addEventListener('wheel', (e) => {
-                if (currentTool === 'zoom') {
-                    e.preventDefault();
-                    const delta = e.deltaY > 0 ? 0.9 : 1.1;
-                    zoomLevel = Math.max(0.1, Math.min(5, zoomLevel * delta));
-                    updateCanvasTransform();
-                    document.getElementById('zoom-level').textContent = Math.round(zoomLevel * 100) + '%';
-                }
-            });
-
-            canvas.addEventListener('mousedown', (e) => {
-                if (currentTool === 'zoom') {
-                    isDragging = true;
-                    dragStart = { x: e.clientX - panX, y: e.clientY - panY };
-                } else if (isEyedropperActive) {
-                    pickColorFromCanvas(e);
-                }
-            });
-
-            canvas.addEventListener('mousemove', (e) => {
-                if (isDragging && currentTool === 'zoom') {
-                    panX = e.clientX - dragStart.x;
-                    panY = e.clientY - dragStart.y;
-                    updateCanvasTransform();
-                }
-            });
-
-            canvas.addEventListener('mouseup', () => {
-                isDragging = false;
-            });
-        }
-
-        function updateCanvasTransform() {
-            const canvas = document.getElementById('inputCanvas');
-            canvas.style.transform = `translate(${panX}px, ${panY}px) scale(${zoomLevel})`;
-        }
-
-        function pickColorFromCanvas(e) {
-            const canvas = document.getElementById('inputCanvas');
-            const ctx = canvas.getContext('2d');
-            const rect = canvas.getBoundingClientRect();
-            const x = Math.floor((e.clientX - rect.left) / zoomLevel);
-            const y = Math.floor((e.clientY - rect.top) / zoomLevel);
-            
-            const imageData = ctx.getImageData(x, y, 1, 1);
-            const [r, g, b] = imageData.data;
-            const hex = '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
-            
-            // Set the picked color to the active color input
-            const activeReplacement = document.querySelector('.color-replacement-item:last-child');
-            const fromColorInput = activeReplacement.querySelector('.from-color');
-            const fromColorText = activeReplacement.querySelector('.from-color-text');
-            
-            fromColorInput.value = hex;
-            fromColorText.value = hex;
-            
-            isEyedropperActive = false;
-            autoProcessImage();
-        }
-
-        // Undo/Redo system
-        function pushToUndoStack() {
-            if (processedImageData) {
-                undoStack.push({
-                    imageData: new ImageData(
-                        new Uint8ClampedArray(processedImageData.data),
-                        processedImageData.width,
-                        processedImageData.height
-                    ),
-                    settings: getCurrentSettings()
-                });
-                redoStack = []; // Clear redo stack
-                
-                if (undoStack.length > 20) {
-                    undoStack.shift(); // Limit undo stack size
-                }
-            }
-        }
-
-        function undo() {
-            if (undoStack.length > 0) {
-                const current = {
-                    imageData: processedImageData,
-                    settings: getCurrentSettings()
-                };
-                redoStack.push(current);
-                
-                const previous = undoStack.pop();
-                processedImageData = previous.imageData;
-                applySettings(previous.settings);
-                
-                const outputCanvas = document.getElementById('outputCanvas');
-                const outputCtx = outputCanvas.getContext('2d');
-                outputCanvas.width = processedImageData.width;
-                outputCanvas.height = processedImageData.height;
-                outputCtx.putImageData(processedImageData, 0, 0);
-            }
-        }
-
-        function redo() {
-            if (redoStack.length > 0) {
-                pushToUndoStack();
-                
-                const next = redoStack.pop();
-                processedImageData = next.imageData;
-                applySettings(next.settings);
-                
-                const outputCanvas = document.getElementById('outputCanvas');
-                const outputCtx = outputCanvas.getContext('2d');
-                outputCanvas.width = processedImageData.width;
-                outputCanvas.height = processedImageData.height;
-                outputCtx.putImageData(processedImageData, 0, 0);
-            }
-        }
-
-        document.getElementById('undo-btn').addEventListener('click', undo);
-        document.getElementById('redo-btn').addEventListener('click', redo);
-        document.getElementById('add-replacement-btn').addEventListener('click', addColorReplacement);
-
-        // Palette extraction
-        function extractPalette() {
-            if (!originalImageData) return;
-            
-            const colors = new Map();
-            const data = originalImageData.data;
-            
-            for (let i = 0; i < data.length; i += 4) {
-                if (data[i + 3] > 128) { // Only count non-transparent pixels
-                    const hex = '#' + [data[i], data[i + 1], data[i + 2]]
-                        .map(x => x.toString(16).padStart(2, '0')).join('');
-                    colors.set(hex, (colors.get(hex) || 0) + 1);
-                }
-            }
-            
-            // Sort by frequency and take top 10
-            const sortedColors = Array.from(colors.entries())
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 10);
-            
-            displayPalette(sortedColors);
-        }
-
-        function displayPalette(colors) {
-            const paletteContainer = document.getElementById('palette-colors');
-            paletteContainer.innerHTML = '';
-            
-            colors.forEach(([color, count]) => {
-                const colorDiv = document.createElement('div');
-                colorDiv.className = 'palette-color';
-                colorDiv.style.backgroundColor = color;
-                colorDiv.setAttribute('data-color', color);
-                colorDiv.addEventListener('click', () => {
-                    const activeReplacement = document.querySelector('.color-replacement-item:last-child');
-                    const fromColorInput = activeReplacement.querySelector('.from-color');
-                    const fromColorText = activeReplacement.querySelector('.from-color-text');
-                    fromColorInput.value = color;
-                    fromColorText.value = color;
-                    autoProcessImage();
-                });
-                paletteContainer.appendChild(colorDiv);
-            });
-            
-            document.getElementById('extracted-palette').style.display = 'block';
-        }
-
-        document.getElementById('extract-palette-btn').addEventListener('click', extractPalette);
-
-        // Preset management
-        async function savePreset() {
-            if (!currentUser) {
-                alert('Please log in to save presets');
-                return;
-            }
-            
-            const name = document.getElementById('preset-name').value.trim();
-            if (!name) {
-                alert('Please enter a preset name');
-                return;
-            }
-            
-            const settings = getCurrentSettings();
-            
-            try {
-                // Try backend first
-                const response = await fetch('/.netlify/functions/presets', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${currentUser.token.access_token}`
-                    },
-                    body: JSON.stringify({ name, data: settings })
-                });
-                
-                if (response.ok) {
-                    alert('Preset saved successfully!');
-                    document.getElementById('preset-name').value = '';
-                    loadUserPresets();
-                } else {
-                    throw new Error('Backend not available');
-                }
-            } catch (error) {
-                // Fallback to localStorage
-                console.log('Backend not available, using localStorage fallback');
-                const userPresets = JSON.parse(localStorage.getItem(`presets_${currentUser.id}`) || '[]');
-                const newPreset = {
-                    id: Date.now().toString(),
-                    name: name,
-                    data: settings,
-                    created: new Date().toISOString()
-                };
-                userPresets.push(newPreset);
-                localStorage.setItem(`presets_${currentUser.id}`, JSON.stringify(userPresets));
-                
-                alert('Preset saved locally! (Backend database not configured)');
-                document.getElementById('preset-name').value = '';
-                loadUserPresets();
-            }
-        }
-
-        async function loadUserPresets() {
-            if (!currentUser) return;
-            
-            try {
-                // Try backend first
-                const response = await fetch('/.netlify/functions/presets', {
-                    headers: {
-                        'Authorization': `Bearer ${currentUser.token.access_token}`
-                    }
-                });
-                
-                if (response.ok) {
-                    const { presets } = await response.json();
-                    displayPresets(presets);
-                    return;
-                }
-            } catch (error) {
-                console.log('Backend not available, loading from localStorage');
-            }
-            
-            // Fallback to localStorage
-            const userPresets = JSON.parse(localStorage.getItem(`presets_${currentUser.id}`) || '[]');
-            displayPresets(userPresets);
-        }
-
-        function displayPresets(presets) {
-            const presetList = document.getElementById('preset-list');
-            presetList.innerHTML = '';
-            
-            presets.forEach(preset => {
-                const presetItem = document.createElement('div');
-                presetItem.className = 'preset-item';
-                presetItem.innerHTML = `
-                    <span>${preset.name}</span>
-                    <div>
-                        <button onclick="loadPreset('${preset.id}')" class="btn btn-secondary">Load</button>
-                        <button onclick="deletePreset('${preset.id}')" class="btn btn-danger">Delete</button>
-                    </div>
-                `;
-                presetList.appendChild(presetItem);
-            });
-        }
-
-        function getCurrentSettings() {
-            return {
-                mode: currentMode,
-                tolerance: document.getElementById('tolerance').value,
-                preserveShades: document.getElementById('preserveShades').checked,
-                smoothEdges: document.getElementById('smoothEdges').checked,
-                edgeRadius: document.getElementById('edgeRadius').value,
-                colorReplacements: colorReplacements,
-                gradientStops: gradientStops,
-                gradientDirection: gradientDirection,
-                gradientPosition: gradientPosition
-            };
-        }
-
-        function applySettings(settings) {
-            currentMode = settings.mode;
-            document.getElementById('tolerance').value = settings.tolerance;
-            document.getElementById('preserveShades').checked = settings.preserveShades;
-            document.getElementById('smoothEdges').checked = settings.smoothEdges;
-            document.getElementById('edgeRadius').value = settings.edgeRadius;
-            colorReplacements = settings.colorReplacements || [];
-            gradientStops = settings.gradientStops || [];
-            gradientDirection = settings.gradientDirection;
-            gradientPosition = settings.gradientPosition;
-            
-            // Update UI elements
-            setMode(currentMode);
-            updateGradientPosition();
-            // ... update other UI elements
-        }
-
-        document.getElementById('save-preset-btn').addEventListener('click', savePreset);
-
-        // Add missing preset functions
-        window.loadPreset = async function(presetId) {
-            const userPresets = JSON.parse(localStorage.getItem(`presets_${currentUser.id}`) || '[]');
-            const preset = userPresets.find(p => p.id === presetId);
-            if (preset) {
-                applySettings(preset.data);
-                autoProcessImage();
-                alert('Preset loaded successfully!');
-            }
-        };
-
-        window.deletePreset = async function(presetId) {
-            if (!confirm('Are you sure you want to delete this preset?')) return;
-            
-            try {
-                // Try backend first
-                await fetch(`/.netlify/functions/presets?id=${presetId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': `Bearer ${currentUser.token.access_token}`
-                    }
-                });
-            } catch (error) {
-                // Fallback to localStorage
-                const userPresets = JSON.parse(localStorage.getItem(`presets_${currentUser.id}`) || '[]');
-                const filteredPresets = userPresets.filter(p => p.id !== presetId);
-                localStorage.setItem(`presets_${currentUser.id}`, JSON.stringify(filteredPresets));
-            }
-            
-            loadUserPresets();
-            alert('Preset deleted successfully!');
-        };
-
-        function setupColorReplacementListeners() {
-            const colorReplacements = document.querySelectorAll('.color-replacement-item');
-            colorReplacements.forEach(item => {
-                const fromColor = item.querySelector('.from-color');
-                const fromColorText = item.querySelector('.from-color-text');
-                const toColor = item.querySelector('.to-color');
-                const toColorText = item.querySelector('.to-color-text');
-                const eyedropper = item.querySelector('.eyedropper-trigger');
-                
-                if (fromColor) {
-                    fromColor.addEventListener('change', () => {
-                        fromColorText.value = fromColor.value;
-                        autoProcessImage();
-                    });
-                }
-                
-                if (fromColorText) {
-                    fromColorText.addEventListener('input', () => {
-                        if (/^#[0-9A-F]{6}$/i.test(fromColorText.value)) {
-                            fromColor.value = fromColorText.value;
-                            autoProcessImage();
-                        }
-                    });
-                }
-                
-                if (toColor) {
-                    toColor.addEventListener('change', () => {
-                        toColorText.value = toColor.value;
-                        autoProcessImage();
-                    });
-                }
-                
-                if (toColorText) {
-                    toColorText.addEventListener('input', () => {
-                        if (/^#[0-9A-F]{6}$/i.test(toColorText.value)) {
-                            toColor.value = toColorText.value;
-                            autoProcessImage();
-                        }
-                    });
-                }
-                
-                if (eyedropper) {
-                    eyedropper.addEventListener('click', () => {
-                        isEyedropperActive = true;
-                        currentActiveColorInput = fromColor;
-                        currentActiveColorText = fromColorText;
-                    });
-                }
-            });
-        }
-
-        function addColorReplacement() {
-            const container = document.getElementById('color-replacements');
-            const newItem = document.createElement('div');
-            newItem.className = 'color-replacement-item';
-            newItem.innerHTML = `
-                <div class="color-group">
-                    <label>From:</label>
-                    <input type="color" class="from-color color-input" value="#ff0000">
-                    <input type="text" class="from-color-text color-text" value="#ff0000">
-                    <button class="eyedropper-trigger" title="Pick from image">💧</button>
-                </div>
-                <div class="color-group">
-                    <label>To:</label>
-                    <input type="color" class="to-color color-input" value="#ffa500">
-                    <input type="text" class="to-color-text color-text" value="#ffa500">
-                </div>
-                <button class="remove-replacement">❌</button>
-            `;
-            
-            const removeBtn = newItem.querySelector('.remove-replacement');
-            removeBtn.style.display = 'block';
-            removeBtn.addEventListener('click', () => {
-                newItem.remove();
-                autoProcessImage();
-            });
-            
-            container.appendChild(newItem);
-            setupColorReplacementListeners();
-            autoProcessImage();
-        }
-
-        // Add missing global variables
-        let currentActiveColorInput = null;
-        let currentActiveColorText = null;
-
-        // Initialize everything when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            try {
-                console.log('Initializing application...');
-                
-                // Setup basic functionality first
-                setupBasicEventListeners();
-                setupZoomPan();
-                updateGradientPreview();
-                
-                // Initialize auth after basic functionality
-                waitForNetlifyIdentity();
-                
-                // Show the interface
-                document.body.style.opacity = '1';
-                
-                console.log('Application initialized successfully');
-            } catch (error) {
-                console.error('Initialization error:', error);
-                // Fallback: just show the interface
-                document.body.style.opacity = '1';
-            }
-        });
-
-        function setupBasicEventListeners() {
-            // File input
-            const fileInput = document.getElementById('fileInput');
-            if (fileInput) {
-                fileInput.addEventListener('change', handleFileUpload);
-            }
-
-            // Upload area click
-            const uploadArea = document.querySelector('.upload-area');
-            if (uploadArea) {
-                uploadArea.addEventListener('click', () => {
-                    const fileInput = document.getElementById('fileInput');
-                    if (fileInput) fileInput.click();
-                });
-            }
-
-            // Mode buttons
-            const colorModeBtn = document.getElementById('colorModeBtn');
-            const gradientModeBtn = document.getElementById('gradientModeBtn');
-            
-            if (colorModeBtn) {
-                colorModeBtn.addEventListener('click', () => setMode('color'));
-            }
-            if (gradientModeBtn) {
-                gradientModeBtn.addEventListener('click', () => setMode('gradient'));
-            }
-
-            // Tolerance controls
-            const tolerance = document.getElementById('tolerance');
-            const toleranceInput = document.getElementById('toleranceInput');
-            
-            if (tolerance) {
-                tolerance.addEventListener('input', updateToleranceValue);
-            }
-            if (toleranceInput) {
-                toleranceInput.addEventListener('input', updateToleranceFromInput);
-            }
-
-            // Basic color inputs
-            const colorInputs = document.querySelectorAll('input[type="color"]');
-            colorInputs.forEach(input => {
-                input.addEventListener('change', autoProcessImage);
-            });
-
-            // Basic checkboxes
-            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', autoProcessImage);
-            });
-        }
-        
-        // Also try to initialize immediately for faster loading
-        setTimeout(() => {
-            try {
-                waitForNetlifyIdentity();
-            } catch (error) {
-                console.log('Auth initialization failed, continuing without auth');
-            }
-        }, 500);
+        updateGradientPreview();
 
         function setMode(mode) {
             currentMode = mode;
@@ -2136,108 +826,38 @@
         }
 
         function handleFile(file) {
-            if (!file.type.includes('png') && !file.type.includes('image')) {
-                alert('Please upload an image file (PNG preferred).');
+            if (!file.type.includes('png')) {
+                alert('Please upload a PNG file.');
                 return;
             }
 
             const fileName = file.name.replace(/\.[^/.]+$/, "");
-            const filenameInput = document.getElementById('filename');
-            if (filenameInput) {
-                filenameInput.value = fileName + "-edited";
-            }
+            document.getElementById('filename').value = fileName + "-edited";
 
             const reader = new FileReader();
             reader.onload = function(e) {
                 const img = new Image();
-                img.crossOrigin = 'anonymous';
                 img.onload = function() {
-                    try {
-                        displayInputImage(img);
-                        setTimeout(() => {
-                            autoProcessImage();
-                        }, 100);
-                    } catch (error) {
-                        console.error('Error processing image:', error);
-                        alert('Error processing the image. The file may be corrupted or in an unsupported format.');
-                    }
+                    displayInputImage(img);
+                    autoProcessImage();
                 };
-                img.onerror = function(error) {
-                    console.error('Image loading error:', error);
-                    alert('Error loading image. The file may be corrupted or in an unsupported PNG format. Please try a different file.');
-                };
-                
-                // Add timeout to catch hanging loads
-                setTimeout(() => {
-                    if (!img.complete) {
-                        img.src = '';
-                        alert('Image loading timed out. Please try a smaller file or different PNG.');
-                    }
-                }, 10000);
-                
                 img.src = e.target.result;
-            };
-            reader.onerror = function() {
-                alert('Error reading file. Please try again.');
             };
             reader.readAsDataURL(file);
         }
 
         function displayInputImage(img) {
-            try {
-                if (!img || !img.width || !img.height) {
-                    throw new Error('Invalid image dimensions');
-                }
-                
-                const canvas = document.getElementById('inputCanvas');
-                const ctx = canvas.getContext('2d');
-                
-                // Check for reasonable image size limits
-                if (img.width > 4000 || img.height > 4000) {
-                    throw new Error('Image too large. Please use an image smaller than 4000x4000 pixels.');
-                }
-                
-                // Set canvas size
-                canvas.width = img.width;
-                canvas.height = img.height;
-                
-                // Clear canvas and draw image
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(img, 0, 0);
-                
-                // Store original image data
-                originalImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                
-                // Verify we got valid image data
-                if (!originalImageData || !originalImageData.data || originalImageData.data.length === 0) {
-                    throw new Error('Failed to extract image data');
-                }
-                
-                // Show canvas and hide upload area
-                canvas.style.display = 'block';
-                const uploadArea = canvas.parentElement.querySelector('.upload-area');
-                if (uploadArea) {
-                    uploadArea.style.display = 'none';
-                }
-                
-                // Show zoom controls
-                const zoomControls = canvas.parentElement.querySelector('.zoom-controls');
-                if (zoomControls) {
-                    zoomControls.style.display = 'flex';
-                }
-                
-                console.log('Image loaded successfully:', img.width + 'x' + img.height);
-            } catch (error) {
-                console.error('Error displaying image:', error);
-                alert('Error processing image: ' + error.message + '. Please try a different PNG file.');
-                
-                // Reset to upload state
-                const canvas = document.getElementById('inputCanvas');
-                const uploadArea = canvas.parentElement.querySelector('.upload-area');
-                if (canvas) canvas.style.display = 'none';
-                if (uploadArea) uploadArea.style.display = 'flex';
-                originalImageData = null;
-            }
+            const canvas = document.getElementById('inputCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+            
+            originalImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            
+            canvas.style.display = 'block';
+            canvas.parentElement.querySelector('.upload-area').style.display = 'none';
         }
 
         function hexToRgb(hex) {
@@ -2303,47 +923,9 @@ function getGradientColor(x, y, width, height, startColor, endColor, direction, 
 }
 
         function autoProcessImage() {
-            try {
-                if (!originalImageData) {
-                    console.log('No original image data available');
-                    return;
-                }
+            if (!originalImageData) return;
 
-                console.log('Starting image processing...');
-
-                // Get all color replacements
-                const replacementItems = document.querySelectorAll('.color-replacement-item');
-                const replacements = [];
-                
-                replacementItems.forEach(item => {
-                    const fromColorInput = item.querySelector('.from-color');
-                    const toColorInput = item.querySelector('.to-color');
-                    if (fromColorInput && toColorInput) {
-                        const fromRgb = hexToRgb(fromColorInput.value);
-                        const toRgb = hexToRgb(toColorInput.value);
-                        if (fromRgb && toRgb) {
-                            replacements.push({
-                                from: fromRgb,
-                                to: toRgb
-                            });
-                        }
-                    }
-                });
-
-                // If no valid replacements, use default
-                if (replacements.length === 0) {
-                    const defaultFrom = hexToRgb('#ff0000');
-                    const defaultTo = hexToRgb('#ffa500');
-                    if (defaultFrom && defaultTo) {
-                        replacements.push({
-                            from: defaultFrom,
-                            to: defaultTo
-                        });
-                    }
-                }
-
-                console.log('Found', replacements.length, 'color replacements');
-
+            const fromColor = hexToRgb(document.getElementById('fromColor').value);
             const tolerance = parseFloat(document.getElementById('tolerance').value);
             const preserveShades = document.getElementById('preserveShades').checked;
 
@@ -2382,33 +964,23 @@ function getGradientColor(x, y, width, height, startColor, endColor, direction, 
                 const x = pixelIndex % width;
                 const y = Math.floor(pixelIndex / width);
 
-                let isMatch = false;
-                let matchedReplacement = null;
+                const rDiff = Math.abs(r - fromColor.r);
+                const gDiff = Math.abs(g - fromColor.g);
+                const bDiff = Math.abs(b - fromColor.b);
+                const totalDiff = rDiff + gDiff + bDiff;
+                const maxDiff = tolerance / 100 * 765;
 
-                // Check against all color replacements
-                for (const replacement of replacements) {
-                    const rDiff = Math.abs(r - replacement.from.r);
-                    const gDiff = Math.abs(g - replacement.from.g);
-                    const bDiff = Math.abs(b - replacement.from.b);
-                    const totalDiff = rDiff + gDiff + bDiff;
-                    const maxDiff = tolerance / 100 * 765;
-
-                    if (totalDiff <= maxDiff && a > 0) {
-                        isMatch = true;
-                        matchedReplacement = replacement;
-                        break;
-                    }
-                }
+                const isMatch = totalDiff <= maxDiff && a > 0;
 
                 if (isMatch) matchCount++;
 
-                if (isMatch && matchedReplacement) {
+                if (isMatch) {
                     let newR, newG, newB;
 
                     if (currentMode === 'color') {
-                        newR = matchedReplacement.to.r;
-                        newG = matchedReplacement.to.g;
-                        newB = matchedReplacement.to.b;
+                        newR = toColor.r;
+                        newG = toColor.g;
+                        newB = toColor.b;
                     } else {
                         const gradientColor = getGradientColor(x, y, width, height, gradientStartColor, gradientEndColor, gradientDirection, gradientPosition);
                         newR = gradientColor.r;
@@ -2418,7 +990,7 @@ function getGradientColor(x, y, width, height, startColor, endColor, direction, 
 
                     if (preserveShades) {
                         const origBrightness = (r + g + b) / 3;
-                        const fromBrightness = (matchedReplacement.from.r + matchedReplacement.from.g + matchedReplacement.from.b) / 3;
+                        const fromBrightness = (fromColor.r + fromColor.g + fromColor.b) / 3;
                         if (fromBrightness > 0) {
                             const ratio = origBrightness / fromBrightness;
                             newR = Math.min(255, Math.max(0, newR * ratio));
@@ -2446,10 +1018,6 @@ function getGradientColor(x, y, width, height, startColor, endColor, direction, 
             outputCanvas.style.display = 'block';
 
             console.log(`Matched ${matchCount} pixels`);
-            } catch (error) {
-                console.error('Error processing image:', error);
-                alert('Error processing image. Please try uploading the image again.');
-            }
         }
 
         async function downloadImage() {
