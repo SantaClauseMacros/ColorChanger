@@ -1289,10 +1289,28 @@
 
         // Wait for Netlify Identity to load, then initialize
         function waitForNetlifyIdentity() {
-            if (typeof netlifyIdentity !== 'undefined') {
-                initAuth();
-            } else {
-                setTimeout(waitForNetlifyIdentity, 100);
+            try {
+                if (typeof netlifyIdentity !== 'undefined') {
+                    initAuth();
+                } else {
+                    // Don't wait forever - after 5 seconds, give up
+                    let attempts = 0;
+                    const checkIdentity = () => {
+                        attempts++;
+                        if (typeof netlifyIdentity !== 'undefined') {
+                            initAuth();
+                        } else if (attempts < 50) { // 5 seconds max
+                            setTimeout(checkIdentity, 100);
+                        } else {
+                            console.log('Netlify Identity not available, continuing without auth');
+                            document.querySelector('.auth-bar').style.display = 'none';
+                        }
+                    };
+                    checkIdentity();
+                }
+            } catch (error) {
+                console.error('Error initializing Netlify Identity:', error);
+                document.querySelector('.auth-bar').style.display = 'none';
             }
         }
 
@@ -1830,22 +1848,86 @@
 
         // Initialize everything when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            waitForNetlifyIdentity();
-            setupZoomPan();
-            updateGradientPreview();
-            
-            // Add some cool page load animations
-            document.body.style.opacity = '0';
-            setTimeout(() => {
-                document.body.style.transition = 'opacity 0.5s ease';
+            try {
+                waitForNetlifyIdentity();
+                setupZoomPan();
+                updateGradientPreview();
+                
+                // Initialize basic functionality
+                setupBasicEventListeners();
+                
+                // Add some cool page load animations
+                document.body.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.style.transition = 'opacity 0.5s ease';
+                    document.body.style.opacity = '1';
+                }, 100);
+            } catch (error) {
+                console.error('Initialization error:', error);
+                // Fallback: just show the interface
                 document.body.style.opacity = '1';
-            }, 100);
+            }
         });
+
+        function setupBasicEventListeners() {
+            // File input
+            const fileInput = document.getElementById('fileInput');
+            if (fileInput) {
+                fileInput.addEventListener('change', handleFileUpload);
+            }
+
+            // Upload area click
+            const uploadArea = document.querySelector('.upload-area');
+            if (uploadArea) {
+                uploadArea.addEventListener('click', () => {
+                    const fileInput = document.getElementById('fileInput');
+                    if (fileInput) fileInput.click();
+                });
+            }
+
+            // Mode buttons
+            const colorModeBtn = document.getElementById('colorModeBtn');
+            const gradientModeBtn = document.getElementById('gradientModeBtn');
+            
+            if (colorModeBtn) {
+                colorModeBtn.addEventListener('click', () => setMode('color'));
+            }
+            if (gradientModeBtn) {
+                gradientModeBtn.addEventListener('click', () => setMode('gradient'));
+            }
+
+            // Tolerance controls
+            const tolerance = document.getElementById('tolerance');
+            const toleranceInput = document.getElementById('toleranceInput');
+            
+            if (tolerance) {
+                tolerance.addEventListener('input', updateToleranceValue);
+            }
+            if (toleranceInput) {
+                toleranceInput.addEventListener('input', updateToleranceFromInput);
+            }
+
+            // Basic color inputs
+            const colorInputs = document.querySelectorAll('input[type="color"]');
+            colorInputs.forEach(input => {
+                input.addEventListener('change', autoProcessImage);
+            });
+
+            // Basic checkboxes
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', autoProcessImage);
+            });
+        }
         
         // Also try to initialize immediately for faster loading
-        setTimeout(waitForNetlifyIdentity, 500);
-        setupZoomPan();
-        updateGradientPreview();
+        setTimeout(() => {
+            try {
+                waitForNetlifyIdentity();
+            } catch (error) {
+                console.log('Auth initialization failed, continuing without auth');
+            }
+        }, 500);
 
         function setMode(mode) {
             currentMode = mode;
@@ -2150,22 +2232,39 @@ function getGradientColor(x, y, width, height, startColor, endColor, direction, 
 }
 
         function autoProcessImage() {
-            if (!originalImageData) return;
+            try {
+                if (!originalImageData) return;
 
-            // Get all color replacements
-            const replacementItems = document.querySelectorAll('.color-replacement-item');
-            const replacements = [];
-            
-            replacementItems.forEach(item => {
-                const fromColorInput = item.querySelector('.from-color');
-                const toColorInput = item.querySelector('.to-color');
-                if (fromColorInput && toColorInput) {
-                    replacements.push({
-                        from: hexToRgb(fromColorInput.value),
-                        to: hexToRgb(toColorInput.value)
-                    });
+                // Get all color replacements
+                const replacementItems = document.querySelectorAll('.color-replacement-item');
+                const replacements = [];
+                
+                replacementItems.forEach(item => {
+                    const fromColorInput = item.querySelector('.from-color');
+                    const toColorInput = item.querySelector('.to-color');
+                    if (fromColorInput && toColorInput) {
+                        const fromRgb = hexToRgb(fromColorInput.value);
+                        const toRgb = hexToRgb(toColorInput.value);
+                        if (fromRgb && toRgb) {
+                            replacements.push({
+                                from: fromRgb,
+                                to: toRgb
+                            });
+                        }
+                    }
+                });
+
+                // If no valid replacements, use default
+                if (replacements.length === 0) {
+                    const defaultFrom = hexToRgb('#ff0000');
+                    const defaultTo = hexToRgb('#ffa500');
+                    if (defaultFrom && defaultTo) {
+                        replacements.push({
+                            from: defaultFrom,
+                            to: defaultTo
+                        });
+                    }
                 }
-            });
 
             const tolerance = parseFloat(document.getElementById('tolerance').value);
             const preserveShades = document.getElementById('preserveShades').checked;
