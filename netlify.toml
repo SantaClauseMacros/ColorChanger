@@ -5,9 +5,7 @@
 
 [context.production]
   environment = { 
-    NODE_VERSION = "18",
-    SUPABASE_URL = "YOUR_SUPABASE_URL_HERE",
-    SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY_HERE"
+    NODE_VERSION = "18"
   }
 
 [[headers]]
@@ -15,13 +13,14 @@
   [headers.values]
     X-Frame-Options = "DENY"
     X-XSS-Protection = "1; mode=block"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://identity.netlify.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com;"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://identity.netlify.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://identity.netlify.com;"
 
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-  conditions = {Role = ["admin"], Country = ["!"]]}
 
 [dev]
   framework = "#static"
