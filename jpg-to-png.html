@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -100,12 +99,12 @@
             overflow: hidden;
             backdrop-filter: blur(10px);
         }
-        
+
         .panels {
             display: flex;
             height: 400px;
         }
-        
+
         .panel {
             flex: 1;
             border: 2px dashed #ccc;
@@ -118,7 +117,7 @@
             background: #fafafa;
             position: relative;
         }
-        
+
         .panel h3 {
             position: absolute;
             top: 15px;
@@ -127,7 +126,7 @@
             font-size: 16px;
             margin: 0;
         }
-        
+
         .upload-area {
             width: 200px;
             height: 150px;
@@ -140,34 +139,34 @@
             cursor: pointer;
             background: white;
         }
-        
+
         .upload-area:hover {
             border-color: #3498db;
             background: #f8f9ff;
         }
-        
+
         .upload-text {
             color: #666;
             text-align: center;
             margin-top: 10px;
         }
-        
+
         #fileInput {
             display: none;
         }
-        
+
         canvas {
             max-width: 300px;
             max-height: 300px;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        
+
         .controls {
             padding: 30px;
             background: #f8f9fa;
         }
-        
+
         .auto-indicator {
             background: #d4edda;
             border: 1px solid #c3e6cb;
@@ -178,12 +177,12 @@
             color: #155724;
             text-align: center;
         }
-        
+
         .buttons {
             text-align: center;
             margin-top: 20px;
         }
-        
+
         .btn {
             padding: 10px 20px;
             margin: 5px;
@@ -192,17 +191,17 @@
             cursor: pointer;
             font-weight: bold;
         }
-        
+
         .btn-success {
             background: #28a745;
             color: white;
         }
-        
+
         .btn-secondary {
             background: #6c757d;
             color: white;
         }
-        
+
         .btn:hover {
             opacity: 0.9;
         }
@@ -249,7 +248,7 @@
                 <input type="file" id="fileInput" accept=".jpg,.jpeg">
                 <canvas id="inputCanvas" style="display: none;"></canvas>
             </div>
-            
+
             <div class="panel">
                 <h3>🖼️ PNG Output</h3>
                 <div id="outputPlaceholder" style="color: #999; text-align: center;">
@@ -259,16 +258,20 @@
                 <canvas id="outputCanvas" style="display: none;"></canvas>
             </div>
         </div>
-        
+
         <div class="controls">
             <h3>🔄 JPG to PNG Conversion</h3>
             <div class="auto-indicator">
                 ✨ <strong>Auto Mode:</strong> Image is automatically converted to PNG when uploaded!
             </div>
-            
+
             <div class="file-info" id="fileInfo" style="display: none;"></div>
-            
+
             <div class="buttons">
+                <label for="filename">Filename:</label>
+                <input type="text" id="filename" value="converted" style="margin-bottom: 10px;">
+                <br>
+
                 <button class="btn btn-success" onclick="downloadImage()">💾 Download PNG</button>
                 <button class="btn btn-secondary" onclick="copyToClipboard()">📋 Copy</button>
                 <button class="btn btn-secondary" onclick="resetAll()">🔄 Reset</button>
@@ -285,10 +288,17 @@
             const file = event.target.files[0];
             if (!file) return;
 
+            handleFile(file);
+        }
+
+        function handleFile(file) {
             if (!file.type.includes('jpeg') && !file.type.includes('jpg')) {
                 alert('Please upload a JPG or JPEG file.');
                 return;
             }
+
+            const fileName = file.name.replace(/\.[^/.]+$/, "");
+            document.getElementById('filename').value = fileName + "-converted";
 
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -306,11 +316,11 @@
         function displayInputImage(img) {
             const canvas = document.getElementById('inputCanvas');
             const ctx = canvas.getContext('2d');
-            
+
             canvas.width = img.width;
             canvas.height = img.height;
             ctx.drawImage(img, 0, 0);
-            
+
             canvas.style.display = 'block';
             canvas.parentElement.querySelector('.upload-area').style.display = 'none';
         }
@@ -318,18 +328,18 @@
         function convertToPNG(img) {
             const outputCanvas = document.getElementById('outputCanvas');
             const outputCtx = outputCanvas.getContext('2d');
-            
+
             outputCanvas.width = img.width;
             outputCanvas.height = img.height;
-            
+
             // Clear with transparent background
             outputCtx.clearRect(0, 0, outputCanvas.width, outputCanvas.height);
-            
+
             // Draw the image
             outputCtx.drawImage(img, 0, 0);
-            
+
             convertedCanvas = outputCanvas;
-            
+
             document.getElementById('outputPlaceholder').style.display = 'none';
             document.getElementById('outputCanvas').style.display = 'block';
         }
@@ -337,7 +347,7 @@
         function showFileInfo(file, img) {
             const fileInfo = document.getElementById('fileInfo');
             const fileSizeKB = (file.size / 1024).toFixed(1);
-            
+
             fileInfo.innerHTML = `
                 <strong>Original JPG:</strong> ${img.width}×${img.height}px, ${fileSizeKB}KB<br>
                 <strong>Converted to:</strong> PNG with transparency support
@@ -351,8 +361,9 @@
                 return;
             }
 
+            const filename = document.getElementById('filename').value || 'converted';
             const link = document.createElement('a');
-            link.download = 'converted.png';
+            link.download = filename + '.png';
             link.href = convertedCanvas.toDataURL('image/png');
             link.click();
         }
@@ -362,7 +373,7 @@
                 alert('Please upload an image first.');
                 return;
             }
-            
+
             convertedCanvas.toBlob(blob => {
                 navigator.clipboard.write([new ClipboardItem({'image/png': blob})]);
                 alert('PNG image copied to clipboard!');
@@ -377,6 +388,7 @@
             document.getElementById('outputPlaceholder').style.display = 'block';
             document.getElementById('fileInfo').style.display = 'none';
             convertedCanvas = null;
+            document.getElementById('filename').value = "converted";
         }
     </script>
 </body>

@@ -261,6 +261,90 @@
             transform: none;
         }
 
+        .save-options {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .save-options h4 {
+            margin-bottom: 15px;
+            color: #555;
+            font-weight: normal;
+        }
+
+        .directory-group {
+            margin-bottom: 15px;
+        }
+
+        .directory-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .directory-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .directory-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            background: #f9f9f9;
+        }
+
+        .directory-btn {
+            padding: 8px 16px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .directory-btn:hover {
+            background: #5a6268;
+        }
+
+        .filename-group {
+            margin-bottom: 20px;
+        }
+
+        .filename-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .filename-input {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .browser-note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #856404;
+        }
+
         @media (max-width: 768px) {
             .panels {
                 flex-direction: column;
@@ -323,6 +407,24 @@
                 <small style="color: #666;">Higher values remove similar colors</small>
             </div>
 
+            <div class="save-options">
+                <h4>💾 Save Options</h4>
+                <div class="directory-group">
+                    <label for="directoryPath">Save directory:</label>
+                    <div class="directory-selector">
+                        <input type="text" id="directoryPath" class="directory-input" placeholder="No directory selected - will use browser default" readonly>
+                        <button class="directory-btn" onclick="selectDirectory()">📁 Browse</button>
+                    </div>
+                    <div class="browser-note">
+                        <strong>Note:</strong> Directory selection requires a modern browser with File System Access API support (Chrome 86+, Edge 86+). If unsupported, files will download to your default Downloads folder.
+                    </div>
+                </div>
+                <div class="filename-group">
+                    <label for="filename">Filename:</label>
+                    <input type="text" id="filename" class="filename-input" value="transparent-image" placeholder="Enter filename (without .png)">
+                </div>
+            </div>
+
             <div class="buttons">
                 <button class="btn btn-primary" onclick="processImage()" id="processBtn" disabled>✨ Make Transparent</button>
                 <button class="btn btn-success" onclick="downloadImage()" id="downloadBtn" disabled>💾 Download PNG</button>
@@ -334,6 +436,38 @@
     <script>
         let inputImage = null;
         let selectedColor = null;
+        let selectedDirectoryHandle = null;
+
+        const supportsFileSystemAccess = 'showDirectoryPicker' in window;
+        if (!supportsFileSystemAccess) {
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(() => {
+                    const browserNote = document.querySelector('.browser-note');
+                    if (browserNote) {
+                        browserNote.innerHTML = '<strong>Directory Selection Not Supported:</strong> Your browser doesn\'t support directory selection. Files will download to your default Downloads folder.';
+                        const dirBtn = document.querySelector('.directory-btn');
+                        if (dirBtn) {
+                            dirBtn.disabled = true;
+                            dirBtn.style.opacity = '0.5';
+                        }
+                    }
+                }, 100);
+            });
+        }
+
+        async function selectDirectory() {
+            if (!supportsFileSystemAccess) {
+                alert('Directory selection is not supported in your browser. Files will be saved to your default Downloads folder.');
+                return;
+            }
+
+            try {
+                selectedDirectoryHandle = await window.showDirectoryPicker();
+                document.getElementById('directoryPath').value = selectedDirectoryHandle.name;
+            } catch (err) {
+                console.log('Directory selection cancelled');
+            }
+        }
 
         document.getElementById('fileInput').addEventListener('change', handleFileUpload);
         document.getElementById('tolerance').addEventListener('input', updateToleranceValue);
@@ -436,10 +570,33 @@
             document.getElementById('downloadBtn').disabled = false;
         }
 
-        function downloadImage() {
+        async function downloadImage() {
             const canvas = document.getElementById('outputCanvas');
+            const filename = document.getElementById('filename').value.trim();
+
+            let finalFilename = filename || 'transparent-image';
+            if (!finalFilename.toLowerCase().endsWith('.png')) {
+                finalFilename += '.png';
+            }
+
+            if (supportsFileSystemAccess && selectedDirectoryHandle) {
+                try {
+                    const fileHandle = await selectedDirectoryHandle.getFileHandle(finalFilename, { create: true });
+                    const writable = await fileHandle.createWritable();
+
+                    canvas.toBlob(async (blob) => {
+                        await writable.write(blob);
+                        await writable.close();
+                    });
+                    return;
+                } catch (err) {
+                    console.error('Error saving to directory:', err);
+                    alert('Error saving to selected directory. Falling back to default download.');
+                }
+            }
+
             const link = document.createElement('a');
-            link.download = 'transparent-image.png';
+            link.download = finalFilename;
             link.href = canvas.toDataURL('image/png');
             link.click();
         }
