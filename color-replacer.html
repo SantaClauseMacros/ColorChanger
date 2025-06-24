@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PNG Color Replacer - Online PNG Tools</title>
+    <title>Video to GIF Converter - Online PNG Tools</title>
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.12.7/dist/umd/ffmpeg.js"></script>
+    <script src="https://unpkg.com/@ffmpeg/util@0.12.1/dist/umd/index.js"></script>
     <style>
         * {
             margin: 0;
@@ -80,12 +82,12 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             overflow: hidden;
         }
-        
+
         .panels {
             display: flex;
             height: 400px;
         }
-        
+
         .panel {
             flex: 1;
             border: 2px dashed #ccc;
@@ -98,7 +100,7 @@
             background: #fafafa;
             position: relative;
         }
-        
+
         .panel h3 {
             position: absolute;
             top: 15px;
@@ -107,9 +109,9 @@
             font-size: 16px;
             margin: 0;
         }
-        
+
         .upload-area {
-            width: 200px;
+            width: 250px;
             height: 150px;
             border: 2px dashed #999;
             border-radius: 8px;
@@ -120,118 +122,86 @@
             cursor: pointer;
             background: white;
         }
-        
-        .upload-area:hover:not(.drag-over) {
+
+        .upload-area:hover {
             border-color: #3498db;
             background: #f8f9ff;
         }
-        
-        .panel.drag-over {
-            border-color: #3498db;
-            background: #f0f7ff;
-        }
-        
-        .panel.drag-over .upload-area {
-            border-color: #3498db;
-            background: #e3f2fd;
-            transform: scale(1.35);
-        }
-        
+
         .upload-text {
             color: #666;
             text-align: center;
             margin-top: 10px;
         }
-        
-        #fileInput {
+
+        #videoInput {
             display: none;
         }
-        
-        canvas {
+
+        video {
             max-width: 300px;
             max-height: 300px;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        
+
+        .gif-preview {
+            max-width: 300px;
+            max-height: 300px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
         .controls {
             padding: 30px;
             background: #f8f9fa;
         }
-        
+
         .controls h3 {
             margin-bottom: 20px;
             color: #333;
         }
-        
+
         .control-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 30px;
         }
-        
+
         .control-section {
             background: white;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-        
+
         .control-section h4 {
             margin-bottom: 15px;
             color: #555;
             font-weight: normal;
         }
-        
-        .color-group {
-            margin-bottom: 15px;
-        }
-        
-        .color-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #666;
-            font-size: 14px;
-        }
-        
-        .color-input {
-            width: 40px;
-            height: 30px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-right: 10px;
-        }
-        
-        .color-text {
-            padding: 6px 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-family: monospace;
-            width: 80px;
-        }
-        
+
         .slider-group {
             margin-bottom: 15px;
         }
-        
+
         .slider-group label {
             display: block;
             margin-bottom: 5px;
             color: #666;
             font-size: 14px;
         }
-        
+
         .slider {
             width: 100%;
             margin-bottom: 10px;
         }
-        
+
         .buttons {
             text-align: center;
             margin-top: 20px;
         }
-        
+
         .btn {
             padding: 10px 20px;
             margin: 5px;
@@ -240,30 +210,56 @@
             cursor: pointer;
             font-weight: bold;
         }
-        
+
         .btn-success {
             background: #28a745;
             color: white;
         }
-        
+
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+
         .btn-secondary {
             background: #6c757d;
             color: white;
         }
-        
+
         .btn:hover {
             opacity: 0.9;
         }
 
-        .auto-indicator {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #28a745;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .processing-info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
             border-radius: 4px;
-            padding: 8px 12px;
-            margin-bottom: 15px;
-            font-size: 12px;
-            color: #155724;
-            text-align: center;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 14px;
+            color: #0c5460;
+            display: none;
         }
 
         @media (max-width: 768px) {
@@ -285,295 +281,285 @@
                 <div class="logo-icon">P</div>
                 ONLINEPNGTOOLS
             </a>
-            <a href="index.html" style="color: #3498db; text-decoration: none;">← Back to Tools</a>
+            <a href="tools.html" style="color: #3498db; text-decoration: none;">← Back to Tools</a>
         </nav>
     </header>
 
     <div class="breadcrumb">
-        <a href="index.html">Home</a> > PNG Color Replacer
+        <a href="index.html">Home</a> > <a href="tools.html">Tools</a> > Video to GIF Converter
     </div>
 
     <div class="container">
         <div class="panels">
             <div class="panel">
-                <h3>📥 Input Image</h3>
-                <div class="upload-area" onclick="document.getElementById('fileInput').click()">
-                    <div style="font-size: 40px;">📁</div>
-                    <div class="upload-text">Click to upload PNG or GIF</div>
+                <h3>🎬 Input Video</h3>
+                <div class="upload-area" onclick="document.getElementById('videoInput').click()">
+                    <div style="font-size: 40px;">🎥</div>
+                    <div class="upload-text">Click to upload video<br>(MP4, WebM, MOV)</div>
                 </div>
-                <input type="file" id="fileInput" accept=".png,.gif">
-                <canvas id="inputCanvas" style="display: none;"></canvas>
+                <input type="file" id="videoInput" accept=".mp4,.webm,.mov">
+                <video id="videoPreview" controls style="display: none;"></video>
             </div>
             
             <div class="panel">
-                <h3>🎯 Output Image</h3>
+                <h3>🎞️ Output GIF</h3>
                 <div id="outputPlaceholder" style="color: #999; text-align: center;">
                     <div style="font-size: 40px;">🖼️</div>
-                    <div>Processed image will appear here</div>
+                    <div>GIF will appear here</div>
                 </div>
-                <canvas id="outputCanvas" style="display: none;"></canvas>
+                <img id="gifPreview" class="gif-preview" style="display: none;">
             </div>
         </div>
         
         <div class="controls">
-            <h3>🛠️ Color Replacement Options</h3>
-            <div class="auto-indicator">
-                ✨ <strong>Auto Mode:</strong> Changes are applied automatically when you upload an image or adjust settings!
-            </div>
+            <h3>⚙️ Conversion Settings</h3>
             
             <div class="control-grid">
                 <div class="control-section">
-                    <h4>Source Color</h4>
-                    <div class="color-group">
-                        <label>Replace this color:</label>
-                        <input type="color" id="fromColor" class="color-input" value="#eb1f2a">
-                        <input type="text" id="fromColorText" class="color-text" value="#eb1f2a">
+                    <h4>Quality & Size</h4>
+                    <div class="slider-group">
+                        <label>Frame Rate: <span id="fpsValue">10</span> fps</label>
+                        <input type="range" id="fps" class="slider" min="5" max="30" value="10">
                     </div>
                     <div class="slider-group">
-                        <label>Match tolerance: <span id="toleranceValue">35</span>%</label>
-                        <input type="range" id="tolerance" class="slider" min="0" max="100" value="35">
+                        <label>Quality: <span id="qualityValue">Medium</span></label>
+                        <input type="range" id="quality" class="slider" min="1" max="3" value="2">
+                    </div>
+                    <div class="slider-group">
+                        <label>Scale: <span id="scaleValue">100</span>%</label>
+                        <input type="range" id="scale" class="slider" min="25" max="100" value="100">
                     </div>
                 </div>
                 
                 <div class="control-section">
-                    <h4>Replacement Color</h4>
-                    <div class="color-group">
-                        <label>With this color:</label>
-                        <input type="color" id="toColor" class="color-input" value="#ffa500">
-                        <input type="text" id="toColorText" class="color-text" value="#ffa500">
+                    <h4>Timing</h4>
+                    <div class="slider-group">
+                        <label>Start Time: <span id="startValue">0</span>s</label>
+                        <input type="range" id="startTime" class="slider" min="0" max="60" value="0">
+                    </div>
+                    <div class="slider-group">
+                        <label>Duration: <span id="durationValue">5</span>s</label>
+                        <input type="range" id="duration" class="slider" min="1" max="15" value="5">
                     </div>
                 </div>
             </div>
+
+            <div class="processing-info" id="processingInfo">
+                <strong>Processing...</strong> This may take a moment depending on video length and quality settings.
+            </div>
+
+            <div class="progress-bar" id="progressBar" style="display: none;">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
             
             <div class="buttons">
-                <button class="btn btn-success" onclick="downloadImage()">💾 Download</button>
-                <button class="btn btn-secondary" onclick="copyToClipboard()">📋 Copy</button>
+                <button class="btn btn-primary" onclick="convertToGif()" id="convertBtn">🎞️ Convert to GIF</button>
+                <button class="btn btn-success" onclick="downloadGif()" id="downloadBtn" disabled>💾 Download GIF</button>
                 <button class="btn btn-secondary" onclick="resetAll()">🔄 Reset</button>
             </div>
         </div>
     </div>
 
     <script>
-        let originalImageData = null;
-        let processedImageData = null;
+        let videoFile = null;
+        let gifBlob = null;
+        let ffmpeg = null;
 
-        document.getElementById('fileInput').addEventListener('change', handleFileUpload);
-        document.getElementById('fromColor').addEventListener('change', updateFromColorText);
-        document.getElementById('toColor').addEventListener('change', updateToColorText);
-        document.getElementById('fromColorText').addEventListener('input', updateFromColorPicker);
-        document.getElementById('toColorText').addEventListener('input', updateToColorPicker);
-        document.getElementById('tolerance').addEventListener('input', updateToleranceValue);
+        const { FFmpeg } = FFmpegWASM;
+        const { fetchFile, toBlobURL } = FFmpegUtil;
 
-        const uploadPanel = document.querySelector('.panel');
-        
-        uploadPanel.addEventListener('dragover', handleDragOver);
-        uploadPanel.addEventListener('dragenter', handleDragEnter);
-        uploadPanel.addEventListener('dragleave', handleDragLeave);
-        uploadPanel.addEventListener('drop', handleDrop);
-        
-        document.addEventListener('dragover', (e) => e.preventDefault());
-        document.addEventListener('drop', (e) => e.preventDefault());
+        document.getElementById('videoInput').addEventListener('change', handleVideoUpload);
+        document.getElementById('fps').addEventListener('input', updateFpsValue);
+        document.getElementById('quality').addEventListener('input', updateQualityValue);
+        document.getElementById('scale').addEventListener('input', updateScaleValue);
+        document.getElementById('startTime').addEventListener('input', updateStartValue);
+        document.getElementById('duration').addEventListener('input', updateDurationValue);
 
-        function handleDragOver(e) {
-            e.preventDefault();
-        }
-
-        function handleDragEnter(e) {
-            e.preventDefault();
-            e.currentTarget.classList.add('drag-over');
-        }
-
-        function handleDragLeave(e) {
-            e.preventDefault();
-            if (!e.currentTarget.contains(e.relatedTarget)) {
-                e.currentTarget.classList.remove('drag-over');
-            }
-        }
-
-        function handleDrop(e) {
-            e.preventDefault();
-            e.currentTarget.classList.remove('drag-over');
+        async function loadFFmpeg() {
+            if (ffmpeg) return ffmpeg;
             
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                const file = files[0];
-                if (file.type.includes('png') || file.type.includes('gif')) {
-                    handleFile(file);
-                } else {
-                    alert('Please upload a PNG or GIF file.');
+            ffmpeg = new FFmpeg();
+            
+            ffmpeg.on('log', ({ message }) => {
+                console.log(message);
+            });
+
+            ffmpeg.on('progress', ({ progress }) => {
+                const progressFill = document.getElementById('progressFill');
+                if (progressFill) {
+                    progressFill.style.width = (progress * 100) + '%';
                 }
-            }
+            });
+
+            const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.4/dist/umd';
+            await ffmpeg.load({
+                coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+                wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
+            });
+
+            return ffmpeg;
         }
 
-        function updateFromColorText() {
-            document.getElementById('fromColorText').value = document.getElementById('fromColor').value;
-            autoProcessImage();
+        function updateFpsValue() {
+            document.getElementById('fpsValue').textContent = document.getElementById('fps').value;
         }
 
-        function updateToColorText() {
-            document.getElementById('toColorText').value = document.getElementById('toColor').value;
-            autoProcessImage();
+        function updateQualityValue() {
+            const quality = document.getElementById('quality').value;
+            const qualityText = ['Low', 'Medium', 'High'][quality - 1];
+            document.getElementById('qualityValue').textContent = qualityText;
         }
 
-        function updateFromColorPicker() {
-            const value = document.getElementById('fromColorText').value;
-            if (/^#[0-9A-F]{6}$/i.test(value)) {
-                document.getElementById('fromColor').value = value;
-                autoProcessImage();
-            }
+        function updateScaleValue() {
+            document.getElementById('scaleValue').textContent = document.getElementById('scale').value;
         }
 
-        function updateToColorPicker() {
-            const value = document.getElementById('toColorText').value;
-            if (/^#[0-9A-F]{6}$/i.test(value)) {
-                document.getElementById('toColor').value = value;
-                autoProcessImage();
-            }
+        function updateStartValue() {
+            document.getElementById('startValue').textContent = document.getElementById('startTime').value;
         }
 
-        function updateToleranceValue() {
-            const value = document.getElementById('tolerance').value;
-            document.getElementById('toleranceValue').textContent = value;
-            autoProcessImage();
+        function updateDurationValue() {
+            document.getElementById('durationValue').textContent = document.getElementById('duration').value;
         }
 
-        function handleFileUpload(event) {
+        function handleVideoUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
-            handleFile(file);
-        }
 
-        function handleFile(file) {
-            if (!file.type.includes('png') && !file.type.includes('gif')) {
-                alert('Please upload a PNG or GIF file.');
+            if (!file.type.startsWith('video/')) {
+                alert('Please upload a valid video file.');
                 return;
             }
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    displayInputImage(img);
-                    autoProcessImage();
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function displayInputImage(img) {
-            const canvas = document.getElementById('inputCanvas');
-            const ctx = canvas.getContext('2d');
+            videoFile = file;
+            const video = document.getElementById('videoPreview');
+            const url = URL.createObjectURL(file);
             
-            canvas.width = img.width;
-            canvas.height = img.height;
-            ctx.drawImage(img, 0, 0);
-            
-            originalImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            
-            canvas.style.display = 'block';
-            canvas.parentElement.querySelector('.upload-area').style.display = 'none';
-        }
+            video.src = url;
+            video.style.display = 'block';
+            document.querySelector('.upload-area').style.display = 'none';
 
-        function hexToRgb(hex) {
-            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-            return result ? {
-                r: parseInt(result[1], 16),
-                g: parseInt(result[2], 16),
-                b: parseInt(result[3], 16)
-            } : null;
-        }
-
-        function autoProcessImage() {
-            if (!originalImageData) return;
-
-            const outputCanvas = document.getElementById('outputCanvas');
-            const outputCtx = outputCanvas.getContext('2d');
-            
-            outputCanvas.width = originalImageData.width;
-            outputCanvas.height = originalImageData.height;
-
-            const newImageData = outputCtx.createImageData(originalImageData.width, originalImageData.height);
-            const data = originalImageData.data;
-            const newData = newImageData.data;
-
-            const fromColor = hexToRgb(document.getElementById('fromColor').value);
-            const toColor = hexToRgb(document.getElementById('toColor').value);
-            const tolerance = parseFloat(document.getElementById('tolerance').value);
-
-            let matchCount = 0;
-
-            for (let i = 0; i < data.length; i += 4) {
-                const r = data[i];
-                const g = data[i + 1];
-                const b = data[i + 2];
-                const a = data[i + 3];
-
-                const rDiff = Math.abs(r - fromColor.r);
-                const gDiff = Math.abs(g - fromColor.g);
-                const bDiff = Math.abs(b - fromColor.b);
-                const totalDiff = rDiff + gDiff + bDiff;
-                const maxDiff = tolerance / 100 * 765;
-
-                const isMatch = totalDiff <= maxDiff && a > 0;
-
-                if (isMatch) {
-                    matchCount++;
-                    newData[i] = toColor.r;
-                    newData[i + 1] = toColor.g;
-                    newData[i + 2] = toColor.b;
-                    newData[i + 3] = a;
-                } else {
-                    newData[i] = r;
-                    newData[i + 1] = g;
-                    newData[i + 2] = b;
-                    newData[i + 3] = a;
-                }
-            }
-
-            outputCtx.putImageData(newImageData, 0, 0);
-            processedImageData = newImageData;
-
-            document.getElementById('outputPlaceholder').style.display = 'none';
-            document.getElementById('outputCanvas').style.display = 'block';
-
-            console.log(`Processed ${matchCount} pixels`);
-        }
-
-        function downloadImage() {
-            if (!processedImageData) {
-                alert('Please upload an image first.');
-                return;
-            }
-
-            const canvas = document.getElementById('outputCanvas');
-            const link = document.createElement('a');
-            link.download = 'color-replaced.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        }
-
-        function copyToClipboard() {
-            if (!processedImageData) {
-                alert('Please upload an image first.');
-                return;
-            }
-            
-            const canvas = document.getElementById('outputCanvas');
-            canvas.toBlob(blob => {
-                navigator.clipboard.write([new ClipboardItem({'image/png': blob})]);
-                alert('Image copied!');
+            video.addEventListener('loadedmetadata', () => {
+                const maxDuration = Math.min(Math.floor(video.duration), 60);
+                document.getElementById('startTime').max = maxDuration;
+                document.getElementById('duration').max = Math.min(15, maxDuration);
             });
         }
 
+        async function convertToGif() {
+            if (!videoFile) {
+                alert('Please upload a video first.');
+                return;
+            }
+
+            const convertBtn = document.getElementById('convertBtn');
+            const processingInfo = document.getElementById('processingInfo');
+            const progressBar = document.getElementById('progressBar');
+            
+            convertBtn.disabled = true;
+            processingInfo.style.display = 'block';
+            progressBar.style.display = 'block';
+
+            try {
+                // Load FFmpeg
+                processingInfo.innerHTML = '<strong>Loading FFmpeg...</strong> Please wait while we initialize the video processor.';
+                await loadFFmpeg();
+
+                // Get conversion settings
+                const fps = parseInt(document.getElementById('fps').value);
+                const duration = parseInt(document.getElementById('duration').value);
+                const startTime = parseInt(document.getElementById('startTime').value);
+                const scale = parseInt(document.getElementById('scale').value);
+                const quality = parseInt(document.getElementById('quality').value);
+
+                processingInfo.innerHTML = '<strong>Processing video...</strong> Converting to GIF format.';
+
+                // Write input file
+                const inputName = 'input.' + videoFile.name.split('.').pop();
+                await ffmpeg.writeFile(inputName, await fetchFile(videoFile));
+
+                // Build FFmpeg command
+                const scaleFilter = scale < 100 ? `scale=iw*${scale/100}:ih*${scale/100}` : '';
+                const filters = scaleFilter ? `-vf "${scaleFilter}"` : '';
+                
+                // Quality mapping
+                const qualityMap = {
+                    1: '256', // Low
+                    2: '128', // Medium  
+                    3: '64'   // High
+                };
+
+                const cmd = [
+                    '-ss', startTime.toString(),
+                    '-t', duration.toString(),
+                    '-i', inputName,
+                    '-r', fps.toString(),
+                    '-vf', `${scaleFilter ? scaleFilter + ',' : ''}palettegen=max_colors=${qualityMap[quality]}`,
+                    'palette.png'
+                ];
+
+                await ffmpeg.exec(cmd);
+
+                const gifCmd = [
+                    '-ss', startTime.toString(),
+                    '-t', duration.toString(),
+                    '-i', inputName,
+                    '-i', 'palette.png',
+                    '-r', fps.toString(),
+                    '-filter_complex', `${scaleFilter ? scaleFilter + '[scaled];[scaled]' : '[0:v]'}paletteuse`,
+                    'output.gif'
+                ];
+
+                await ffmpeg.exec(gifCmd);
+
+                // Read output file
+                const data = await ffmpeg.readFile('output.gif');
+                gifBlob = new Blob([data.buffer], { type: 'image/gif' });
+
+                // Display result
+                document.getElementById('outputPlaceholder').style.display = 'none';
+                const gifPreview = document.getElementById('gifPreview');
+                gifPreview.src = URL.createObjectURL(gifBlob);
+                gifPreview.style.display = 'block';
+                
+                document.getElementById('downloadBtn').disabled = false;
+                processingInfo.innerHTML = '<strong>✅ Conversion complete!</strong> Your GIF is ready to download.';
+                
+            } catch (error) {
+                console.error('Conversion error:', error);
+                processingInfo.innerHTML = '<strong style="color: #dc3545;">❌ Conversion failed:</strong> ' + error.message;
+            } finally {
+                convertBtn.disabled = false;
+                setTimeout(() => {
+                    processingInfo.style.display = 'none';
+                    progressBar.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        function downloadGif() {
+            if (!gifBlob) {
+                alert('Please convert a video first.');
+                return;
+            }
+
+            const link = document.createElement('a');
+            link.download = 'converted-video.gif';
+            link.href = URL.createObjectURL(gifBlob);
+            link.click();
+        }
+
         function resetAll() {
-            document.getElementById('fileInput').value = '';
-            document.getElementById('inputCanvas').style.display = 'none';
-            document.getElementById('outputCanvas').style.display = 'none';
+            document.getElementById('videoInput').value = '';
+            document.getElementById('videoPreview').style.display = 'none';
+            document.getElementById('gifPreview').style.display = 'none';
             document.querySelector('.upload-area').style.display = 'flex';
             document.getElementById('outputPlaceholder').style.display = 'block';
-            originalImageData = null;
-            processedImageData = null;
+            document.getElementById('downloadBtn').disabled = true;
+            document.getElementById('processingInfo').style.display = 'none';
+            document.getElementById('progressBar').style.display = 'none';
+            videoFile = null;
+            gifBlob = null;
         }
     </script>
 </body>
