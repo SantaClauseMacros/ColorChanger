@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebP Converter - PixToolbox</title>
+    <title>WebP Converter - ImageCraft Pro</title>
     <style>
         * {
             margin: 0;
@@ -16,7 +16,7 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
             color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             min-height: 100vh;
         }
 
@@ -49,6 +49,18 @@
             text-decoration: none;
         }
 
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
         .back-btn {
             background: #f8f9fa;
             border: 1px solid #dee2e6;
@@ -65,50 +77,199 @@
             transform: translateY(-2px);
         }
 
+        .breadcrumb {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .breadcrumb a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+        }
+
         .container {
             max-width: 1200px;
             margin: 20px auto;
             padding: 0 20px;
-        }
-
-        .coming-soon {
             background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
             border-radius: 20px;
-            padding: 60px 40px;
-            text-align: center;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
         }
 
-        .coming-soon h1 {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .tool-header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
         }
 
-        .coming-soon p {
-            font-size: 1.2rem;
+        .tool-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .tool-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .panels {
+            display: flex;
+            height: 400px;
+        }
+
+        .panel {
+            flex: 1;
+            border: 2px dashed #ddd;
+            margin: 20px;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #fafafa;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .panel:hover {
+            border-color: #4facfe;
+            background: #f0faff;
+        }
+
+        .panel h3 {
+            position: absolute;
+            top: 15px;
+            left: 15px;
             color: #666;
-            margin-bottom: 30px;
+            font-size: 16px;
+            margin: 0;
+        }
+
+        .upload-area {
+            width: 250px;
+            height: 150px;
+            border: 2px dashed #999;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover {
+            border-color: #4facfe;
+            background: #f0faff;
+            transform: scale(1.05);
+        }
+
+        .upload-text {
+            color: #666;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        canvas {
+            max-width: 300px;
+            max-height: 300px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .controls {
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .controls h3 {
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .slider {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .buttons {
+            text-align: center;
+            margin-top: 30px;
         }
 
         .btn {
-            display: inline-block;
-            padding: 15px 30px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-            text-decoration: none;
+            padding: 12px 30px;
+            margin: 0 10px;
+            border: none;
             border-radius: 25px;
+            cursor: pointer;
             font-weight: 600;
+            font-size: 16px;
             transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #56ab2f, #a8e6cf);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #bdc3c7, #2c3e50);
+            color: white;
         }
 
         .btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        @media (max-width: 768px) {
+            .panels {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .tool-header h1 {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
@@ -122,12 +283,143 @@
         </nav>
     </header>
 
+    <div class="breadcrumb">
+        <a href="index.html">Home</a> > <a href="tools.html">Tools</a> > WebP Converter
+    </div>
+
     <div class="container">
-        <div class="coming-soon">
+        <div class="tool-header">
             <h1>🚀 WebP Converter</h1>
-            <p>This tool is coming soon! We're working hard to bring you the best WebP conversion experience.</p>
-            <a href="tools.html" class="btn">← Back to All Tools</a>
+            <p>Convert images to modern WebP format for better compression</p>
+        </div>
+
+        <div class="panels">
+            <div class="panel">
+                <h3>📥 Input Image</h3>
+                <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                    <div style="font-size: 40px;">🖼️</div>
+                    <div class="upload-text">Click to upload image<br>(PNG, JPG, WebP)</div>
+                </div>
+                <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.webp">
+                <canvas id="inputCanvas" style="display: none;"></canvas>
+            </div>
+            
+            <div class="panel">
+                <h3>🚀 WebP Output</h3>
+                <div id="outputPlaceholder" style="color: #999; text-align: center;">
+                    <div style="font-size: 40px;">🚀</div>
+                    <div>WebP image will appear here</div>
+                </div>
+                <canvas id="outputCanvas" style="display: none;"></canvas>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <h3>🚀 WebP Settings</h3>
+            
+            <div class="control-group">
+                <label>Quality: <span id="qualityValue">85</span>%</label>
+                <input type="range" id="quality" class="slider" min="1" max="100" value="85">
+                <small style="color: #666;">Higher values = better quality, larger file size</small>
+            </div>
+
+            <div class="buttons">
+                <button class="btn btn-primary" onclick="convertToWebP()" id="convertBtn" disabled>🚀 Convert to WebP</button>
+                <button class="btn btn-success" onclick="downloadImage()" id="downloadBtn" disabled>💾 Download WebP</button>
+                <button class="btn btn-secondary" onclick="resetAll()">🔄 Reset</button>
+            </div>
         </div>
     </div>
+
+    <script>
+        let inputImage = null;
+
+        document.getElementById('fileInput').addEventListener('change', handleFileUpload);
+        document.getElementById('quality').addEventListener('input', updateQualityValue);
+
+        function updateQualityValue() {
+            document.getElementById('qualityValue').textContent = document.getElementById('quality').value;
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    inputImage = img;
+                    
+                    const canvas = document.getElementById('inputCanvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    
+                    ctx.drawImage(img, 0, 0);
+                    canvas.style.display = 'block';
+                    document.querySelector('.upload-area').style.display = 'none';
+                    
+                    document.getElementById('convertBtn').disabled = false;
+                    
+                    // Auto-convert
+                    convertToWebP();
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function convertToWebP() {
+            if (!inputImage) return;
+
+            const quality = parseInt(document.getElementById('quality').value) / 100;
+            
+            const outputCanvas = document.getElementById('outputCanvas');
+            const ctx = outputCanvas.getContext('2d');
+            
+            outputCanvas.width = inputImage.width;
+            outputCanvas.height = inputImage.height;
+            
+            ctx.drawImage(inputImage, 0, 0);
+            
+            document.getElementById('outputPlaceholder').style.display = 'none';
+            outputCanvas.style.display = 'block';
+            document.getElementById('downloadBtn').disabled = false;
+        }
+
+        function downloadImage() {
+            const canvas = document.getElementById('outputCanvas');
+            const quality = parseInt(document.getElementById('quality').value) / 100;
+            
+            // Check if browser supports WebP
+            const supportsWebP = canvas.toDataURL('image/webp').indexOf('image/webp') === 5;
+            
+            if (supportsWebP) {
+                const link = document.createElement('a');
+                link.download = 'converted-image.webp';
+                link.href = canvas.toDataURL('image/webp', quality);
+                link.click();
+            } else {
+                alert('Your browser does not support WebP format. The image will be downloaded as PNG.');
+                const link = document.createElement('a');
+                link.download = 'converted-image.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }
+        }
+
+        function resetAll() {
+            document.getElementById('fileInput').value = '';
+            document.getElementById('inputCanvas').style.display = 'none';
+            document.getElementById('outputCanvas').style.display = 'none';
+            document.querySelector('.upload-area').style.display = 'flex';
+            document.getElementById('outputPlaceholder').style.display = 'block';
+            document.getElementById('convertBtn').disabled = true;
+            document.getElementById('downloadBtn').disabled = true;
+            inputImage = null;
+        }
+    </script>
 </body>
 </html>
