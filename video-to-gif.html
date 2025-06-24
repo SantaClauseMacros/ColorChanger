@@ -297,7 +297,7 @@
     <header class="header">
         <nav class="nav-container">
             <a href="index.html" class="logo">
-                <img src="Logo.png" alt="PixToolbox" style="height: 40px; width: auto;">
+                <img src="./Logo.png" alt="PixToolbox" style="height: 40px; width: auto;" onerror="this.style.display='none'; this.parentNode.innerHTML='<div class=\'logo-icon\'>P</div>PixToolbox';">
             </a>
             <a href="tools.html" class="back-btn">← Back to Tools</a>
         </nav>
@@ -311,11 +311,11 @@
         <div class="panels">
             <div class="panel">
                 <h3>🎬 Input Video</h3>
-                <div class="upload-area" onclick="document.getElementById('videoInput').click()">
+                <div class="upload-area" onclick="triggerVideoUpload()">
                     <div style="font-size: 40px;">🎥</div>
                     <div class="upload-text">Click to upload video<br>(MP4, WebM, MOV, AVI, MKV, etc.)</div>
                 </div>
-                <input type="file" id="videoInput" accept=".mp4,.webm,.mov,.avi,.mkv,.flv,.wmv,.m4v,.3gp">
+                <input type="file" id="videoInput" accept="video/*,.mp4,.webm,.mov,.avi,.mkv,.flv,.wmv,.m4v,.3gp">
                 <video id="videoPreview" controls style="display: none;"></video>
             </div>
 
@@ -387,6 +387,10 @@
         const { fetchFile, toBlobURL } = FFmpegUtil;
 
         document.getElementById('videoInput').addEventListener('change', handleVideoUpload);
+
+        function triggerVideoUpload() {
+            document.getElementById('videoInput').click();
+        }
         document.getElementById('fps').addEventListener('input', updateFpsValue);
         document.getElementById('quality').addEventListener('input', updateQualityValue);
         document.getElementById('scale').addEventListener('input', updateScaleValue);
@@ -444,8 +448,10 @@
             const file = event.target.files[0];
             if (!file) return;
 
-            if (!file.type.startsWith('video/')) {
-                alert('Please upload a valid video file.');
+            console.log('File selected:', file.name, file.type, file.size);
+
+            if (!file.type.startsWith('video/') && !file.name.match(/\.(mp4|webm|mov|avi|mkv|flv|wmv|m4v|3gp)$/i)) {
+                alert('Please upload a valid video file (MP4, WebM, MOV, AVI, MKV, etc.).');
                 return;
             }
 
