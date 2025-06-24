@@ -3,1234 +3,390 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PNG/GIF Color Replacer & Background Remover</title>
+    <title>Online PNG Tools - Professional PNG Editing Suite</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        * {
             margin: 0;
-            padding: 20px;
-            background-color: #f0f0f0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
-        .container {
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .header {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
             max-width: 1200px;
             margin: 0 auto;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        
-        .panels {
+            padding: 0 20px;
             display: flex;
-            height: 400px;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
         }
-        
-        .panel {
-            flex: 1;
-            border: 2px dashed #ccc;
-            margin: 10px;
-            border-radius: 8px;
+
+        .logo {
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: #e74c3c;
+            border-radius: 6px;
+            display: flex;
             align-items: center;
             justify-content: center;
-            background: #fafafa;
-            position: relative;
+            color: white;
+            font-weight: bold;
         }
-        
-        .panel h3 {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            color: #666;
-            font-size: 16px;
-            margin: 0;
-        }
-        
-        .upload-area {
-            width: 200px;
-            height: 150px;
-            border: 2px dashed #999;
-            border-radius: 8px;
+
+        .nav-menu {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            background: white;
+            gap: 30px;
+            list-style: none;
         }
-        
-        .upload-area:hover:not(.drag-over) {
-            border-color: #007bff;
-            background: #f8f9ff;
-        }
-        
-        .panel.drag-over {
-            border-color: #007bff;
-            background: #f0f7ff;
-        }
-        
-        .panel.drag-over .upload-area {
-            border-color: #007bff;
-            background: #e3f2fd;
-            transform: scale(1.35);
-        }
-        
-        .upload-text {
+
+        .nav-menu a {
+            text-decoration: none;
             color: #666;
-            text-align: center;
-            margin-top: 10px;
+            font-weight: 500;
+            transition: color 0.2s;
         }
-        
-        #fileInput {
-            display: none;
+
+        .nav-menu a:hover {
+            color: #3498db;
         }
-        
-        canvas {
-            max-width: 300px;
-            max-height: 300px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .controls {
-            padding: 30px;
+
+        .all-tools-btn {
             background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #495057;
+            font-weight: 500;
+            transition: all 0.2s;
         }
-        
-        .controls h3 {
+
+        .all-tools-btn:hover {
+            background: #e9ecef;
+        }
+
+        .announcement {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 6px;
+            padding: 12px 20px;
+            margin: 20px auto;
+            max-width: 1200px;
+            color: #1565c0;
+            font-size: 14px;
+        }
+
+        .hero {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
             margin-bottom: 20px;
             color: #333;
         }
-        
-        .mode-selector {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+
+        .hero p {
+            font-size: 1.1rem;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto 40px;
         }
-        
-        .mode-selector h4 {
-            margin-bottom: 15px;
-            color: #555;
-            font-weight: normal;
-        }
-        
-        .mode-buttons {
+
+        .cta-buttons {
             display: flex;
-            gap: 10px;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 40px;
         }
-        
-        .mode-btn {
-            padding: 10px 20px;
-            border: 2px solid #ddd;
-            background: white;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-weight: 500;
-        }
-        
-        .mode-btn.active {
-            background: #007bff;
-            color: white;
-            border-color: #007bff;
-        }
-        
-        .mode-btn:hover:not(.active) {
-            border-color: #007bff;
-            background: #f8f9ff;
-        }
-        
-        .control-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 30px;
-        }
-        
-        .control-section {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        
-        .control-section h4 {
-            margin-bottom: 15px;
-            color: #555;
-            font-weight: normal;
-        }
-        
-        .color-group {
-            margin-bottom: 15px;
-        }
-        
-        .color-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #666;
-            font-size: 14px;
-        }
-        
-        .color-input {
-            width: 40px;
-            height: 30px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-right: 10px;
-        }
-        
-        .color-text {
-            padding: 6px 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-family: monospace;
-            width: 80px;
-        }
-        
-        .gradient-preview {
-            width: 100%;
-            height: 40px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-top: 10px;
-            position: relative;
-        }
-        
-        .gradient-position-indicator {
-            position: absolute;
-            top: -5px;
-            bottom: -5px;
-            width: 2px;
-            background: #333;
-            border-radius: 1px;
-            pointer-events: none;
-            z-index: 35;
-        }
-        
-        .direction-selector {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 5px;
-            margin-top: 10px;
-        }
-        
-        .direction-btn {
-            padding: 8px;
-            border: 1px solid #ddd;
-            background: white;
-            border-radius: 4px;
-            cursor: pointer;
-            text-align: center;
-            font-size: 12px;
-            transition: all 0.2s;
-        }
-        
-        .direction-btn.active {
-            background: #007bff;
-            color: white;
-            border-color: #007bff;
-        }
-        
-        .direction-btn:hover:not(.active) {
-            background: #f8f9ff;
-            border-color: #007bff;
-        }
-        
-        .slider-group {
-            margin-bottom: 15px;
-        }
-        
-        .slider-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #666;
-            font-size: 14px;
-        }
-        
-        .slider {
-            width: 100%;
-            margin-bottom: 10px;
-        }
-        
-        .checkbox-group {
-            margin-bottom: 10px;
-        }
-        
-        .checkbox-group input {
-            margin-right: 8px;
-        }
-        
-        .checkbox-group label {
-            color: #555;
-        }
-        
-        .info-box {
-            background: #e3f2fd;
-            border: 1px solid #bbdefb;
-            border-radius: 4px;
-            padding: 10px;
-            margin-top: 10px;
-            font-size: 12px;
-            color: #1565c0;
-        }
-        
-        .save-options {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .save-options h4 {
-            margin-bottom: 15px;
-            color: #555;
-            font-weight: normal;
-        }
-        
-        .directory-group {
-            margin-bottom: 15px;
-        }
-        
-        .directory-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #666;
-            font-size: 14px;
-        }
-        
-        .directory-selector {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        
-        .directory-input {
-            flex: 1;
-            padding: 8px 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 14px;
-            background: #f9f9f9;
-        }
-        
-        .directory-btn {
-            padding: 8px 16px;
-            background: #6c757d;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        
-        .directory-btn:hover {
-            background: #5a6268;
-        }
-        
-        .filename-group {
-            margin-bottom: 20px;
-        }
-        
-        .filename-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #666;
-            font-size: 14px;
-        }
-        
-        .filename-input {
-            padding: 8px 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            width: 100%;
-            font-size: 14px;
-        }
-        
-        .buttons {
-            text-align: center;
-            margin-top: 20px;
-        }
-        
+
         .btn {
-            padding: 10px 20px;
-            margin: 5px;
+            padding: 12px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
             border: none;
-            border-radius: 4px;
             cursor: pointer;
-            font-weight: bold;
         }
-        
-        .btn-success {
-            background: #28a745;
+
+        .btn-primary {
+            background: #3498db;
             color: white;
         }
-        
+
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+
         .btn-secondary {
-            background: #6c757d;
+            background: #95a5a6;
             color: white;
         }
-        
-        .btn:hover {
-            opacity: 0.9;
-        }
-        
-        .browser-note {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 4px;
-            padding: 10px;
-            margin-top: 10px;
-            font-size: 12px;
-            color: #856404;
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
         }
 
-        .auto-indicator {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            border-radius: 4px;
-            padding: 8px 12px;
-            margin-bottom: 15px;
-            font-size: 12px;
-            color: #155724;
+        .search-section {
+            max-width: 800px;
+            margin: 0 auto 60px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-box:focus {
+            border-color: #3498db;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .tool-card {
+            background: white;
+            border: 1px solid #e1e8ed;
+            border-radius: 8px;
+            padding: 20px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s;
+        }
+
+        .tool-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .tool-card h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .tool-card p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .trust-section {
+            max-width: 1200px;
+            margin: 80px auto 40px;
+            padding: 0 20px;
             text-align: center;
         }
 
-        .hidden {
-            display: none !important;
+        .trust-section h2 {
+            margin-bottom: 40px;
+            color: #333;
         }
 
-        .gradient-position-control {
-            margin-top: 15px;
-        }
-
-        .position-slider-container {
+        .trust-logos {
             display: flex;
+            justify-content: center;
             align-items: center;
-            gap: 10px;
-            margin-top: 5px;
+            gap: 60px;
+            flex-wrap: wrap;
+            opacity: 0.7;
         }
 
-        .position-value {
-            min-width: 35px;
-            text-align: center;
+        .trust-logo {
+            font-size: 24px;
             font-weight: bold;
-            color: #007bff;
+            color: #666;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 40px 20px;
+            margin-top: 80px;
+            text-align: center;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="panels">
-            <div class="panel">
-                <h3>📥 Input Image</h3>
-                <div class="upload-area" onclick="document.getElementById('fileInput').click()">
-                    <div style="font-size: 40px;">📁</div>
-                    <div class="upload-text">Click to upload PNG or GIF</div>
-                </div>
-                <input type="file" id="fileInput" accept=".png,.gif">
-                <canvas id="inputCanvas" style="display: none;"></canvas>
-            </div>
-            
-            <div class="panel">
-                <h3>🎯 Output Image</h3>
-                <div id="outputPlaceholder" style="color: #999; text-align: center;">
-                    <div style="font-size: 40px;">🖼️</div>
-                    <div>Processed image will appear here</div>
-                </div>
-                <canvas id="outputCanvas" style="display: none;"></canvas>
-            </div>
-        </div>
-        
-        <div class="controls">
-            <h3>🛠️ Tool Options</h3>
-            <div class="auto-indicator">
-                ✨ <strong>Auto Mode:</strong> Changes are applied automatically when you upload an image or adjust settings!
-            </div>
-            
-            <div class="mode-selector">
-                <h4>Tool Mode</h4>
-                <div class="mode-buttons">
-                    <button class="mode-btn active" onclick="setMode('color')" id="colorModeBtn">🎨 Solid Color</button>
-                    <button class="mode-btn" onclick="setMode('gradient')" id="gradientModeBtn">🌈 Gradient</button>
-                    <button class="mode-btn" onclick="setMode('background')" id="backgroundModeBtn">🗑️ Remove Background</button>
-                </div>
-            </div>
-            
-            <div class="control-grid">
-                <div class="control-section">
-                    <h4>Source Color</h4>
-                    <div class="color-group">
-                        <label>Replace this color:</label>
-                        <input type="color" id="fromColor" class="color-input" value="#eb1f2a">
-                        <input type="text" id="fromColorText" class="color-text" value="#eb1f2a">
-                    </div>
-                    <div class="slider-group">
-                        <label>Match this % of similar colors:</label>
-                        <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
-                            <input type="range" id="tolerance" class="slider" min="0" max="100" value="20" style="flex: 1;">
-                            <input type="number" id="toleranceInput" min="0" max="100" value="35" style="width: 50px; padding: 4px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px;">
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="control-section" id="solidColorSection">
-                    <h4>Replacement Color</h4>
-                    <div class="color-group">
-                        <label>With this color:</label>
-                        <input type="color" id="toColor" class="color-input" value="#ffa500">
-                        <input type="text" id="toColorText" class="color-text" value="#ffa500">
-                    </div>
-                </div>
-                
-                <div class="control-section hidden" id="gradientSection">
-                    <h4>Gradient Colors</h4>
-                    <div class="color-group">
-                        <label>Start color:</label>
-                        <input type="color" id="gradientStart" class="color-input" value="#eb1f2a">
-                        <input type="text" id="gradientStartText" class="color-text" value="#eb1f2a">
-                    </div>
-                    <div class="color-group">
-                        <label>End color:</label>
-                        <input type="color" id="gradientEnd" class="color-input" value="#0000ff">
-                        <input type="text" id="gradientEndText" class="color-text" value="#0000ff">
-                    </div>
-                    
-                    <div class="gradient-position-control">
-                        <label>Gradient Balance:</label>
-                        <div class="position-slider-container">
-                            <span style="font-size: 12px; color: #666;">Start</span>
-                            <input type="range" id="gradientPosition" class="slider" min="0" max="100" value="60" style="flex: 1;">
-                            <span style="font-size: 12px; color: #666;">End</span>
-                            <span class="position-value" id="positionValue">60%</span>
-                        </div>
-                        <div class="info-box">
-                            Move left for more start color, right for more end color. 50% = equal balance.
-                        </div>
-                    </div>
-                    
-                    <div class="gradient-preview" id="gradientPreview">
-                        <div class="gradient-position-indicator" id="positionIndicator"></div>
-                    </div>
-                    <label>Gradient Direction:</label>
-                    <div class="direction-selector">
-                        <div class="direction-btn" onclick="setDirection('top-left')">↖ Top Left</div>
-                        <div class="direction-btn" onclick="setDirection('top')">↑ Top</div>
-                        <div class="direction-btn" onclick="setDirection('top-right')">↗ Top Right</div>
-                        <div class="direction-btn" onclick="setDirection('left')">← Left</div>
-                        <div class="direction-btn" onclick="setDirection('center')">● Center</div>
-                        <div class="direction-btn" onclick="setDirection('right')">→ Right</div>
-                        <div class="direction-btn active" onclick="setDirection('bottom-left')">↙ Bottom Left</div>
-                        <div class="direction-btn" onclick="setDirection('bottom')">↓ Bottom</div>
-                        <div class="direction-btn" onclick="setDirection('bottom-right')">↘ Bottom Right</div>
-                    </div>
-                </div>
-                
-                <div class="control-section hidden" id="backgroundSection">
-                    <h4>Background Removal</h4>
-                    <div class="color-group">
-                        <label>Background color to remove:</label>
-                        <input type="color" id="bgColor" class="color-input" value="#ffffff">
-                        <input type="text" id="bgColorText" class="color-text" value="#ffffff">
-                    </div>
-                    <div class="slider-group">
-                        <label>Detection sensitivity:</label>
-                        <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
-                            <input type="range" id="bgTolerance" class="slider" min="0" max="100" value="30" style="flex: 1;">
-                            <input type="number" id="bgToleranceInput" min="0" max="100" value="30" style="width: 50px; padding: 4px; border: 1px solid #ddd; border-radius: 3px; font-size: 12px;">
-                        </div>
-                    </div>
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="autoDetectBg" checked>
-                        <label>Auto-detect background color</label>
-                    </div>
-                    <div class="info-box">
-                        Auto-detect will analyze the corners of the image to determine the most likely background color. Disable this to manually select the background color above.
-                    </div>
-                </div>
+    <header class="header">
+        <nav class="nav-container">
+            <a href="/" class="logo">
+                <div class="logo-icon">P</div>
+                ONLINEPNGTOOLS
+                <span style="font-size: 12px; color: #999;">Part of Online Tools family</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#profile">Profile</a></li>
+            </ul>
+            <a href="#" class="all-tools-btn">All Tools ▼</a>
+        </nav>
+    </header>
 
-                <div class="control-section">
-                    <h4>Refine Edges</h4>
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="preserveShades" checked>
-                        <label>Preserve Color Shades</label>
-                    </div>
-                    <div class="info-box">
-                        If you turn this option on, then all pixels during the color-change operation will preserve their shades (which is the lightness and darkness of each pixel).
-                    </div>
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="smoothEdges" checked>
-                        <label>Make Edges Smooth</label>
-                    </div>
-                    <div class="slider-group">
-                        <label>Edge refinement radius: <span id="radiusValue">1</span></label>
-                        <input type="range" id="edgeRadius" class="slider" min="0" max="5" value="1">
-                    </div>
-                </div>
-            </div>
-            
-            <div class="save-options">
-                <h4>💾 Save Options</h4>
-                <div class="directory-group">
-                    <label for="directoryPath">Save directory:</label>
-                    <div class="directory-selector">
-                        <input type="text" id="directoryPath" class="directory-input" placeholder="No directory selected - will use browser default" readonly>
-                        <button class="directory-btn" onclick="selectDirectory()">📁 Browse</button>
-                    </div>
-                    <div class="browser-note">
-                        <strong>Note:</strong> Directory selection requires a modern browser with File System Access API support (Chrome 86+, Edge 86+). If unsupported, files will download to your default Downloads folder.
-                    </div>
-                </div>
-                <div class="filename-group">
-                    <label for="filename">Filename:</label>
-                    <input type="text" id="filename" class="filename-input" value="color-replaced" placeholder="Enter filename (without .png)">
-                </div>
-            </div>
-            
-            <div class="buttons">
-                <button class="btn btn-success" onclick="downloadImage()">💾 Download</button>
-                <button class="btn btn-secondary" onclick="copyToClipboard()">📋 Copy</button>
-                <button class="btn btn-secondary" onclick="resetAll()">🔄 Reset</button>
-            </div>
-        </div>
+    <div class="announcement">
+        🚀 <strong>NEW:</strong> We created <a href="#" style="color: #1565c0;">Advanced PNG Editor</a> - get professional editing in 5 seconds. Check it out!
     </div>
 
+    <main class="hero">
+        <h1>Online PNG Maker. Get things done fast</h1>
+        <p>
+            Revolutionize your PNG editing experience with Online PNG Maker tools! Say goodbye to complicated 
+            software and hello to instant, one-click transformations—all in your web browser. With our intuitive, uniform 
+            interface, editing your PNGs has never been easier and faster. Created by team <strong>WebTools</strong>.
+        </p>
+
+        <div class="cta-buttons">
+            <a href="color-replacer.html" class="btn btn-primary">See All PNG Tools</a>
+            <a href="color-replacer.html" class="btn btn-secondary">Try PNG Color Changer <span style="background: orange; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px; margin-left: 5px;">MOST POPULAR</span></a>
+        </div>
+
+        <div class="search-section">
+            <input type="text" class="search-box" placeholder="Search all tools" id="searchTools">
+        </div>
+
+        <div class="tools-grid" id="toolsGrid">
+            <a href="color-replacer.html" class="tool-card">
+                <h3>create a transparent png</h3>
+                <p>Remove backgrounds and create transparent PNG images instantly</p>
+            </a>
+
+            <a href="color-replacer.html" class="tool-card">
+                <h3>convert jpg to png</h3>
+                <p>Convert JPEG images to PNG format with high quality</p>
+            </a>
+
+            <a href="color-replacer.html" class="tool-card">
+                <h3>rotate a png</h3>
+                <p>Rotate PNG images by any angle with precision</p>
+            </a>
+
+            <a href="color-replacer.html" class="tool-card">
+                <h3>pixelate a png</h3>
+                <p>Apply pixelation effects to your PNG images</p>
+            </a>
+
+            <a href="color-replacer.html" class="tool-card">
+                <h3>create a grayscale png</h3>
+                <p>Convert color PNG images to grayscale</p>
+            </a>
+
+            <a href="color-replacer.html" class="tool-card">
+                <h3>add png background</h3>
+                <p>Add solid colors or gradients as PNG backgrounds</p>
+            </a>
+
+            <a href="color-replacer.html" class="tool-card">
+                <h3>resize a png</h3>
+                <p>Resize PNG images while maintaining quality</p>
+            </a>
+
+            <a href="color-replacer.html" class="tool-card">
+                <h3>crop a png</h3>
+                <p>Crop PNG images to specific dimensions</p>
+            </a>
+
+            <a href="color-replacer.html" class="tool-card">
+                <h3>blur a png</h3>
+                <p>Apply blur effects to PNG images</p>
+            </a>
+        </div>
+    </main>
+
+    <section class="trust-section">
+        <h2>Our tools and products are trusted by:</h2>
+        <div class="trust-logos">
+            <div class="trust-logo">L'OREAL</div>
+            <div class="trust-logo">motorola</div>
+            <div class="trust-logo">Payoneer</div>
+            <div class="trust-logo">LIBRARY</div>
+            <div class="trust-logo">fiverr</div>
+        </div>
+        <div style="margin-top: 40px;">
+            <a href="#" class="btn btn-secondary">See Our Plans and Pricing</a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; 2024 Online PNG Tools. All rights reserved.</p>
+    </footer>
+
     <script>
-        let originalImageData = null;
-        let processedImageData = null;
-        let selectedDirectoryHandle = null;
-        let currentMode = 'color';
-        let gradientDirection = 'bottom-left';
-        let gradientPosition = 60;
+        const searchInput = document.getElementById('searchTools');
+        const toolsGrid = document.getElementById('toolsGrid');
+        const toolCards = Array.from(toolsGrid.querySelectorAll('.tool-card'));
 
-        document.getElementById('fileInput').addEventListener('change', handleFileUpload);
-        document.getElementById('fromColor').addEventListener('change', updateFromColorText);
-        document.getElementById('toColor').addEventListener('change', updateToColorText);
-        document.getElementById('fromColorText').addEventListener('input', updateFromColorPicker);
-        document.getElementById('toColorText').addEventListener('input', updateToColorPicker);
-        document.getElementById('gradientStart').addEventListener('change', updateGradientStartText);
-        document.getElementById('gradientEnd').addEventListener('change', updateGradientEndText);
-        document.getElementById('gradientStartText').addEventListener('input', updateGradientStartPicker);
-        document.getElementById('gradientEndText').addEventListener('input', updateGradientEndPicker);
-        document.getElementById('gradientPosition').addEventListener('input', updateGradientPosition);
-        document.getElementById('tolerance').addEventListener('input', updateToleranceValue);
-        document.getElementById('toleranceInput').addEventListener('input', updateToleranceFromInput);
-        document.getElementById('edgeRadius').addEventListener('input', updateRadiusValue);
-        document.getElementById('preserveShades').addEventListener('change', autoProcessImage);
-        document.getElementById('smoothEdges').addEventListener('change', autoProcessImage);
-        document.getElementById('bgColor').addEventListener('change', updateBgColorText);
-        document.getElementById('bgColorText').addEventListener('input', updateBgColorPicker);
-        document.getElementById('bgTolerance').addEventListener('input', updateBgToleranceValue);
-        document.getElementById('bgToleranceInput').addEventListener('input', updateBgToleranceFromInput);
-        document.getElementById('autoDetectBg').addEventListener('change', autoProcessImage);
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
 
-        const uploadPanel = document.querySelector('.panel');
-        
-        uploadPanel.addEventListener('dragover', handleDragOver);
-        uploadPanel.addEventListener('dragenter', handleDragEnter);
-        uploadPanel.addEventListener('dragleave', handleDragLeave);
-        uploadPanel.addEventListener('drop', handleDrop);
-        
-        document.addEventListener('dragover', (e) => e.preventDefault());
-        document.addEventListener('drop', (e) => e.preventDefault());
+            toolCards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const description = card.querySelector('p').textContent.toLowerCase();
 
-        const supportsFileSystemAccess = 'showDirectoryPicker' in window;
-        if (!supportsFileSystemAccess) {
-            document.querySelector('.browser-note').innerHTML = 
-                '<strong>Directory Selection Not Supported:</strong> Your browser doesn\'t support directory selection. Files will download to your default Downloads folder.';
-            document.querySelector('.directory-btn').disabled = true;
-            document.querySelector('.directory-btn').style.opacity = '0.5';
-        }
-
-        updateGradientPreview();
-
-        function setMode(mode) {
-            currentMode = mode;
-            
-            document.getElementById('colorModeBtn').classList.toggle('active', mode === 'color');
-            document.getElementById('gradientModeBtn').classList.toggle('active', mode === 'gradient');
-            document.getElementById('backgroundModeBtn').classList.toggle('active', mode === 'background');
-            
-            document.getElementById('solidColorSection').classList.toggle('hidden', mode !== 'color');
-            document.getElementById('gradientSection').classList.toggle('hidden', mode !== 'gradient');
-            document.getElementById('backgroundSection').classList.toggle('hidden', mode !== 'background');
-            
-            autoProcessImage();
-        }
-
-        function setDirection(direction) {
-            gradientDirection = direction;
-            
-            document.querySelectorAll('.direction-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            updateGradientPreview();
-            autoProcessImage();
-        }
-
-        function updateGradientPosition() {
-            gradientPosition = parseInt(document.getElementById('gradientPosition').value);
-            document.getElementById('positionValue').textContent = gradientPosition + '%';
-            
-            const indicator = document.getElementById('positionIndicator');
-            indicator.style.left = gradientPosition + '%';
-            
-            updateGradientPreview();
-            autoProcessImage();
-        }
-
-        function updateGradientPreview() {
-    const preview = document.getElementById('gradientPreview');
-    const startColor = document.getElementById('gradientStart').value;
-    const endColor = document.getElementById('gradientEnd').value;
-    const position = gradientPosition;
-    
-    let gradientCSS = '';
-    
-    switch(gradientDirection) {
-        case 'top':
-            gradientCSS = `linear-gradient(to top, ${startColor} 0%, ${endColor} 100%)`;
-            break;
-        case 'bottom':
-            gradientCSS = `linear-gradient(to bottom, ${startColor} 0%, ${endColor} 100%)`;
-            break;
-        case 'left':
-            gradientCSS = `linear-gradient(to left, ${startColor} 0%, ${endColor} 100%)`;
-            break;
-        case 'right':
-            gradientCSS = `linear-gradient(to right, ${startColor} 0%, ${endColor} 100%)`;
-            break;
-        case 'top-left':
-            gradientCSS = `linear-gradient(to top left, ${startColor} 0%, ${endColor} 100%)`;
-            break;
-        case 'top-right':
-            gradientCSS = `linear-gradient(to top right, ${startColor} 0%, ${endColor} 100%)`;
-            break;
-        case 'bottom-left':
-            gradientCSS = `linear-gradient(to bottom left, ${startColor} 0%, ${endColor} 100%)`;
-            break;
-        case 'bottom-right':
-            gradientCSS = `linear-gradient(to bottom right, ${startColor} 0%, ${endColor} 100%)`;
-            break;
-        case 'center':
-            gradientCSS = `radial-gradient(circle, ${startColor} 0%, ${endColor} 100%)`;
-            break;
-    }
-    
-    preview.style.background = gradientCSS;
-    
-    const indicator = document.getElementById('positionIndicator');
-    indicator.style.left = position + '%';
-}
-
-        async function selectDirectory() {
-            if (!supportsFileSystemAccess) {
-                alert('Directory selection is not supported in your browser. Files will be saved to your default Downloads folder.');
-                return;
-            }
-
-            try {
-                selectedDirectoryHandle = await window.showDirectoryPicker();
-                document.getElementById('directoryPath').value = selectedDirectoryHandle.name;
-            } catch (err) {
-                console.log('Directory selection cancelled');
-            }
-        }
-
-        function handleDragOver(e) {
-            e.preventDefault();
-        }
-
-        function handleDragEnter(e) {
-            e.preventDefault();
-            e.currentTarget.classList.add('drag-over');
-        }
-
-        function handleDragLeave(e) {
-            e.preventDefault();
-            if (!e.currentTarget.contains(e.relatedTarget)) {
-                e.currentTarget.classList.remove('drag-over');
-            }
-        }
-
-        function handleDrop(e) {
-            e.preventDefault();
-            e.currentTarget.classList.remove('drag-over');
-            
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                const file = files[0];
-                if (file.type.includes('png') || file.type.includes('gif')) {
-                    handleFile(file);
+                if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    card.style.display = 'block';
                 } else {
-                    alert('Please upload a PNG or GIF file.');
-                }
-            }
-        }
-
-        function updateFromColorText() {
-            document.getElementById('fromColorText').value = document.getElementById('fromColor').value;
-            autoProcessImage();
-        }
-
-        function updateToColorText() {
-            document.getElementById('toColorText').value = document.getElementById('toColor').value;
-            autoProcessImage();
-        }
-
-        function updateFromColorPicker() {
-            const value = document.getElementById('fromColorText').value;
-            if (/^#[0-9A-F]{6}$/i.test(value)) {
-                document.getElementById('fromColor').value = value;
-                autoProcessImage();
-            }
-        }
-
-        function updateToColorPicker() {
-            const value = document.getElementById('toColorText').value;
-            if (/^#[0-9A-F]{6}$/i.test(value)) {
-                document.getElementById('toColor').value = value;
-                autoProcessImage();
-            }
-        }
-
-        function updateGradientStartText() {
-            document.getElementById('gradientStartText').value = document.getElementById('gradientStart').value;
-            updateGradientPreview();
-            autoProcessImage();
-        }
-
-        function updateGradientEndText() {
-            document.getElementById('gradientEndText').value = document.getElementById('gradientEnd').value;
-            updateGradientPreview();
-            autoProcessImage();
-        }
-
-        function updateGradientStartPicker() {
-            const value = document.getElementById('gradientStartText').value;
-            if (/^#[0-9A-F]{6}$/i.test(value)) {
-                document.getElementById('gradientStart').value = value;
-                updateGradientPreview();
-                autoProcessImage();
-            }
-        }
-
-        function updateGradientEndPicker() {
-            const value = document.getElementById('gradientEndText').value;
-            if (/^#[0-9A-F]{6}$/i.test(value)) {
-                document.getElementById('gradientEnd').value = value;
-                updateGradientPreview();
-                autoProcessImage();
-            }
-        }
-
-        function updateToleranceValue() {
-            const value = document.getElementById('tolerance').value;
-            document.getElementById('toleranceInput').value = value;
-            autoProcessImage();
-        }
-
-        function updateToleranceFromInput() {
-            const value = document.getElementById('toleranceInput').value;
-            if (value >= 0 && value <= 100) {
-                document.getElementById('tolerance').value = value;
-                autoProcessImage();
-            }
-        }
-
-        function updateRadiusValue() {
-            document.getElementById('radiusValue').textContent = document.getElementById('edgeRadius').value;
-            autoProcessImage();
-        }
-
-        function updateBgColorText() {
-            document.getElementById('bgColorText').value = document.getElementById('bgColor').value;
-            autoProcessImage();
-        }
-
-        function updateBgColorPicker() {
-            const value = document.getElementById('bgColorText').value;
-            if (/^#[0-9A-F]{6}$/i.test(value)) {
-                document.getElementById('bgColor').value = value;
-                autoProcessImage();
-            }
-        }
-
-        function updateBgToleranceValue() {
-            const value = document.getElementById('bgTolerance').value;
-            document.getElementById('bgToleranceInput').value = value;
-            autoProcessImage();
-        }
-
-        function updateBgToleranceFromInput() {
-            const value = document.getElementById('bgToleranceInput').value;
-            if (value >= 0 && value <= 100) {
-                document.getElementById('bgTolerance').value = value;
-                autoProcessImage();
-            }
-        }
-
-        function detectBackgroundColor(imageData) {
-            const data = imageData.data;
-            const width = imageData.width;
-            const height = imageData.height;
-            const cornerPixels = [];
-            
-            // Sample corner pixels
-            const samplePositions = [
-                [0, 0], [width-1, 0], [0, height-1], [width-1, height-1],
-                [Math.floor(width/2), 0], [0, Math.floor(height/2)], 
-                [width-1, Math.floor(height/2)], [Math.floor(width/2), height-1]
-            ];
-            
-            samplePositions.forEach(([x, y]) => {
-                const index = (y * width + x) * 4;
-                if (data[index + 3] > 0) { // Not transparent
-                    cornerPixels.push({
-                        r: data[index],
-                        g: data[index + 1],
-                        b: data[index + 2]
-                    });
+                    card.style.display = 'none';
                 }
             });
-            
-            if (cornerPixels.length === 0) return { r: 255, g: 255, b: 255 };
-            
-            // Find most common color
-            const colorCounts = {};
-            cornerPixels.forEach(pixel => {
-                const key = `${pixel.r},${pixel.g},${pixel.b}`;
-                colorCounts[key] = (colorCounts[key] || 0) + 1;
-            });
-            
-            let mostCommonColor = Object.keys(colorCounts).reduce((a, b) => 
-                colorCounts[a] > colorCounts[b] ? a : b
-            );
-            
-            const [r, g, b] = mostCommonColor.split(',').map(Number);
-            return { r, g, b };
-        }
-
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            handleFile(file);
-        }
-
-        function handleFile(file) {
-            if (!file.type.includes('png') && !file.type.includes('gif')) {
-                alert('Please upload a PNG or GIF file.');
-                return;
-            }
-
-            const fileName = file.name.replace(/\.[^/.]+$/, "");
-            document.getElementById('filename').value = fileName + "-edited";
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    displayInputImage(img);
-                    autoProcessImage();
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function displayInputImage(img) {
-            const canvas = document.getElementById('inputCanvas');
-            const ctx = canvas.getContext('2d');
-            
-            canvas.width = img.width;
-            canvas.height = img.height;
-            ctx.drawImage(img, 0, 0);
-            
-            originalImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            
-            canvas.style.display = 'block';
-            canvas.parentElement.querySelector('.upload-area').style.display = 'none';
-        }
-
-        function hexToRgb(hex) {
-            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-            return result ? {
-                r: parseInt(result[1], 16),
-                g: parseInt(result[2], 16),
-                b: parseInt(result[3], 16)
-            } : null;
-        }
-
-function getGradientColor(x, y, width, height, startColor, endColor, direction, position) {
-    let progress = 0;
-    
-    switch(direction) {
-        case 'top':
-            progress = y / height;
-            break;
-        case 'bottom':
-            progress = 1 - (y / height);
-            break;
-        case 'left':
-            progress = x / width;
-            break;
-        case 'right':
-            progress = 1 - (x / width);
-            break;
-        case 'top-left':
-            progress = (x + y) / (width + height);
-            break;
-        case 'top-right':
-            progress = ((width - x) + y) / (width + height);
-            break;
-        case 'bottom-left':
-            progress = (x + (height - y)) / (width + height);
-            break;
-        case 'bottom-right':
-            progress = ((width - x) + (height - y)) / (width + height);
-            break;
-        case 'center':
-            const centerX = width / 2;
-            const centerY = height / 2;
-            const maxDistance = Math.sqrt(centerX * centerX + centerY * centerY);
-            const distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
-            progress = distance / maxDistance;
-            break;
-    }
-    
-    progress = Math.max(0, Math.min(1, progress));
-    
-    const positionRatio = position / 100;
-    if (progress < positionRatio) {
-        progress = Math.pow(progress / positionRatio, 1.5) * 0.4;
-    } else {
-        progress = 0.4 + ((progress - positionRatio) / (1 - positionRatio)) * 0.6;
-    }
-    
-    return {
-        r: Math.round(startColor.r + (endColor.r - startColor.r) * progress),
-        g: Math.round(startColor.g + (endColor.g - startColor.g) * progress),
-        b: Math.round(startColor.b + (endColor.b - startColor.b) * progress)
-    };
-}
-
-        function autoProcessImage() {
-            if (!originalImageData) return;
-
-            const outputCanvas = document.getElementById('outputCanvas');
-            const outputCtx = outputCanvas.getContext('2d');
-            
-            outputCanvas.width = originalImageData.width;
-            outputCanvas.height = originalImageData.height;
-
-            const newImageData = outputCtx.createImageData(originalImageData.width, originalImageData.height);
-            const data = originalImageData.data;
-            const newData = newImageData.data;
-
-            let matchCount = 0;
-            const width = originalImageData.width;
-            const height = originalImageData.height;
-
-            if (currentMode === 'background') {
-                // Background removal mode
-                let bgColor;
-                const autoDetect = document.getElementById('autoDetectBg').checked;
-                
-                if (autoDetect) {
-                    bgColor = detectBackgroundColor(originalImageData);
-                    // Update UI with detected color
-                    const hexColor = `#${bgColor.r.toString(16).padStart(2, '0')}${bgColor.g.toString(16).padStart(2, '0')}${bgColor.b.toString(16).padStart(2, '0')}`;
-                    document.getElementById('bgColor').value = hexColor;
-                    document.getElementById('bgColorText').value = hexColor;
-                } else {
-                    bgColor = hexToRgb(document.getElementById('bgColor').value);
-                }
-                
-                const tolerance = parseFloat(document.getElementById('bgTolerance').value);
-                const maxDiff = tolerance / 100 * 765;
-
-                for (let i = 0; i < data.length; i += 4) {
-                    const r = data[i];
-                    const g = data[i + 1];
-                    const b = data[i + 2];
-                    const a = data[i + 3];
-
-                    const rDiff = Math.abs(r - bgColor.r);
-                    const gDiff = Math.abs(g - bgColor.g);
-                    const bDiff = Math.abs(b - bgColor.b);
-                    const totalDiff = rDiff + gDiff + bDiff;
-
-                    const isBackground = totalDiff <= maxDiff && a > 0;
-
-                    if (isBackground) {
-                        matchCount++;
-                        // Make pixel transparent
-                        newData[i] = r;
-                        newData[i + 1] = g;
-                        newData[i + 2] = b;
-                        newData[i + 3] = 0; // Transparent
-                    } else {
-                        // Keep original pixel
-                        newData[i] = r;
-                        newData[i + 1] = g;
-                        newData[i + 2] = b;
-                        newData[i + 3] = a;
-                    }
-                }
-            } else {
-                // Color replacement modes
-                const fromColor = hexToRgb(document.getElementById('fromColor').value);
-                const tolerance = parseFloat(document.getElementById('tolerance').value);
-                const preserveShades = document.getElementById('preserveShades').checked;
-
-                let toColor = null;
-                let gradientStartColor = null;
-                let gradientEndColor = null;
-
-                if (currentMode === 'color') {
-                    toColor = hexToRgb(document.getElementById('toColor').value);
-                } else {
-                    gradientStartColor = hexToRgb(document.getElementById('gradientStart').value);
-                    gradientEndColor = hexToRgb(document.getElementById('gradientEnd').value);
-                }
-
-                for (let i = 0; i < data.length; i += 4) {
-                    const r = data[i];
-                    const g = data[i + 1];
-                    const b = data[i + 2];
-                    const a = data[i + 3];
-
-                    const pixelIndex = i / 4;
-                    const x = pixelIndex % width;
-                    const y = Math.floor(pixelIndex / width);
-
-                    const rDiff = Math.abs(r - fromColor.r);
-                    const gDiff = Math.abs(g - fromColor.g);
-                    const bDiff = Math.abs(b - fromColor.b);
-                    const totalDiff = rDiff + gDiff + bDiff;
-                    const maxDiff = tolerance / 100 * 765;
-
-                    const isMatch = totalDiff <= maxDiff && a > 0;
-
-                    if (isMatch) matchCount++;
-
-                    if (isMatch) {
-                        let newR, newG, newB;
-
-                        if (currentMode === 'color') {
-                            newR = toColor.r;
-                            newG = toColor.g;
-                            newB = toColor.b;
-                        } else {
-                            const gradientColor = getGradientColor(x, y, width, height, gradientStartColor, gradientEndColor, gradientDirection, gradientPosition);
-                            newR = gradientColor.r;
-                            newG = gradientColor.g;
-                            newB = gradientColor.b;
-                        }
-
-                        if (preserveShades) {
-                            const origBrightness = (r + g + b) / 3;
-                            const fromBrightness = (fromColor.r + fromColor.g + fromColor.b) / 3;
-                            if (fromBrightness > 0) {
-                                const ratio = origBrightness / fromBrightness;
-                                newR = Math.min(255, Math.max(0, newR * ratio));
-                                newG = Math.min(255, Math.max(0, newG * ratio));
-                                newB = Math.min(255, Math.max(0, newB * ratio));
-                            }
-                        }
-
-                        newData[i] = Math.round(newR);
-                        newData[i + 1] = Math.round(newG);
-                        newData[i + 2] = Math.round(newB);
-                        newData[i + 3] = a;
-                    } else {
-                        newData[i] = r;
-                        newData[i + 1] = g;
-                        newData[i + 2] = b;
-                        newData[i + 3] = a;
-                    }
-                }
-            }
-
-            outputCtx.putImageData(newImageData, 0, 0);
-            processedImageData = newImageData;
-
-            document.getElementById('outputPlaceholder').style.display = 'none';
-            outputCanvas.style.display = 'block';
-
-            console.log(`Processed ${matchCount} pixels`);
-        }
-
-        async function downloadImage() {
-            if (!processedImageData) {
-                alert('Please upload an image first.');
-                return;
-            }
-
-            const canvas = document.getElementById('outputCanvas');
-            const filename = document.getElementById('filename').value.trim();
-            
-            let finalFilename = filename || 'color-replaced';
-            if (!finalFilename.toLowerCase().endsWith('.png')) {
-                finalFilename += '.png';
-            }
-
-            if (supportsFileSystemAccess && selectedDirectoryHandle) {
-                try {
-                    const fileHandle = await selectedDirectoryHandle.getFileHandle(finalFilename, { create: true });
-                    const writable = await fileHandle.createWritable();
-                    
-                    canvas.toBlob(async (blob) => {
-                        await writable.write(blob);
-                        await writable.close();
-                    });
-                    return;
-                } catch (err) {
-                    console.error('Error saving to directory:', err);
-                    alert('Error saving to selected directory. Falling back to default download.');
-                }
-            }
-
-            const link = document.createElement('a');
-            link.download = finalFilename;
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        }
-
-        function copyToClipboard() {
-            if (!processedImageData) {
-                alert('Please upload an image first.');
-                return;
-            }
-            
-            const canvas = document.getElementById('outputCanvas');
-            canvas.toBlob(blob => {
-                navigator.clipboard.write([new ClipboardItem({'image/png': blob})]);
-                alert('Image copied!');
-            });
-        }
-
-        function resetAll() {
-            document.getElementById('fileInput').value = '';
-            document.getElementById('inputCanvas').style.display = 'none';
-            document.getElementById('outputCanvas').style.display = 'none';
-            document.querySelector('.upload-area').style.display = 'flex';
-            document.getElementById('outputPlaceholder').style.display = 'block';
-            document.getElementById('directoryPath').value = '';
-            selectedDirectoryHandle = null;
-            originalImageData = null;
-            processedImageData = null;
-            
-            setMode('color');
-            setDirection('bottom');
-        }
+        });
     </script>
 </body>
 </html>
