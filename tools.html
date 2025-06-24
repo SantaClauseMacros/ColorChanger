@@ -1,0 +1,366 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All PNG Tools - Online PNG Tools</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+
+        .header {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: #e74c3c;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .breadcrumb {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .page-header {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .page-header h1 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .page-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .search-section {
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s;
+            background: white;
+        }
+
+        .search-box:focus {
+            border-color: #3498db;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .tool-card {
+            background: white;
+            border: 1px solid #e1e8ed;
+            border-radius: 8px;
+            padding: 25px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .tool-card:hover {
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            transform: translateY(-3px);
+        }
+
+        .tool-card h3 {
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 1.2rem;
+        }
+
+        .tool-card p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .tool-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #28a745;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .tool-badge.popular {
+            background: #ff6b35;
+        }
+
+        .tool-badge.new {
+            background: #007bff;
+        }
+
+        .category-section {
+            margin-bottom: 40px;
+        }
+
+        .category-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e1e8ed;
+        }
+
+        @media (max-width: 768px) {
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-header {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">P</div>
+                ONLINEPNGTOOLS
+            </a>
+            <a href="index.html" style="color: #3498db; text-decoration: none;">← Back to Home</a>
+        </nav>
+    </header>
+
+    <div class="breadcrumb">
+        <a href="index.html">Home</a> > All PNG Tools
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>All PNG Tools</h1>
+            <p>Complete collection of professional PNG editing and conversion tools</p>
+        </div>
+
+        <div class="search-section">
+            <input type="text" class="search-box" placeholder="Search tools..." id="searchTools">
+        </div>
+
+        <div class="category-section">
+            <h2 class="category-title">🎨 Color & Effects</h2>
+            <div class="tools-grid">
+                <a href="color-replacer.html" class="tool-card">
+                    <div class="tool-badge popular">POPULAR</div>
+                    <h3>PNG Color Replacer</h3>
+                    <p>Replace specific colors in your PNG images with custom colors. Perfect for rebranding and design modifications.</p>
+                </a>
+
+                <a href="grayscale.html" class="tool-card">
+                    <h3>Create Grayscale PNG</h3>
+                    <p>Convert colorful PNG images to elegant grayscale versions while preserving transparency.</p>
+                </a>
+
+                <a href="pixelate.html" class="tool-card">
+                    <h3>Pixelate PNG</h3>
+                    <p>Apply retro pixelation effects to your images for artistic or privacy purposes.</p>
+                </a>
+
+                <a href="blur.html" class="tool-card">
+                    <h3>Blur PNG</h3>
+                    <p>Add blur effects to your PNG images with adjustable intensity levels.</p>
+                </a>
+            </div>
+        </div>
+
+        <div class="category-section">
+            <h2 class="category-title">🖼️ Background & Transparency</h2>
+            <div class="tools-grid">
+                <a href="background-remover.html" class="tool-card">
+                    <div class="tool-badge new">NEW</div>
+                    <h3>Remove PNG Background</h3>
+                    <p>Automatically remove backgrounds from images and create transparent PNGs using AI technology.</p>
+                </a>
+
+                <a href="transparent.html" class="tool-card">
+                    <h3>Create Transparent PNG</h3>
+                    <p>Make specific colors transparent in your PNG images for seamless integration.</p>
+                </a>
+
+                <a href="background-add.html" class="tool-card">
+                    <h3>Add PNG Background</h3>
+                    <p>Add solid colors, gradients, or patterns as backgrounds to your transparent PNGs.</p>
+                </a>
+            </div>
+        </div>
+
+        <div class="category-section">
+            <h2 class="category-title">📐 Resize & Transform</h2>
+            <div class="tools-grid">
+                <a href="resize.html" class="tool-card">
+                    <h3>Resize PNG</h3>
+                    <p>Resize PNG images to specific dimensions while maintaining quality and transparency.</p>
+                </a>
+
+                <a href="crop.html" class="tool-card">
+                    <h3>Crop PNG</h3>
+                    <p>Crop PNG images to focus on specific areas or fit exact dimensions.</p>
+                </a>
+
+                <a href="rotate.html" class="tool-card">
+                    <h3>Rotate PNG</h3>
+                    <p>Rotate PNG images by any angle with precision while preserving transparency.</p>
+                </a>
+
+                <a href="flip.html" class="tool-card">
+                    <h3>Flip PNG</h3>
+                    <p>Flip PNG images horizontally or vertically for mirror effects.</p>
+                </a>
+            </div>
+        </div>
+
+        <div class="category-section">
+            <h2 class="category-title">🔄 Convert & Export</h2>
+            <div class="tools-grid">
+                <a href="jpg-to-png.html" class="tool-card">
+                    <h3>JPG to PNG Converter</h3>
+                    <p>Convert JPEG images to PNG format with transparency support.</p>
+                </a>
+
+                <a href="png-to-jpg.html" class="tool-card">
+                    <h3>PNG to JPG Converter</h3>
+                    <p>Convert PNG images to JPEG format with custom background colors.</p>
+                </a>
+
+                <a href="video-to-gif.html" class="tool-card">
+                    <div class="tool-badge new">NEW</div>
+                    <h3>Video to GIF Converter</h3>
+                    <p>Convert video files to animated GIF format with custom frame rates and quality settings.</p>
+                </a>
+
+                <a href="webp-converter.html" class="tool-card">
+                    <h3>PNG to WebP Converter</h3>
+                    <p>Convert PNG images to modern WebP format for better compression.</p>
+                </a>
+            </div>
+        </div>
+
+        <div class="category-section">
+            <h2 class="category-title">⚡ Quick Tools</h2>
+            <div class="tools-grid">
+                <a href="compress.html" class="tool-card">
+                    <h3>Compress PNG</h3>
+                    <p>Reduce PNG file sizes while maintaining visual quality and transparency.</p>
+                </a>
+
+                <a href="metadata.html" class="tool-card">
+                    <h3>PNG Metadata Viewer</h3>
+                    <p>View and edit metadata information embedded in PNG files.</p>
+                </a>
+
+                <a href="analyzer.html" class="tool-card">
+                    <h3>PNG Analyzer</h3>
+                    <p>Analyze PNG files for color information, dimensions, and technical details.</p>
+                </a>
+
+                <a href="optimizer.html" class="tool-card">
+                    <h3>PNG Optimizer</h3>
+                    <p>Optimize PNG files for web use with advanced compression algorithms.</p>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('searchTools');
+        const toolCards = document.querySelectorAll('.tool-card');
+
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+
+            toolCards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const description = card.querySelector('p').textContent.toLowerCase();
+
+                if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

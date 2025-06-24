@@ -1,0 +1,580 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PNG Color Replacer - Online PNG Tools</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+
+        .header {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: #e74c3c;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .breadcrumb {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .panels {
+            display: flex;
+            height: 400px;
+        }
+        
+        .panel {
+            flex: 1;
+            border: 2px dashed #ccc;
+            margin: 10px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #fafafa;
+            position: relative;
+        }
+        
+        .panel h3 {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            color: #666;
+            font-size: 16px;
+            margin: 0;
+        }
+        
+        .upload-area {
+            width: 200px;
+            height: 150px;
+            border: 2px dashed #999;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: white;
+        }
+        
+        .upload-area:hover:not(.drag-over) {
+            border-color: #3498db;
+            background: #f8f9ff;
+        }
+        
+        .panel.drag-over {
+            border-color: #3498db;
+            background: #f0f7ff;
+        }
+        
+        .panel.drag-over .upload-area {
+            border-color: #3498db;
+            background: #e3f2fd;
+            transform: scale(1.35);
+        }
+        
+        .upload-text {
+            color: #666;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        #fileInput {
+            display: none;
+        }
+        
+        canvas {
+            max-width: 300px;
+            max-height: 300px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .controls {
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        
+        .controls h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .control-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .control-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .control-section h4 {
+            margin-bottom: 15px;
+            color: #555;
+            font-weight: normal;
+        }
+        
+        .color-group {
+            margin-bottom: 15px;
+        }
+        
+        .color-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .color-input {
+            width: 40px;
+            height: 30px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        
+        .color-text {
+            padding: 6px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: monospace;
+            width: 80px;
+        }
+        
+        .slider-group {
+            margin-bottom: 15px;
+        }
+        
+        .slider-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .slider {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        
+        .buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .auto-indicator {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin-bottom: 15px;
+            font-size: 12px;
+            color: #155724;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .panels {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .control-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">P</div>
+                ONLINEPNGTOOLS
+            </a>
+            <a href="index.html" style="color: #3498db; text-decoration: none;">← Back to Tools</a>
+        </nav>
+    </header>
+
+    <div class="breadcrumb">
+        <a href="index.html">Home</a> > PNG Color Replacer
+    </div>
+
+    <div class="container">
+        <div class="panels">
+            <div class="panel">
+                <h3>📥 Input Image</h3>
+                <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                    <div style="font-size: 40px;">📁</div>
+                    <div class="upload-text">Click to upload PNG or GIF</div>
+                </div>
+                <input type="file" id="fileInput" accept=".png,.gif">
+                <canvas id="inputCanvas" style="display: none;"></canvas>
+            </div>
+            
+            <div class="panel">
+                <h3>🎯 Output Image</h3>
+                <div id="outputPlaceholder" style="color: #999; text-align: center;">
+                    <div style="font-size: 40px;">🖼️</div>
+                    <div>Processed image will appear here</div>
+                </div>
+                <canvas id="outputCanvas" style="display: none;"></canvas>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <h3>🛠️ Color Replacement Options</h3>
+            <div class="auto-indicator">
+                ✨ <strong>Auto Mode:</strong> Changes are applied automatically when you upload an image or adjust settings!
+            </div>
+            
+            <div class="control-grid">
+                <div class="control-section">
+                    <h4>Source Color</h4>
+                    <div class="color-group">
+                        <label>Replace this color:</label>
+                        <input type="color" id="fromColor" class="color-input" value="#eb1f2a">
+                        <input type="text" id="fromColorText" class="color-text" value="#eb1f2a">
+                    </div>
+                    <div class="slider-group">
+                        <label>Match tolerance: <span id="toleranceValue">35</span>%</label>
+                        <input type="range" id="tolerance" class="slider" min="0" max="100" value="35">
+                    </div>
+                </div>
+                
+                <div class="control-section">
+                    <h4>Replacement Color</h4>
+                    <div class="color-group">
+                        <label>With this color:</label>
+                        <input type="color" id="toColor" class="color-input" value="#ffa500">
+                        <input type="text" id="toColorText" class="color-text" value="#ffa500">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="buttons">
+                <button class="btn btn-success" onclick="downloadImage()">💾 Download</button>
+                <button class="btn btn-secondary" onclick="copyToClipboard()">📋 Copy</button>
+                <button class="btn btn-secondary" onclick="resetAll()">🔄 Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let originalImageData = null;
+        let processedImageData = null;
+
+        document.getElementById('fileInput').addEventListener('change', handleFileUpload);
+        document.getElementById('fromColor').addEventListener('change', updateFromColorText);
+        document.getElementById('toColor').addEventListener('change', updateToColorText);
+        document.getElementById('fromColorText').addEventListener('input', updateFromColorPicker);
+        document.getElementById('toColorText').addEventListener('input', updateToColorPicker);
+        document.getElementById('tolerance').addEventListener('input', updateToleranceValue);
+
+        const uploadPanel = document.querySelector('.panel');
+        
+        uploadPanel.addEventListener('dragover', handleDragOver);
+        uploadPanel.addEventListener('dragenter', handleDragEnter);
+        uploadPanel.addEventListener('dragleave', handleDragLeave);
+        uploadPanel.addEventListener('drop', handleDrop);
+        
+        document.addEventListener('dragover', (e) => e.preventDefault());
+        document.addEventListener('drop', (e) => e.preventDefault());
+
+        function handleDragOver(e) {
+            e.preventDefault();
+        }
+
+        function handleDragEnter(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            if (!e.currentTarget.contains(e.relatedTarget)) {
+                e.currentTarget.classList.remove('drag-over');
+            }
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                const file = files[0];
+                if (file.type.includes('png') || file.type.includes('gif')) {
+                    handleFile(file);
+                } else {
+                    alert('Please upload a PNG or GIF file.');
+                }
+            }
+        }
+
+        function updateFromColorText() {
+            document.getElementById('fromColorText').value = document.getElementById('fromColor').value;
+            autoProcessImage();
+        }
+
+        function updateToColorText() {
+            document.getElementById('toColorText').value = document.getElementById('toColor').value;
+            autoProcessImage();
+        }
+
+        function updateFromColorPicker() {
+            const value = document.getElementById('fromColorText').value;
+            if (/^#[0-9A-F]{6}$/i.test(value)) {
+                document.getElementById('fromColor').value = value;
+                autoProcessImage();
+            }
+        }
+
+        function updateToColorPicker() {
+            const value = document.getElementById('toColorText').value;
+            if (/^#[0-9A-F]{6}$/i.test(value)) {
+                document.getElementById('toColor').value = value;
+                autoProcessImage();
+            }
+        }
+
+        function updateToleranceValue() {
+            const value = document.getElementById('tolerance').value;
+            document.getElementById('toleranceValue').textContent = value;
+            autoProcessImage();
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            handleFile(file);
+        }
+
+        function handleFile(file) {
+            if (!file.type.includes('png') && !file.type.includes('gif')) {
+                alert('Please upload a PNG or GIF file.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    displayInputImage(img);
+                    autoProcessImage();
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function displayInputImage(img) {
+            const canvas = document.getElementById('inputCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+            
+            originalImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            
+            canvas.style.display = 'block';
+            canvas.parentElement.querySelector('.upload-area').style.display = 'none';
+        }
+
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+
+        function autoProcessImage() {
+            if (!originalImageData) return;
+
+            const outputCanvas = document.getElementById('outputCanvas');
+            const outputCtx = outputCanvas.getContext('2d');
+            
+            outputCanvas.width = originalImageData.width;
+            outputCanvas.height = originalImageData.height;
+
+            const newImageData = outputCtx.createImageData(originalImageData.width, originalImageData.height);
+            const data = originalImageData.data;
+            const newData = newImageData.data;
+
+            const fromColor = hexToRgb(document.getElementById('fromColor').value);
+            const toColor = hexToRgb(document.getElementById('toColor').value);
+            const tolerance = parseFloat(document.getElementById('tolerance').value);
+
+            let matchCount = 0;
+
+            for (let i = 0; i < data.length; i += 4) {
+                const r = data[i];
+                const g = data[i + 1];
+                const b = data[i + 2];
+                const a = data[i + 3];
+
+                const rDiff = Math.abs(r - fromColor.r);
+                const gDiff = Math.abs(g - fromColor.g);
+                const bDiff = Math.abs(b - fromColor.b);
+                const totalDiff = rDiff + gDiff + bDiff;
+                const maxDiff = tolerance / 100 * 765;
+
+                const isMatch = totalDiff <= maxDiff && a > 0;
+
+                if (isMatch) {
+                    matchCount++;
+                    newData[i] = toColor.r;
+                    newData[i + 1] = toColor.g;
+                    newData[i + 2] = toColor.b;
+                    newData[i + 3] = a;
+                } else {
+                    newData[i] = r;
+                    newData[i + 1] = g;
+                    newData[i + 2] = b;
+                    newData[i + 3] = a;
+                }
+            }
+
+            outputCtx.putImageData(newImageData, 0, 0);
+            processedImageData = newImageData;
+
+            document.getElementById('outputPlaceholder').style.display = 'none';
+            document.getElementById('outputCanvas').style.display = 'block';
+
+            console.log(`Processed ${matchCount} pixels`);
+        }
+
+        function downloadImage() {
+            if (!processedImageData) {
+                alert('Please upload an image first.');
+                return;
+            }
+
+            const canvas = document.getElementById('outputCanvas');
+            const link = document.createElement('a');
+            link.download = 'color-replaced.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        function copyToClipboard() {
+            if (!processedImageData) {
+                alert('Please upload an image first.');
+                return;
+            }
+            
+            const canvas = document.getElementById('outputCanvas');
+            canvas.toBlob(blob => {
+                navigator.clipboard.write([new ClipboardItem({'image/png': blob})]);
+                alert('Image copied!');
+            });
+        }
+
+        function resetAll() {
+            document.getElementById('fileInput').value = '';
+            document.getElementById('inputCanvas').style.display = 'none';
+            document.getElementById('outputCanvas').style.display = 'none';
+            document.querySelector('.upload-area').style.display = 'flex';
+            document.getElementById('outputPlaceholder').style.display = 'block';
+            originalImageData = null;
+            processedImageData = null;
+        }
+    </script>
+</body>
+</html>

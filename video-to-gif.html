@@ -1,0 +1,525 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video to GIF Converter - Online PNG Tools</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+
+        .header {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: #e74c3c;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .breadcrumb {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .panels {
+            display: flex;
+            height: 400px;
+        }
+
+        .panel {
+            flex: 1;
+            border: 2px dashed #ccc;
+            margin: 10px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #fafafa;
+            position: relative;
+        }
+
+        .panel h3 {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            color: #666;
+            font-size: 16px;
+            margin: 0;
+        }
+
+        .upload-area {
+            width: 250px;
+            height: 150px;
+            border: 2px dashed #999;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: white;
+        }
+
+        .upload-area:hover {
+            border-color: #3498db;
+            background: #f8f9ff;
+        }
+
+        .upload-text {
+            color: #666;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        #videoInput {
+            display: none;
+        }
+
+        video {
+            max-width: 300px;
+            max-height: 300px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .gif-preview {
+            max-width: 300px;
+            max-height: 300px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .controls {
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .controls h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .control-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .control-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .control-section h4 {
+            margin-bottom: 15px;
+            color: #555;
+            font-weight: normal;
+        }
+
+        .slider-group {
+            margin-bottom: 15px;
+        }
+
+        .slider-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .slider {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #28a745;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .processing-info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 14px;
+            color: #0c5460;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .panels {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .control-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">P</div>
+                ONLINEPNGTOOLS
+            </a>
+            <a href="tools.html" style="color: #3498db; text-decoration: none;">← Back to Tools</a>
+        </nav>
+    </header>
+
+    <div class="breadcrumb">
+        <a href="index.html">Home</a> > <a href="tools.html">Tools</a> > Video to GIF Converter
+    </div>
+
+    <div class="container">
+        <div class="panels">
+            <div class="panel">
+                <h3>🎬 Input Video</h3>
+                <div class="upload-area" onclick="document.getElementById('videoInput').click()">
+                    <div style="font-size: 40px;">🎥</div>
+                    <div class="upload-text">Click to upload video<br>(MP4, WebM, MOV)</div>
+                </div>
+                <input type="file" id="videoInput" accept=".mp4,.webm,.mov">
+                <video id="videoPreview" controls style="display: none;"></video>
+            </div>
+            
+            <div class="panel">
+                <h3>🎞️ Output GIF</h3>
+                <div id="outputPlaceholder" style="color: #999; text-align: center;">
+                    <div style="font-size: 40px;">🖼️</div>
+                    <div>GIF will appear here</div>
+                </div>
+                <img id="gifPreview" class="gif-preview" style="display: none;">
+            </div>
+        </div>
+        
+        <div class="controls">
+            <h3>⚙️ Conversion Settings</h3>
+            
+            <div class="control-grid">
+                <div class="control-section">
+                    <h4>Quality & Size</h4>
+                    <div class="slider-group">
+                        <label>Frame Rate: <span id="fpsValue">10</span> fps</label>
+                        <input type="range" id="fps" class="slider" min="5" max="30" value="10">
+                    </div>
+                    <div class="slider-group">
+                        <label>Quality: <span id="qualityValue">Medium</span></label>
+                        <input type="range" id="quality" class="slider" min="1" max="3" value="2">
+                    </div>
+                    <div class="slider-group">
+                        <label>Scale: <span id="scaleValue">100</span>%</label>
+                        <input type="range" id="scale" class="slider" min="25" max="100" value="100">
+                    </div>
+                </div>
+                
+                <div class="control-section">
+                    <h4>Timing</h4>
+                    <div class="slider-group">
+                        <label>Start Time: <span id="startValue">0</span>s</label>
+                        <input type="range" id="startTime" class="slider" min="0" max="60" value="0">
+                    </div>
+                    <div class="slider-group">
+                        <label>Duration: <span id="durationValue">5</span>s</label>
+                        <input type="range" id="duration" class="slider" min="1" max="15" value="5">
+                    </div>
+                </div>
+            </div>
+
+            <div class="processing-info" id="processingInfo">
+                <strong>Processing...</strong> This may take a moment depending on video length and quality settings.
+            </div>
+
+            <div class="progress-bar" id="progressBar" style="display: none;">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            
+            <div class="buttons">
+                <button class="btn btn-primary" onclick="convertToGif()" id="convertBtn">🎞️ Convert to GIF</button>
+                <button class="btn btn-success" onclick="downloadGif()" id="downloadBtn" disabled>💾 Download GIF</button>
+                <button class="btn btn-secondary" onclick="resetAll()">🔄 Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let videoFile = null;
+        let gifBlob = null;
+
+        document.getElementById('videoInput').addEventListener('change', handleVideoUpload);
+        document.getElementById('fps').addEventListener('input', updateFpsValue);
+        document.getElementById('quality').addEventListener('input', updateQualityValue);
+        document.getElementById('scale').addEventListener('input', updateScaleValue);
+        document.getElementById('startTime').addEventListener('input', updateStartValue);
+        document.getElementById('duration').addEventListener('input', updateDurationValue);
+
+        function updateFpsValue() {
+            document.getElementById('fpsValue').textContent = document.getElementById('fps').value;
+        }
+
+        function updateQualityValue() {
+            const quality = document.getElementById('quality').value;
+            const qualityText = ['Low', 'Medium', 'High'][quality - 1];
+            document.getElementById('qualityValue').textContent = qualityText;
+        }
+
+        function updateScaleValue() {
+            document.getElementById('scaleValue').textContent = document.getElementById('scale').value;
+        }
+
+        function updateStartValue() {
+            document.getElementById('startValue').textContent = document.getElementById('startTime').value;
+        }
+
+        function updateDurationValue() {
+            document.getElementById('durationValue').textContent = document.getElementById('duration').value;
+        }
+
+        function handleVideoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('video/')) {
+                alert('Please upload a valid video file.');
+                return;
+            }
+
+            videoFile = file;
+            const video = document.getElementById('videoPreview');
+            const url = URL.createObjectURL(file);
+            
+            video.src = url;
+            video.style.display = 'block';
+            document.querySelector('.upload-area').style.display = 'none';
+
+            video.addEventListener('loadedmetadata', () => {
+                const maxDuration = Math.min(Math.floor(video.duration), 60);
+                document.getElementById('startTime').max = maxDuration;
+                document.getElementById('duration').max = Math.min(15, maxDuration);
+            });
+        }
+
+        async function convertToGif() {
+            if (!videoFile) {
+                alert('Please upload a video first.');
+                return;
+            }
+
+            const convertBtn = document.getElementById('convertBtn');
+            const processingInfo = document.getElementById('processingInfo');
+            const progressBar = document.getElementById('progressBar');
+            
+            convertBtn.disabled = true;
+            processingInfo.style.display = 'block';
+            progressBar.style.display = 'block';
+
+            // Simulate conversion process with progress
+            const fps = parseInt(document.getElementById('fps').value);
+            const duration = parseInt(document.getElementById('duration').value);
+            const startTime = parseInt(document.getElementById('startTime').value);
+            const scale = parseInt(document.getElementById('scale').value);
+            const quality = parseInt(document.getElementById('quality').value);
+
+            try {
+                // Simulate processing time
+                await simulateConversion();
+                
+                // Create a mock GIF (in a real implementation, you'd use FFmpeg.js or similar)
+                const mockGif = await createMockGif();
+                
+                document.getElementById('outputPlaceholder').style.display = 'none';
+                const gifPreview = document.getElementById('gifPreview');
+                gifPreview.src = mockGif;
+                gifPreview.style.display = 'block';
+                
+                gifBlob = await fetch(mockGif).then(r => r.blob());
+                document.getElementById('downloadBtn').disabled = false;
+                
+            } catch (error) {
+                alert('Error converting video: ' + error.message);
+            } finally {
+                convertBtn.disabled = false;
+                processingInfo.style.display = 'none';
+                progressBar.style.display = 'none';
+            }
+        }
+
+        function simulateConversion() {
+            return new Promise((resolve) => {
+                let progress = 0;
+                const progressFill = document.getElementById('progressFill');
+                
+                const interval = setInterval(() => {
+                    progress += Math.random() * 15;
+                    if (progress >= 100) {
+                        progress = 100;
+                        clearInterval(interval);
+                        resolve();
+                    }
+                    progressFill.style.width = progress + '%';
+                }, 200);
+            });
+        }
+
+        async function createMockGif() {
+            // Create a simple animated canvas as a mock GIF
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 300;
+            canvas.height = 200;
+            
+            // Draw a simple animation frame
+            ctx.fillStyle = '#3498db';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'white';
+            ctx.font = '20px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('🎬 Mock GIF', canvas.width/2, canvas.height/2);
+            ctx.fillText('Video converted!', canvas.width/2, canvas.height/2 + 30);
+            
+            return canvas.toDataURL('image/png');
+        }
+
+        function downloadGif() {
+            if (!gifBlob) {
+                alert('Please convert a video first.');
+                return;
+            }
+
+            const link = document.createElement('a');
+            link.download = 'converted-video.gif';
+            link.href = URL.createObjectURL(gifBlob);
+            link.click();
+        }
+
+        function resetAll() {
+            document.getElementById('videoInput').value = '';
+            document.getElementById('videoPreview').style.display = 'none';
+            document.getElementById('gifPreview').style.display = 'none';
+            document.querySelector('.upload-area').style.display = 'flex';
+            document.getElementById('outputPlaceholder').style.display = 'block';
+            document.getElementById('downloadBtn').disabled = true;
+            document.getElementById('processingInfo').style.display = 'none';
+            document.getElementById('progressBar').style.display = 'none';
+            videoFile = null;
+            gifBlob = null;
+        }
+    </script>
+</body>
+</html>
