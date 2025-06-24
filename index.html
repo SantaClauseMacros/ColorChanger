@@ -314,7 +314,11 @@
     <header class="header">
         <nav class="nav-container">
             <a href="/" class="logo">
-                <img src="Logo.png" alt="PixToolbox" style="height: 40px; width: auto;">
+                <img src="./Logo.png" alt="PixToolbox" style="height: 40px; width: auto;" onerror="this.style.display='none'; this.parentNode.querySelector('.logo-fallback').style.display='flex';">
+                <div class="logo-fallback" style="display: none; align-items: center; gap: 10px;">
+                    <div class="logo-icon">P</div>
+                    <span>PixToolbox</span>
+                </div>
                 <span style="font-size: 12px; color: #999; margin-left: 10px;">Professional Image Editor</span>
             </a>
 
