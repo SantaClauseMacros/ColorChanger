@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video to GIF Converter - Online PNG Tools</title>
+    <title>Video to GIF Converter - ImageCraft Pro</title>
     <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.12.7/dist/umd/ffmpeg.js"></script>
     <script src="https://unpkg.com/@ffmpeg/util@0.12.1/dist/umd/index.js"></script>
     <style>
@@ -267,7 +266,7 @@
                 flex-direction: column;
                 height: auto;
             }
-            
+
             .control-grid {
                 grid-template-columns: 1fr;
             }
@@ -278,10 +277,10 @@
     <header class="header">
         <nav class="nav-container">
             <a href="index.html" class="logo">
-                <div class="logo-icon">P</div>
-                ONLINEPNGTOOLS
+                <div class="logo-icon">I</div>
+                IMAGECRAFT PRO
             </a>
-            <a href="tools.html" style="color: #3498db; text-decoration: none;">← Back to Tools</a>
+            <a href="tools.html" class="back-btn">← Back to Tools</a>
         </nav>
     </header>
 
@@ -300,7 +299,7 @@
                 <input type="file" id="videoInput" accept=".mp4,.webm,.mov">
                 <video id="videoPreview" controls style="display: none;"></video>
             </div>
-            
+
             <div class="panel">
                 <h3>🎞️ Output GIF</h3>
                 <div id="outputPlaceholder" style="color: #999; text-align: center;">
@@ -310,10 +309,10 @@
                 <img id="gifPreview" class="gif-preview" style="display: none;">
             </div>
         </div>
-        
+
         <div class="controls">
             <h3>⚙️ Conversion Settings</h3>
-            
+
             <div class="control-grid">
                 <div class="control-section">
                     <h4>Quality & Size</h4>
@@ -330,7 +329,7 @@
                         <input type="range" id="scale" class="slider" min="25" max="100" value="100">
                     </div>
                 </div>
-                
+
                 <div class="control-section">
                     <h4>Timing</h4>
                     <div class="slider-group">
@@ -351,7 +350,7 @@
             <div class="progress-bar" id="progressBar" style="display: none;">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
-            
+
             <div class="buttons">
                 <button class="btn btn-primary" onclick="convertToGif()" id="convertBtn">🎞️ Convert to GIF</button>
                 <button class="btn btn-success" onclick="downloadGif()" id="downloadBtn" disabled>💾 Download GIF</button>
@@ -377,9 +376,9 @@
 
         async function loadFFmpeg() {
             if (ffmpeg) return ffmpeg;
-            
+
             ffmpeg = new FFmpeg();
-            
+
             ffmpeg.on('log', ({ message }) => {
                 console.log(message);
             });
@@ -434,7 +433,7 @@
             videoFile = file;
             const video = document.getElementById('videoPreview');
             const url = URL.createObjectURL(file);
-            
+
             video.src = url;
             video.style.display = 'block';
             document.querySelector('.upload-area').style.display = 'none';
@@ -455,7 +454,7 @@
             const convertBtn = document.getElementById('convertBtn');
             const processingInfo = document.getElementById('processingInfo');
             const progressBar = document.getElementById('progressBar');
-            
+
             convertBtn.disabled = true;
             processingInfo.style.display = 'block';
             progressBar.style.display = 'block';
@@ -481,7 +480,7 @@
                 // Build FFmpeg command
                 const scaleFilter = scale < 100 ? `scale=iw*${scale/100}:ih*${scale/100}` : '';
                 const filters = scaleFilter ? `-vf "${scaleFilter}"` : '';
-                
+
                 // Quality mapping
                 const qualityMap = {
                     1: '256', // Low
@@ -521,10 +520,10 @@
                 const gifPreview = document.getElementById('gifPreview');
                 gifPreview.src = URL.createObjectURL(gifBlob);
                 gifPreview.style.display = 'block';
-                
+
                 document.getElementById('downloadBtn').disabled = false;
                 processingInfo.innerHTML = '<strong>✅ Conversion complete!</strong> Your GIF is ready to download.';
-                
+
             } catch (error) {
                 console.error('Conversion error:', error);
                 processingInfo.innerHTML = '<strong style="color: #dc3545;">❌ Conversion failed:</strong> ' + error.message;
