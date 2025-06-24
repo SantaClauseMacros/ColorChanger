@@ -1,0 +1,490 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resize PNG - Online PNG Tools</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+
+        .header {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: #e74c3c;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .breadcrumb {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .panels {
+            display: flex;
+            height: 400px;
+        }
+        
+        .panel {
+            flex: 1;
+            border: 2px dashed #ccc;
+            margin: 10px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #fafafa;
+            position: relative;
+        }
+        
+        .panel h3 {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            color: #666;
+            font-size: 16px;
+            margin: 0;
+        }
+        
+        .upload-area {
+            width: 200px;
+            height: 150px;
+            border: 2px dashed #999;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: white;
+        }
+        
+        .upload-area:hover {
+            border-color: #3498db;
+            background: #f8f9ff;
+        }
+        
+        .upload-text {
+            color: #666;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        #fileInput {
+            display: none;
+        }
+        
+        canvas {
+            max-width: 300px;
+            max-height: 300px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .controls {
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        
+        .control-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .control-section h4 {
+            margin-bottom: 15px;
+            color: #555;
+        }
+        
+        .dimension-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .dimension-input {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .lock-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        .lock-btn.locked {
+            background: #28a745;
+        }
+        
+        .preset-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        
+        .preset-btn {
+            padding: 6px 12px;
+            background: #f8f9fa;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .preset-btn:hover {
+            background: #e9ecef;
+        }
+        
+        .buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .info-display {
+            background: #e3f2fd;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #1565c0;
+        }
+
+        @media (max-width: 768px) {
+            .panels {
+                flex-direction: column;
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">P</div>
+                ONLINEPNGTOOLS
+            </a>
+            <a href="tools.html" style="color: #3498db; text-decoration: none;">← Back to Tools</a>
+        </nav>
+    </header>
+
+    <div class="breadcrumb">
+        <a href="index.html">Home</a> > <a href="tools.html">Tools</a> > Resize PNG
+    </div>
+
+    <div class="container">
+        <div class="panels">
+            <div class="panel">
+                <h3>📥 Input Image</h3>
+                <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                    <div style="font-size: 40px;">📁</div>
+                    <div class="upload-text">Click to upload PNG</div>
+                </div>
+                <input type="file" id="fileInput" accept=".png">
+                <canvas id="inputCanvas" style="display: none;"></canvas>
+            </div>
+            
+            <div class="panel">
+                <h3>📐 Resized Output</h3>
+                <div id="outputPlaceholder" style="color: #999; text-align: center;">
+                    <div style="font-size: 40px;">📏</div>
+                    <div>Resized image will appear here</div>
+                </div>
+                <canvas id="outputCanvas" style="display: none;"></canvas>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <h3>📐 Resize Options</h3>
+            
+            <div class="control-section">
+                <h4>Dimensions</h4>
+                <div class="dimension-controls">
+                    <input type="number" id="widthInput" class="dimension-input" placeholder="Width" min="1">
+                    <input type="number" id="heightInput" class="dimension-input" placeholder="Height" min="1">
+                    <button class="lock-btn locked" id="aspectLock" title="Lock aspect ratio">🔒</button>
+                </div>
+                
+                <div class="preset-buttons">
+                    <button class="preset-btn" onclick="setPreset(100, 100)">100×100</button>
+                    <button class="preset-btn" onclick="setPreset(200, 200)">200×200</button>
+                    <button class="preset-btn" onclick="setPreset(512, 512)">512×512</button>
+                    <button class="preset-btn" onclick="setPreset(1024, 1024)">1024×1024</button>
+                    <button class="preset-btn" onclick="setPreset(1920, 1080)">HD</button>
+                </div>
+                
+                <div class="info-display" id="imageInfo">
+                    Upload an image to see dimensions
+                </div>
+            </div>
+            
+            <div class="buttons">
+                <button class="btn btn-success" onclick="resizeImage()">🔄 Resize</button>
+                <button class="btn btn-success" onclick="downloadImage()">💾 Download</button>
+                <button class="btn btn-secondary" onclick="copyToClipboard()">📋 Copy</button>
+                <button class="btn btn-secondary" onclick="resetAll()">🔄 Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let originalImage = null;
+        let originalAspectRatio = 1;
+        let aspectLocked = true;
+
+        document.getElementById('fileInput').addEventListener('change', handleFileUpload);
+        document.getElementById('widthInput').addEventListener('input', handleWidthChange);
+        document.getElementById('heightInput').addEventListener('input', handleHeightChange);
+        document.getElementById('aspectLock').addEventListener('click', toggleAspectLock);
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (!file.type.includes('png')) {
+                alert('Please upload a PNG file.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    originalImage = img;
+                    originalAspectRatio = img.width / img.height;
+                    displayInputImage(img);
+                    updateImageInfo();
+                    setDefaultDimensions();
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function displayInputImage(img) {
+            const canvas = document.getElementById('inputCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+            
+            canvas.style.display = 'block';
+            canvas.parentElement.querySelector('.upload-area').style.display = 'none';
+        }
+
+        function setDefaultDimensions() {
+            if (!originalImage) return;
+            
+            document.getElementById('widthInput').value = originalImage.width;
+            document.getElementById('heightInput').value = originalImage.height;
+        }
+
+        function updateImageInfo() {
+            if (!originalImage) return;
+            
+            const info = `Original: ${originalImage.width}×${originalImage.height}px`;
+            document.getElementById('imageInfo').textContent = info;
+        }
+
+        function handleWidthChange() {
+            if (!aspectLocked || !originalImage) return;
+            
+            const width = parseInt(document.getElementById('widthInput').value);
+            if (width > 0) {
+                const height = Math.round(width / originalAspectRatio);
+                document.getElementById('heightInput').value = height;
+            }
+        }
+
+        function handleHeightChange() {
+            if (!aspectLocked || !originalImage) return;
+            
+            const height = parseInt(document.getElementById('heightInput').value);
+            if (height > 0) {
+                const width = Math.round(height * originalAspectRatio);
+                document.getElementById('widthInput').value = width;
+            }
+        }
+
+        function toggleAspectLock() {
+            aspectLocked = !aspectLocked;
+            const btn = document.getElementById('aspectLock');
+            
+            if (aspectLocked) {
+                btn.textContent = '🔒';
+                btn.classList.add('locked');
+            } else {
+                btn.textContent = '🔓';
+                btn.classList.remove('locked');
+            }
+        }
+
+        function setPreset(width, height) {
+            document.getElementById('widthInput').value = width;
+            document.getElementById('heightInput').value = height;
+        }
+
+        function resizeImage() {
+            if (!originalImage) {
+                alert('Please upload an image first.');
+                return;
+            }
+
+            const width = parseInt(document.getElementById('widthInput').value);
+            const height = parseInt(document.getElementById('heightInput').value);
+
+            if (!width || !height || width <= 0 || height <= 0) {
+                alert('Please enter valid dimensions.');
+                return;
+            }
+
+            const outputCanvas = document.getElementById('outputCanvas');
+            const ctx = outputCanvas.getContext('2d');
+            
+            outputCanvas.width = width;
+            outputCanvas.height = height;
+            
+            ctx.drawImage(originalImage, 0, 0, width, height);
+            
+            document.getElementById('outputPlaceholder').style.display = 'none';
+            document.getElementById('outputCanvas').style.display = 'block';
+        }
+
+        function downloadImage() {
+            const canvas = document.getElementById('outputCanvas');
+            if (canvas.style.display === 'none') {
+                alert('Please resize the image first.');
+                return;
+            }
+
+            const link = document.createElement('a');
+            link.download = 'resized.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        function copyToClipboard() {
+            const canvas = document.getElementById('outputCanvas');
+            if (canvas.style.display === 'none') {
+                alert('Please resize the image first.');
+                return;
+            }
+            
+            canvas.toBlob(blob => {
+                navigator.clipboard.write([new ClipboardItem({'image/png': blob})]);
+                alert('Image copied to clipboard!');
+            });
+        }
+
+        function resetAll() {
+            document.getElementById('fileInput').value = '';
+            document.getElementById('inputCanvas').style.display = 'none';
+            document.getElementById('outputCanvas').style.display = 'none';
+            document.querySelector('.upload-area').style.display = 'flex';
+            document.getElementById('outputPlaceholder').style.display = 'block';
+            document.getElementById('widthInput').value = '';
+            document.getElementById('heightInput').value = '';
+            document.getElementById('imageInfo').textContent = 'Upload an image to see dimensions';
+            originalImage = null;
+        }
+    </script>
+</body>
+</html>
