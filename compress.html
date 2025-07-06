@@ -1,4 +1,4 @@
-    .btn {
+.btn {
             padding: 12px 30px;
             margin: 0 10px;
             border: none;
@@ -40,10 +40,63 @@
                 flex-direction: column;
                 height: auto;
             }
-            
+
             .tool-header h1 {
                 font-size: 2rem;
             }
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(79, 172, 254, 0.3);
+        }
+
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            border-radius: 8px;
+            opacity: 0.8;
+        }
+
+        .logo-text {
+            position: relative;
+            z-index: 1;
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+
+        .logo-brand {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
         }
     </style>
 </head>
@@ -77,7 +130,7 @@
                 <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.webp">
                 <canvas id="inputCanvas" style="display: none;"></canvas>
             </div>
-            
+
             <div class="panel">
                 <h3>📦 Compressed Output</h3>
                 <div id="outputPlaceholder" style="color: #999; text-align: center;">
@@ -87,12 +140,12 @@
                 <canvas id="outputCanvas" style="display: none;"></canvas>
             </div>
         </div>
-        
+
         <div class="controls">
             <h3>📦 Compression Settings</h3>
-            
+
             <div class="file-info" id="fileInfo" style="display: none;"></div>
-            
+
             <div class="control-group">
                 <label>Compression Level: <span id="qualityValue">80</span>%</label>
                 <input type="range" id="quality" class="slider" min="10" max="100" value="80">
@@ -134,21 +187,21 @@
                 const img = new Image();
                 img.onload = function() {
                     inputImage = img;
-                    
+
                     const canvas = document.getElementById('inputCanvas');
                     const ctx = canvas.getContext('2d');
-                    
+
                     canvas.width = img.width;
                     canvas.height = img.height;
-                    
+
                     ctx.drawImage(img, 0, 0);
                     canvas.style.display = 'block';
                     document.querySelector('.upload-area').style.display = 'none';
-                    
+
                     document.getElementById('compressBtn').disabled = false;
-                    
+
                     showFileInfo(file);
-                    
+
                     // Auto-compress
                     compressImage();
                 };
@@ -160,7 +213,7 @@
         function showFileInfo(file) {
             const fileInfo = document.getElementById('fileInfo');
             const fileSizeKB = (file.size / 1024).toFixed(1);
-            
+
             fileInfo.innerHTML = `
                 <strong>Original File:</strong> ${file.name}<br>
                 <strong>Size:</strong> ${fileSizeKB} KB<br>
@@ -174,21 +227,21 @@
             if (!inputImage) return;
 
             const quality = parseInt(document.getElementById('quality').value) / 100;
-            
+
             const outputCanvas = document.getElementById('outputCanvas');
             const ctx = outputCanvas.getContext('2d');
-            
+
             outputCanvas.width = inputImage.width;
             outputCanvas.height = inputImage.height;
-            
+
             // Clear canvas with transparent background
             ctx.clearRect(0, 0, outputCanvas.width, outputCanvas.height);
             ctx.drawImage(inputImage, 0, 0);
-            
+
             // Determine output format based on original format
             let outputFormat = 'image/png'; // Default to PNG to preserve transparency
             let compressedDataURL;
-            
+
             if (originalFormat === 'image/jpeg' || originalFormat === 'image/jpg') {
                 // Only use JPEG for originally JPEG files
                 outputFormat = 'image/jpeg';
@@ -197,15 +250,15 @@
                 // For PNG/WebP, use PNG to preserve transparency
                 compressedDataURL = outputCanvas.toDataURL('image/png');
             }
-            
+
             const compressedSize = Math.round((compressedDataURL.length * 3) / 4);
             const compressionRatio = ((originalFileSize - compressedSize) / originalFileSize * 100).toFixed(1);
-            
+
             // Update file info
             const fileInfo = document.getElementById('fileInfo');
             const originalSizeKB = (originalFileSize / 1024).toFixed(1);
             const compressedSizeKB = (compressedSize / 1024).toFixed(1);
-            
+
             fileInfo.innerHTML = `
                 <strong>Original Size:</strong> ${originalSizeKB} KB<br>
                 <strong>Compressed Size:</strong> ${compressedSizeKB} KB<br>
@@ -213,7 +266,7 @@
                 <strong>Quality:</strong> ${document.getElementById('quality').value}%<br>
                 <strong>Output Format:</strong> ${outputFormat === 'image/png' ? 'PNG (transparency preserved)' : 'JPEG'}
             `;
-            
+
             document.getElementById('outputPlaceholder').style.display = 'none';
             outputCanvas.style.display = 'block';
             document.getElementById('downloadBtn').disabled = false;
@@ -222,9 +275,9 @@
         function downloadImage() {
             const canvas = document.getElementById('outputCanvas');
             const quality = parseInt(document.getElementById('quality').value) / 100;
-            
+
             const link = document.createElement('a');
-            
+
             // Determine download format and filename
             if (originalFormat === 'image/jpeg' || originalFormat === 'image/jpg') {
                 link.download = 'compressed-image.jpg';
@@ -233,7 +286,7 @@
                 link.download = 'compressed-image.png';
                 link.href = canvas.toDataURL('image/png');
             }
-            
+
             link.click();
         }
 
