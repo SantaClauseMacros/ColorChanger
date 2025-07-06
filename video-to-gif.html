@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video to GIF Converter - ImageCraft Pro</title>
-    <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.7/dist/umd/ffmpeg.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/dist/umd/util.js"></script>
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js"></script>
+    <script src="https://unpkg.com/@ffmpeg/util@0.12.1/dist/umd/util.js"></script>
     <style>
         * {
             margin: 0;
@@ -418,7 +418,7 @@
                 }
             });
 
-            const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.4/dist/umd';
+            const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
             await ffmpeg.load({
                 coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
                 wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
@@ -507,39 +507,24 @@
                 const inputName = 'input.' + videoFile.name.split('.').pop();
                 await ffmpeg.writeFile(inputName, await fetchFile(videoFile));
 
-                // Build FFmpeg command
-                const scaleFilter = scale < 100 ? `scale=iw*${scale/100}:ih*${scale/100}` : '';
-                const filters = scaleFilter ? `-vf "${scaleFilter}"` : '';
+                // Build simplified FFmpeg command for better compatibility
+                let scaleFilter = '';
+                if (scale < 100) {
+                    const newWidth = Math.floor(320 * (scale / 100));
+                    scaleFilter = `scale=${newWidth}:-1:flags=lanczos,`;
+                }
 
-                // Quality mapping
-                const qualityMap = {
-                    1: '256', // Low
-                    2: '128', // Medium  
-                    3: '64'   // High
-                };
-
+                // Simplified single-pass conversion
                 const cmd = [
                     '-ss', startTime.toString(),
                     '-t', duration.toString(),
                     '-i', inputName,
-                    '-r', fps.toString(),
-                    '-vf', `${scaleFilter ? scaleFilter + ',' : ''}palettegen=max_colors=${qualityMap[quality]}`,
-                    'palette.png'
-                ];
-
-                await ffmpeg.exec(cmd);
-
-                const gifCmd = [
-                    '-ss', startTime.toString(),
-                    '-t', duration.toString(),
-                    '-i', inputName,
-                    '-i', 'palette.png',
-                    '-r', fps.toString(),
-                    '-filter_complex', `${scaleFilter ? scaleFilter + '[scaled];[scaled]' : '[0:v]'}paletteuse`,
+                    '-vf', `${scaleFilter}fps=${fps},split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse`,
+                    '-loop', '0',
                     'output.gif'
                 ];
 
-                await ffmpeg.exec(gifCmd);
+                await ffmpeg.exec(cmd);
 
                 // Read output file
                 const data = await ffmpeg.readFile('output.gif');
